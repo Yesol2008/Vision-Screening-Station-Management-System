@@ -27,21 +27,23 @@
 		out.println("Password loaded: " + (password != null));
 
         // Step 2: Load JDBC Driver (optional for newer drivers)
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.cj.jdbc.Driver");
         		
 		
         	// Step 3: Establish database connection
 			Connection conn = DriverManager.getConnection(connURL, username, password);
+			out.println("Database connected successfully!");
 
 			// Step 4: Create Statement object
 			Statement stmt = conn.createStatement();
 
             // Step 5: Execute SQL command
 			ResultSet rs = stmt.executeQuery("SELECT * FROM users");
+			out.println("Query executed successfully!");
 			 
             // Step 6: Process results
             while (rs.next()) {
-                int id = rs.getInt("id");
+                int id = rs.getInt("user_id");
                 String name = rs.getString("username");
 
                 out.println("ID: " + id + ", Name: " + name + "<br>");
