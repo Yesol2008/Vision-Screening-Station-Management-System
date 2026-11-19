@@ -16,9 +16,8 @@
 	try {
 		
 		// Step 1: Load environment variables
-		Dotenv dotenv = Dotenv.configure()
-        .directory(application.getRealPath("/WEB-INF"))
-        .load();
+		Dotenv dotenv = Dotenv.load();
+
 
 		String connURL = dotenv.get("DB_URL");
 		String username = dotenv.get("DB_USERNAME");
@@ -33,7 +32,7 @@
         		
 		
         	// Step 3: Establish database connection
-			Connection conn = DriverManager.getConnection(connURL, username, password);
+		Connection conn = DriverManager.getConnection(connURL, username, password);
 			out.println("Database connected successfully!");
 
 			// Step 4: Create Statement object
@@ -50,7 +49,13 @@
 
                 out.println("ID: " + id + ", Name: " + name + "<br>");
             
-        }
+        	}
+            
+            rs.close();
+            stmt.close();
+            conn.close();
+            
+		
 
     } catch (Exception e) {
         e.printStackTrace();

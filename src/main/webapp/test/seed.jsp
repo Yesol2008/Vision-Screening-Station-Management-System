@@ -29,7 +29,7 @@
         Class.forName("com.mysql.cj.jdbc.Driver");
         		
 		
-        	// Step 3: Establish database connection
+        	// Step 3: Establish database connection. Used try-with so that connection will close automatically
 			Connection conn = DriverManager.getConnection(connURL, username, password);
 			out.println("Database connected successfully!");
 
@@ -145,10 +145,8 @@
 
 		out.println("<h3>Datas inserted successfully!</h3>");
 		
-			stmt.close();
-			conn.close();
-    		
-
+		stmt.close();
+		conn.close();
 		
     } catch (Exception e) {
         e.printStackTrace();
