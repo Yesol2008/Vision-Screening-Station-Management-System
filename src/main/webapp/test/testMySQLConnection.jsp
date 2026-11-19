@@ -16,7 +16,9 @@
 	try {
 		
 		// Step 1: Load environment variables
-		Dotenv dotenv = Dotenv.load();
+		Dotenv dotenv = Dotenv.configure()
+        .directory(application.getRealPath("/WEB-INF"))
+        .load();
 
 
 		String connURL = dotenv.get("DB_URL");
