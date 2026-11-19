@@ -32,14 +32,13 @@
         		
 		
         	// Step 3: Establish database connection
-		Connection conn = DriverManager.getConnection(connURL, username, password);
-			out.println("Database connected successfully!");
+		try(Connection conn = DriverManager.getConnection(connURL, username, password);
 
 			// Step 4: Create Statement object
 			Statement stmt = conn.createStatement();
 
             // Step 5: Execute SQL command
-			ResultSet rs = stmt.executeQuery("SELECT * FROM users");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM users");){
 			out.println("Query executed successfully!");
 			 
             // Step 6: Process results
@@ -50,10 +49,8 @@
                 out.println("ID: " + id + ", Name: " + name + "<br>");
             
         	}
-            
-            rs.close();
-            stmt.close();
-            conn.close();
+		}
+        	
             
 		
 

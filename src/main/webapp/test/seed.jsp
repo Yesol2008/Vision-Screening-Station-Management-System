@@ -145,7 +145,7 @@
 
 		out.println("<h3>Datas inserted successfully!</h3>");
 		
-		stmt.close();
+    	stmt.close();
 		conn.close();
 		
     } catch (Exception e) {
