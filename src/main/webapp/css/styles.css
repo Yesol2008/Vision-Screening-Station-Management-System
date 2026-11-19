@@ -1,0 +1,50 @@
+/* ===== Page layout ===== */
+body { margin: 0; background: #f5f5f3; color: #1a1a1a; font-family: Arial, Helvetica, sans-serif; }
+.page { max-width: 1340px; margin: 0 auto; padding: 0 30px 40px; }
+
+/* ===== Header (staffHeader.jspf) ===== */
+.topbar { display: flex; justify-content: space-between; align-items: center; padding: 36px 0 30px; }
+.brand { display: flex; gap: 16px; align-items: center; }
+.logo { width: 44px; height: 44px; border: 1px solid #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+.brandName { font-size: 24px; font-weight: bold; }
+.brandSub { font-size: 14px; color: #555; }
+.userBox { display: flex; gap: 18px; align-items: center; }
+.userName { font-size: 16px; }
+.userRole { font-size: 13px; color: #555; }
+
+/* ===== Navigation menu ===== */
+.navMenu { display: flex; gap: 34px; border-bottom: 1px solid #ccc; }
+.navMenu a { color: #1a1a1a; text-decoration: none; font-size: 17px; padding: 14px 0; border-bottom: 3px solid transparent; }
+.navMenu a.active { font-weight: bold; border-bottom-color: #1a1a1a; }
+
+/* ===== Page titles ===== */
+.eyebrow { font-size: 13px; letter-spacing: 3px; font-weight: bold; color: #444; margin-top: 48px; }
+.titleRow { display: flex; justify-content: space-between; align-items: center; }
+h1 { font-size: 36px; margin: 12px 0; }
+.intro { color: #555; font-size: 17px; margin: 0 0 40px; }
+
+/* ===== Buttons ===== */
+.btn { display: inline-block; border: 1px solid #1a1a1a; background: #fff; color: #1a1a1a; padding: 8px 12px; font-size: 15px; text-decoration: none; cursor: pointer; }
+.btnDark { background: #1a1a1a; color: #fff; font-size: 18px; padding: 14px 20px; }
+
+/* ===== Search ===== */
+.searchLabel { display: block; font-weight: bold; margin-bottom: 10px; }
+.searchRow { display: flex; gap: 10px; margin-bottom: 26px; }
+.searchRow input[type="text"] { flex: 1; font-size: 16px; padding: 14px 16px; border: 1px solid #999; }
+
+/* ===== Success / error messages ===== */
+.msgBox { padding: 12px 16px; margin-bottom: 20px; border: 1px solid; }
+.msgSuccess { border-color: green; color: green; background: #eef8ee; }
+.msgError { border-color: red; color: #b00000; background: #fdeeee; }
+
+/* ===== Tables ===== */
+table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #ccc; }
+th { text-align: left; font-size: 13px; letter-spacing: 2px; padding: 22px 20px; background: #ececea; border-bottom: 1px solid #ccc; }
+td { padding: 22px 20px; border-bottom: 1px solid #ddd; vertical-align: middle; }
+
+/* ===== Small text, status badges, row actions ===== */
+.small { font-size: 13px; color: #777; }
+.badge { border: 1px solid #bbb; background: #f0f0ee; padding: 4px 10px; font-size: 14px; }
+.badgeInactive { color: #999; border-style: dashed; }
+.actions { display: flex; gap: 8px; align-items: center; }
+.actions form { margin: 0; }
