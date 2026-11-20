@@ -12,6 +12,21 @@
 <body>
 
 <%
+
+// password for each users
+// "admuser", "Staff@123"
+// "john123" "Participant@123"
+// "mary123" "Participant@456"
+// "alex123" "Participant@789"
+// "sarah123" "Participant@000"
+
+
+
+
+
+%>
+
+<%
 	try {
 		
 		// Step 1: Load environment variables
