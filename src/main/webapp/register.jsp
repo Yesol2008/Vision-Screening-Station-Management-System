@@ -205,9 +205,10 @@
 	}
 %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Create account - Vision Screening</title>
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 </head>
@@ -216,26 +217,26 @@
 
 	<%-- placeholder for now will be replaced by shared header include file --%>
 	<div class="topbar">
-		<div class="brand">
-			<div class="logo">+</div>
+		<a class="brand" href="index.jsp">
+			<img class="logo" src="<%= request.getContextPath() %>/images/logo.png" alt="Vision Screening logo">
 			<div>
 				<div class="brandName">Vision Screening</div>
 				<div class="brandSub">Station Management System</div>
 			</div>
-		</div>
+		</a>
+		<nav class="navMenu">
+			<a href="index.jsp">Overview</a>
+			<a href="login.jsp">Sign in</a>
+			<a href="register.jsp" class="active">Create account</a>
+		</nav>
 		<div class="userBox">
 			<span class="userRole">Guest</span>
-			<a class="btn" href="login.jsp">Sign in</a>
 		</div>
 	</div>
-	<nav class="navMenu">
-		<a href="index.jsp">Overview</a>
-		<a href="login.jsp">Sign in</a>
-		<a href="register.jsp" class="active">Create account</a>
-	</nav>
 
 	<div class="card">
-		<h1>Create a participant account</h1>
+		<h1 class="pageTitle">Create a participant account</h1>
+		<p class="pageSub">Register to manage your vision screening appointments and results.</p>
 
 		<%-- form-level message --%>
 		<% if (formErr != null) { %>
@@ -244,35 +245,39 @@
 
 		<%-- submits to the same page; novalidate turns off the browser checks --%>
 		<%--every field is checked by server-side code --%>
+		<%-- the error goes before the grey hint; styles.css hides the hint when an error is shown --%>
 		<form action="register.jsp" method="post" novalidate>
 			<div class="formGrid">
 
 				<div class="field">
 					<label for="username">Username <span class="req">*</span></label>
 					<!-- if this field has an error, give the box the inputError class otherwise no class -->
-					<input type="text" id="username" name="username" maxlength="20"
+					<input type="text" id="username" name="username" maxlength="20" placeholder="e.g. alex_tan"
 						value="<%= escapeHtml(username) %>" class="<%= usernameErr != null ? "inputError" : "" %>">
-						<!-- if usernameErr is not null, print the usernameErr inside the class fieldError -->
+					<!-- if usernameErr is not null, print the usernameErr inside the class fieldError -->
 					<% if (usernameErr != null) { %><div class="fieldError"><%= usernameErr %></div><% } %>
+					<div class="fieldHint">Use 3-20 letters, numbers or underscores.</div>
 				</div>
 
 				<div class="field">
 					<label for="fullName">Full name <span class="req">*</span></label>
-					<input type="text" id="fullName" name="fullName" maxlength="100"
+					<input type="text" id="fullName" name="fullName" maxlength="100" placeholder="e.g. Alex Tan"
 						value="<%= escapeHtml(fullName) %>" class="<%= fullNameErr != null ? "inputError" : "" %>">
 					<% if (fullNameErr != null) { %><div class="fieldError"><%= fullNameErr %></div><% } %>
+					<div class="fieldHint">Enter your full name.</div>
 				</div>
 
 				<div class="field">
 					<label for="contact">Contact number <span class="req">*</span></label>
-					<input type="text" id="contact" name="contact" maxlength="9"
+					<input type="text" id="contact" name="contactNum" maxlength="9" placeholder="e.g. 9123 4567"
 						value="<%= escapeHtml(contactNum) %>" class="<%= contactNumErr != null ? "inputError" : "" %>">
 					<% if (contactNumErr != null) { %><div class="fieldError"><%= contactNumErr %></div><% } %>
+					<div class="fieldHint">8-digit Singapore number starting with 6, 8 or 9.</div>
 				</div>
 
 				<div class="field">
 					<label for="email">Email <span class="req">*</span></label>
-					<input type="text" id="email" name="email" maxlength="255"
+					<input type="text" id="email" name="email" maxlength="255" placeholder="name@example.com"
 						value="<%= escapeHtml(email) %>" class="<%= emailErr != null ? "inputError" : "" %>">
 					<% if (emailErr != null) { %><div class="fieldError"><%= emailErr %></div><% } %>
 				</div>
@@ -282,6 +287,7 @@
 					<input type="password" id="password" name="password" maxlength="64"
 						class="<%= passwordErr != null ? "inputError" : "" %>">
 					<% if (passwordErr != null) { %><div class="fieldError"><%= passwordErr %></div><% } %>
+					<div class="fieldHint">8-64 characters, with uppercase, lowercase, number and symbol.</div>
 				</div>
 
 				<div class="field">
@@ -294,8 +300,8 @@
 			</div>
 
 			<div class="formActions">
-				<a href="login.jsp">Back to sign in</a>
-				<input type="submit" class="btn btnDark" value="Create account">
+				<span>Already have an account? <a href="login.jsp">Sign in</a></span>
+				<input type="submit" class="btn btnPrimary" value="Create account">
 			</div>
 		</form>
 	</div>

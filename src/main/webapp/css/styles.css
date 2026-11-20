@@ -1,50 +1,439 @@
-/* ===== Page layout ===== */
-body { margin: 0; background: #f5f5f3; color: #1a1a1a; font-family: Arial, Helvetica, sans-serif; }
-.page { max-width: 1340px; margin: 0 auto; padding: 0 30px 40px; }
+/* =====================================================================
+   Vision Screening - Station Management System
+   Shared stylesheet for every page (css/styles.css)
 
-/* ===== Header (staffHeader.jspf) ===== */
-.topbar { display: flex; justify-content: space-between; align-items: center; padding: 36px 0 30px; }
-.brand { display: flex; gap: 16px; align-items: center; }
-.logo { width: 44px; height: 44px; border: 1px solid #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 26px; }
-.brandName { font-size: 24px; font-weight: bold; }
-.brandSub { font-size: 14px; color: #555; }
-.userBox { display: flex; gap: 18px; align-items: center; }
-.userName { font-size: 16px; }
-.userRole { font-size: 13px; color: #555; }
+   Link it in each JSP:
+   <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 
-/* ===== Navigation menu ===== */
-.navMenu { display: flex; gap: 34px; border-bottom: 1px solid #ccc; }
-.navMenu a { color: #1a1a1a; text-decoration: none; font-size: 17px; padding: 14px 0; border-bottom: 3px solid transparent; }
-.navMenu a.active { font-weight: bold; border-bottom-color: #1a1a1a; }
+   Sections
+     1. Colours (CSS variables)
+     2. Base
+     3. Top bar and navigation
+     4. Cards and headings
+     5. Forms
+     6. Buttons
+     7. Message boxes
+     8. Tables and badges (for other pages)
+     9. Small screens
+   ===================================================================== */
 
-/* ===== Page titles ===== */
-.eyebrow { font-size: 13px; letter-spacing: 3px; font-weight: bold; color: #444; margin-top: 48px; }
-.titleRow { display: flex; justify-content: space-between; align-items: center; }
-h1 { font-size: 36px; margin: 12px 0; }
-.intro { color: #555; font-size: 17px; margin: 0 0 40px; }
+/* ---------- 1. Colours ---------- */
+:root {
+	--navy: #15324F;
+	--teal: #087F8C;
+	--tealDark: #066A75;
+	--ice: #F2F8FA;
+	--white: #FFFFFF;
+	--amber: #F3A54B;
 
-/* ===== Buttons ===== */
-.btn { display: inline-block; border: 1px solid #1a1a1a; background: #fff; color: #1a1a1a; padding: 8px 12px; font-size: 15px; text-decoration: none; cursor: pointer; }
-.btnDark { background: #1a1a1a; color: #fff; font-size: 18px; padding: 14px 20px; }
+	--red: #D92D20;
+	--redLight: #FEF3F2;
+	--green: #12805C;
+	--greenLight: #E8F6EF;
 
-/* ===== Search ===== */
-.searchLabel { display: block; font-weight: bold; margin-bottom: 10px; }
-.searchRow { display: flex; gap: 10px; margin-bottom: 26px; }
-.searchRow input[type="text"] { flex: 1; font-size: 16px; padding: 14px 16px; border: 1px solid #999; }
+	--grey: #5B6B7B;        /* help text */
+	--greyLight: #8A99A8;   /* placeholder text */
+	--border: #C3D1DB;
+	--borderLight: #E2EAF0;
 
-/* ===== Success / error messages ===== */
-.msgBox { padding: 12px 16px; margin-bottom: 20px; border: 1px solid; }
-.msgSuccess { border-color: green; color: green; background: #eef8ee; }
-.msgError { border-color: red; color: #b00000; background: #fdeeee; }
+	--radius: 8px;
+	--font: "Segoe UI", Arial, Helvetica, sans-serif;
+}
 
-/* ===== Tables ===== */
-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #ccc; }
-th { text-align: left; font-size: 13px; letter-spacing: 2px; padding: 22px 20px; background: #ececea; border-bottom: 1px solid #ccc; }
-td { padding: 22px 20px; border-bottom: 1px solid #ddd; vertical-align: middle; }
+/* ---------- 2. Base ---------- */
+* {
+	box-sizing: border-box;
+}
 
-/* ===== Small text, status badges, row actions ===== */
-.small { font-size: 13px; color: #777; }
-.badge { border: 1px solid #bbb; background: #f0f0ee; padding: 4px 10px; font-size: 14px; }
-.badgeInactive { color: #999; border-style: dashed; }
-.actions { display: flex; gap: 8px; align-items: center; }
-.actions form { margin: 0; }
+body {
+	margin: 0;
+	font-family: var(--font);
+	font-size: 16px;
+	line-height: 1.5;
+	color: var(--navy);
+	background: var(--ice);
+}
+
+a {
+	color: var(--teal);
+	font-weight: 600;
+}
+
+a:hover {
+	color: var(--tealDark);
+}
+
+h1 {
+	margin: 0 0 6px;
+	font-size: 28px;
+}
+
+h2 {
+	margin: 0 0 12px;
+	font-size: 22px;
+}
+
+/* centred column that holds every page */
+.page {
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 0 20px 40px;
+}
+
+/* ---------- 3. Top bar and navigation ---------- */
+.topbar {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	padding: 16px 0;
+	margin-bottom: 28px;
+	border-bottom: 1px solid var(--borderLight);
+}
+
+.brand {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	text-decoration: none;
+}
+
+/* round amber badge with a "+" */
+.logo {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: var(--amber);
+	color: var(--white);
+	font-size: 26px;
+	font-weight: 700;
+	line-height: 40px;
+	text-align: center;
+}
+
+/* logo image in the top bar (the round .logo badge is for text "+" logos) */
+img.logo {
+	width: auto;
+	height: 48px;
+	border-radius: 0;
+	background: none;
+}
+
+.brandName {
+	font-size: 20px;
+	font-weight: 700;
+	color: var(--navy);
+}
+
+.brandSub {
+	font-size: 14px;
+	font-weight: normal;
+	color: var(--grey);
+}
+
+.navMenu {
+	display: flex;
+	gap: 4px;
+	margin-left: auto;
+}
+
+.navMenu a {
+	padding: 8px 12px;
+	color: var(--grey);
+	font-weight: 500;
+	text-decoration: none;
+	border-bottom: 3px solid transparent;
+}
+
+.navMenu a:hover {
+	color: var(--navy);
+}
+
+/* current page: dark text with an amber underline */
+.navMenu a.active {
+	color: var(--navy);
+	font-weight: 700;
+	border-bottom-color: var(--amber);
+}
+
+.userBox {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+/* grey pill showing who is signed in */
+.userRole {
+	padding: 6px 14px;
+	border-radius: 20px;
+	background: #E4ECF1;
+	color: var(--grey);
+	font-size: 14px;
+}
+
+/* ---------- 4. Cards and headings ---------- */
+.card {
+	background: var(--white);
+	border: 1px solid var(--borderLight);
+	border-radius: 12px;
+	padding: 32px 36px;
+	margin-bottom: 24px;
+	box-shadow: 0 4px 16px rgba(21, 50, 79, 0.06);
+}
+
+/* narrower card for short forms like login */
+.cardNarrow {
+	max-width: 480px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* h1 with an amber bar on the left */
+.pageTitle {
+	padding-left: 14px;
+	border-left: 5px solid var(--amber);
+}
+
+.pageSub {
+	margin: 0 0 28px 19px;
+	color: var(--grey);
+}
+
+/* ---------- 5. Forms ---------- */
+/* two columns of fields */
+.formGrid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px 32px;
+}
+
+/* one column of fields */
+.formStack {
+	display: grid;
+	gap: 20px;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+}
+
+.field label {
+	margin-bottom: 6px;
+	font-weight: 600;
+}
+
+.req {
+	color: var(--amber);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+	width: 100%;
+	padding: 11px 14px;
+	font-family: inherit;
+	font-size: 16px;
+	color: var(--navy);
+	background: var(--white);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+}
+
+/* greyed-out example text inside empty boxes */
+::placeholder {
+	color: var(--greyLight);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+	outline: none;
+	border-color: var(--teal);
+	box-shadow: 0 0 0 3px rgba(8, 127, 140, 0.15);
+}
+
+/* red box when the server found a problem with the field */
+input.inputError,
+select.inputError,
+textarea.inputError {
+	border-color: var(--red);
+	background: var(--redLight);
+}
+
+/* grey help text under a field */
+.fieldHint {
+	margin-top: 6px;
+	font-size: 14px;
+	color: var(--grey);
+}
+
+/* red message under a field */
+.fieldError {
+	margin-top: 6px;
+	font-size: 14px;
+	color: var(--red);
+}
+
+/* when an error is shown, hide the help text right after it */
+.fieldError + .fieldHint {
+	display: none;
+}
+
+/* bottom row of a form: link on the left, button on the right */
+.formActions {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-top: 28px;
+	padding-top: 20px;
+	border-top: 1px solid var(--borderLight);
+}
+
+/* ---------- 6. Buttons ---------- */
+/* .btn alone = white button with a border */
+.btn {
+	display: inline-block;
+	padding: 10px 18px;
+	font-family: inherit;
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--navy);
+	text-decoration: none;
+	background: var(--white);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	cursor: pointer;
+}
+
+.btn:hover {
+	border-color: var(--navy);
+}
+
+/* main action (teal) */
+.btnPrimary {
+	color: var(--white);
+	background: var(--teal);
+	border-color: var(--teal);
+}
+
+.btnPrimary:hover {
+	color: var(--white);
+	background: var(--tealDark);
+}
+
+/* dark navy button */
+.btnDark {
+	color: var(--white);
+	background: var(--navy);
+	border-color: var(--navy);
+}
+
+.btnDark:hover {
+	color: var(--white);
+	opacity: 0.9;
+}
+
+/* delete actions */
+.btnDanger {
+	color: var(--white);
+	background: var(--red);
+	border-color: var(--red);
+}
+
+.btnDanger:hover {
+	color: var(--white);
+	opacity: 0.9;
+}
+
+.btnSmall {
+	padding: 5px 10px;
+	font-size: 14px;
+}
+
+/* ---------- 7. Message boxes ---------- */
+.msgBox {
+	padding: 12px 16px;
+	margin-bottom: 20px;
+	border-radius: var(--radius);
+	border-left: 4px solid;
+}
+
+.msgError   { color: #912018; background: var(--redLight);   border-left-color: var(--red); }
+.msgSuccess { color: #0B5E43; background: var(--greenLight); border-left-color: var(--green); }
+.msgInfo    { color: var(--navy); background: #E3F3F4;       border-left-color: var(--teal); }
+
+/* ---------- 8. Tables and badges (for other pages) ---------- */
+.dataTable {
+	width: 100%;
+	border-collapse: collapse;
+	background: var(--white);
+}
+
+.dataTable th,
+.dataTable td {
+	padding: 12px 14px;
+	text-align: left;
+	border-bottom: 1px solid var(--borderLight);
+}
+
+.dataTable th {
+	font-size: 14px;
+	color: var(--grey);
+	background: var(--ice);
+}
+
+.dataTable tr:hover td {
+	background: #F8FBFC;
+}
+
+/* small coloured status labels */
+.badge {
+	display: inline-block;
+	padding: 3px 10px;
+	border-radius: 20px;
+	font-size: 13px;
+	font-weight: 600;
+	background: #E4ECF1;
+	color: var(--grey);
+}
+
+.badgeGreen { background: var(--greenLight); color: var(--green); }
+.badgeRed   { background: var(--redLight);   color: var(--red); }
+.badgeAmber { background: #FDF1E2;           color: #B86E14; }
+
+/* ---------- 9. Small screens ---------- */
+@media (max-width: 760px) {
+	.topbar {
+		flex-wrap: wrap;
+	}
+
+	.navMenu {
+		order: 3;
+		width: 100%;
+		margin-left: 0;
+	}
+
+	.userBox {
+		margin-left: auto;
+	}
+
+	.card {
+		padding: 24px 20px;
+	}
+
+	.formGrid {
+		grid-template-columns: 1fr;
+	}
+
+	.formActions {
+		flex-direction: column-reverse;
+		align-items: stretch;
+		text-align: center;
+	}
+}
