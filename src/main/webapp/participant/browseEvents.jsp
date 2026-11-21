@@ -44,7 +44,7 @@ try {
 			
 			cs.setInt(1, participantId);
 			try(ResultSet rs = cs.executeQuery();){
-							    LocalDate today = LocalDate.now();
+			LocalDate today = LocalDate.now();
 				
 
 /////////////////////// start of html page ///////////////////
@@ -80,12 +80,12 @@ try {
 <%
 					if("Registered".equals(registrationStatus) || "Attended".equals(registrationStatus)){ %>
 						<p><strong>You are signed up</strong></p>
-					<% } else if("Withrawn".equals(registrationStatus)){%>
+					<% } else if("Withdrawn".equals(registrationStatus)){%>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>" method="post">
 							<input type="submit" class="btn btnPrimary" value="Sign-up again">
 							<input type="hidden" name="registrationId" value="<%=registration_id%>">
 						</form>
-					<%} else if(date.isBefore(today) || "Completed".equals(status)){ %>
+					<%} else if(date.isBefore(today) || "Completed".equals(status) || "Canceled".equals(status)){ %>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>>" method="post">
 							<input type="submit" class="btn btnPrimary" value="Sign-up closed" disabled>
 						</form>

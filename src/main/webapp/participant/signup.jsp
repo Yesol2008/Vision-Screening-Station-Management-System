@@ -39,6 +39,7 @@ try {
 				
 		String registrationId = request.getParameter("registrationId");
 		String eventId = request.getParameter("eventId");
+		String registrationIdForWithraw = request.getParameter("registrationIdForWithraw");
 
 		if(registrationId != null && !registrationId.isEmpty()){
 			
@@ -83,6 +84,30 @@ try {
 					response.sendRedirect(returnUrl+"?msg=failedRegistration");
 					return;
 				}
+			}
+			
+			
+		}else if(registrationIdForWithraw != null && !registrationIdForWithraw.isEmpty()){
+			String sql ="UPDATE registrations SET status = 'Withdrawn' " +
+					"WHERE registration_id = ? " +
+            	    "AND participant_id = ? " +
+            	    "AND status = 'Registered'";
+			
+			try(PreparedStatement ps = conn.prepareStatement(sql)){
+				
+				ps.setInt(1, Integer.parseInt(registrationIdForWithraw));
+				ps.setInt(2, participantId);
+				
+				int rowsUpdated = ps.executeUpdate();
+				
+				if(rowsUpdated > 0){
+					response.sendRedirect(returnUrl+"?msg=withdrawn");
+					return;
+				}else{
+					response.sendRedirect(returnUrl+"?msg=failedWithdrawn");
+					return;
+				}
+				
 			}
 			
 			
