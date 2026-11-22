@@ -4,8 +4,8 @@ Date: 20/11/2026
 Description: ST0510/JAD Assignment 1 - Shared header file
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="java.sql.*, java.util.*" %>
-<%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
+<%@ page import="java.sql.*" %>
+<%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
 <%@ include file="/WEB-INF/shared/helpers.jsp" %>
 <%
 	//base URL excluding the file names
@@ -82,19 +82,19 @@ Description: ST0510/JAD Assignment 1 - Shared header file
 		</span>
 	</a>
 
-<% if (!signedIn) { %>
 	<%-- guest: nav sits inside the topbar, on the same row --%>
-	<nav class="navMenu">
-		<a href="<%= base %>/index.jsp" class="<%= path.equals("/index.jsp") ? "active" : "" %>">Overview</a>
-		<a href="<%= base %>/login.jsp" class="<%= path.equals("/login.jsp") ? "active" : "" %>">Sign in</a>
-		<a href="<%= base %>/register.jsp" class="<%= path.equals("/register.jsp") ? "active" : "" %>">Create account</a>
-	</nav>
+	<% if (!signedIn) { %>
+		<nav class="navMenu">
+			<a href="<%= base %>/index.jsp" class="<%= path.equals("/index.jsp") ? "active" : "" %>">Overview</a>
+			<a href="<%= base %>/login.jsp" class="<%= path.equals("/login.jsp") ? "active" : "" %>">Sign in</a>
+			<a href="<%= base %>/register.jsp" class="<%= path.equals("/register.jsp") ? "active" : "" %>">Create account</a>
+		</nav>
+	<% } %>
+
 	<div class="userBox">
+	<% if (!signedIn) { %>
 		<span class="userRole">Guest</span>
-	</div>
-</div>
-<% } else { %>
-	<div class="userBox">
+	<% } else { %>
 		<div class="userInfo">
 			<span class="userName"><%= escapeHtml(headerName) %></span>
 			<% if (isStaff) { %>
@@ -104,19 +104,21 @@ Description: ST0510/JAD Assignment 1 - Shared header file
 			<% } %>
 		</div>
 		<a class="btn" href="<%= base %>/logout.jsp">Log out</a>
+	<% } %>
 	</div>
-
+</div>
 
 <%-- signed in: nav sits under the topbar (styled by .topbar + .navMenu) --%>
-<nav class="navMenu">
-	<a href="<%= base %>/index.jsp" class="<%= path.equals("/index.jsp") ? "active" : "" %>">Overview</a>
-	<% if (isStaff) { %>
-		<a href="<%= base %>/staff/listParticipants.jsp" class="<%= path.equals("/staff/listParticipants.jsp") ? "active" : "" %>">Participants</a>
-		<a href="<%= base %>/staff/listEvents.jsp" class="<%= path.equals("/staff/listEvents.jsp") ? "active" : "" %>">Events</a>
-	<% } else { %>
-		<a href="<%= base %>/participant/browseEvents.jsp" class="<%= path.equals("/participant/browseEvents.jsp") ? "active" : "" %>">Browse events</a>
-		<a href="<%= base %>/participant/mySignups.jsp" class="<%= path.equals("/participant/mySignups.jsp") ? "active" : "" %>">My sign-ups</a>
-		<a href="<%= base %>/participant/myProfile.jsp" class="<%= path.equals("/participant/myProfile.jsp") ? "active" : "" %>">My profile</a>
-	<% } %>
-</nav>
+<% if (signedIn) { %>
+	<nav class="navMenu">
+		<a href="<%= base %>/index.jsp" class="<%= path.equals("/index.jsp") ? "active" : "" %>">Overview</a>
+		<% if (isStaff) { %>
+			<a href="<%= base %>/staff/listParticipants.jsp" class="<%= path.equals("/staff/listParticipants.jsp") ? "active" : "" %>">Participants</a>
+			<a href="<%= base %>/staff/listEvents.jsp" class="<%= path.equals("/staff/listEvents.jsp") ? "active" : "" %>">Events</a>
+		<% } else { %>
+			<a href="<%= base %>/participant/browseEvents.jsp" class="<%= path.equals("/participant/browseEvents.jsp") ? "active" : "" %>">Browse events</a>
+			<a href="<%= base %>/participant/mySignups.jsp" class="<%= path.equals("/participant/mySignups.jsp") ? "active" : "" %>">My sign-ups</a>
+			<a href="<%= base %>/participant/myProfile.jsp" class="<%= path.equals("/participant/myProfile.jsp") ? "active" : "" %>">My profile</a>
+		<% } %>
+	</nav>
 <% } %>
