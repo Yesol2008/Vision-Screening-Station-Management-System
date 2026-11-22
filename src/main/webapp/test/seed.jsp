@@ -146,7 +146,7 @@
 			 
 			String insertParticipants =
     			"INSERT INTO participants "
-    			+ "(user_id, full_name, date_of_birth, email, contact_number) "
+    			+ "(user_id, full_name, email, contact_number) "
     			+ "VALUES "
  				+ "(2, 'John Tan', 'john@gmail.com', '91234567'), "
  				+ "(3, 'Mary Lim','mary@gmail.com', '92345678'), "
