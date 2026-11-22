@@ -36,6 +36,8 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 // Event name validation
 if (eventName == null || eventName.trim().isEmpty()) {
 	eventNameErr = "Event name cannot be empty.";
+}else if (!eventName.matches("[A-Za-z '\\-]{1,99}")) {
+	eventNameErr = "Use 2-100 letters. Spaces, hyphens and apostrophes are allowed.";
 }
 
 // Event date validation
@@ -46,7 +48,10 @@ if (eventDate == null || eventDate.trim().isEmpty()) {
 // Event location validation
 if (eventLocation == null || eventLocation.trim().isEmpty()) {
 	eventLocationErr = "Event location cannot be empty.";
+}else if (!eventLocation.matches("[A-Za-z0-9][A-Za-z ,.'\\-#]{1,99}")) {
+	eventLocationErr = "Only letters, digits, spaces, hyphens, dots, '#', and apostrophes are allowed.";
 }
+
 
 // Status validation
 if (status == null || status.trim().isEmpty()) {
@@ -131,7 +136,7 @@ if (status == null || status.trim().isEmpty()) {
 	
 	<div class="card">
 	<h1>Create Event</h1>
-		<form class="formGrid" method="post">
+		<form class="formGrid" method="post" action="listEvents.jsp">
 			<div class="field">
 				<label>Event Name :<span class="req">*</span> </label>
 				<input type="text" name="event_name" 
