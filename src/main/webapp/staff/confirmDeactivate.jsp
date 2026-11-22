@@ -9,7 +9,6 @@ Description: ST0510/JAD Assignment 1 - Staff: confirm deactivation of a particip
 
 <%-- staff only: redirects anyone who is not a logged-in, active staff member --%>
 <%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
-<%@ include file="/WEB-INF/shared/helpers.jsp" %>
 <%
 	//1. only reachable from the Deactivate button, which submits by POST
 	if (!"POST".equals(request.getMethod())) {
@@ -125,7 +124,8 @@ Description: ST0510/JAD Assignment 1 - Staff: confirm deactivation of a particip
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 </head>
 <body>
-	<%-- TODO: shared signed-in header (brand, user box, log out) --%>
+	<%-- shared header--%>
+	<%@ include file="/WEB-INF/shared/header.jsp" %>
 	<%-- TODO: staff nav (Overview, Participants, Events) with Participants active --%>
 
 	<main class="container">
