@@ -14,19 +14,7 @@
 	                                 then redirect to login.jsp?msg=registered
 	Passwords are hashed with bcrypt (jBCrypt jar in WEB-INF/lib) before they are stored.
 --%>
-<%!
-	// helper method to escape HTML special characters (prevents XSS)
-	private String escapeHtml(String input) {
-		if (input == null) {
-			return "";
-		}
-		return input.replace("&", "&amp;")
-				.replace("<", "&lt;")
-				.replace(">", "&gt;")
-				.replace("\"", "&quot;")
-				.replace("'", "&#39;");
-	}
-%>
+
 <%
 	// values to put back into the form (empty on the first visit)
 	// passwords are never put back into the page
@@ -214,29 +202,9 @@
 </head>
 <body>
 <div class="page">
-
-	<%-- placeholder for now will be replaced by shared header include file --%>
-	<div class="topbar">
-		<a class="brand" href="index.jsp">
-			<img class="logo" src="<%= request.getContextPath() %>/images/logo.png" alt="Vision Screening logo">
-			<div>
-				<div class="brandName">Vision Screening</div>
-				<div class="brandSub">Station Management System</div>
-			</div>
-		</a>
-		<nav class="navMenu">
-			<a href="index.jsp">Overview</a>
-			<a href="login.jsp">Sign in</a>
-			<a href="register.jsp" class="active">Create account</a>
-		</nav>
-		<div class="userBox">
-			<span class="userRole">Guest</span>
-		</div>
-	</div>
-
+	<%@ include file="/WEB-INF/shared/header.jsp" %>
 	<div class="card">
 		<h1 class="pageTitle">Create a participant account</h1>
-		<p class="pageSub">Register to manage your vision screening appointments and results.</p>
 
 		<%-- form-level message --%>
 		<% if (formErr != null) { %>

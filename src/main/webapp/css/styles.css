@@ -367,7 +367,7 @@ textarea.inputError {
 .msgError   { color: #912018; background: var(--redLight);   border-left-color: var(--red); }
 .msgSuccess { color: #0B5E43; background: var(--greenLight); border-left-color: var(--green); }
 .msgInfo    { color: var(--navy); background: #E3F3F4;       border-left-color: var(--teal); }
-
+.msgWarn    { color: #7A4A0E; background: #FDF1E2;       border-left-color: var(--amber); }
 /* ---------- 8. Tables and badges (for other pages) ---------- */
 .dataTable {
 	width: 100%;
@@ -954,6 +954,21 @@ textarea.inputError {
 	margin: 0;
 }
 
+/* confirm pages: Cancel and the action button share the row equally */
+.confirmActions > * {
+	flex: 1;
+}
+
+.confirmActions form {
+	margin: 0;
+}
+
+.confirmActions .btn {
+	display: block;
+	width: 100%;
+	text-align: center;
+}
+
 /* ---------- 9. Small screens ---------- */
 @media (max-width: 760px) {
 	.topbar {
@@ -983,6 +998,12 @@ textarea.inputError {
 		align-items: stretch;
 		text-align: center;
 	}
+}
+
+/* ---------- 10. Nav ---------- */
+.brandName,
+.brandSub {
+	display: block;
 }
 
 
