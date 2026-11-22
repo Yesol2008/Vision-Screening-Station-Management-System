@@ -15,7 +15,7 @@ private String escapeHtml(String input) {
 
     return input.replace("&", "&amp;")
                 .replace("<", "&lt;")
-                .replace(">", "&gt;")
+             	.replace(">", "&gt;")
                 .replace("\"", "&quot;")
                 .replace("'", "&#39;");
 }
@@ -134,7 +134,7 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 								//Redirect according to user role. it will be replaced when the page is implemented
 								if ("staff".equalsIgnoreCase(role)) {
 									
-									response.sendRedirect("staff/listParticipants.jsp");
+									response.sendRedirect("staff/listEvents.jsp");
 									return;
 								} else if ("participant".equalsIgnoreCase(role)) {
 									
