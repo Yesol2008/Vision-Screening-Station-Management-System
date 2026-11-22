@@ -46,11 +46,30 @@ try {
 			try(ResultSet rs = cs.executeQuery();){
 				LocalDate today = LocalDate.now();
 				
-				///start of the html/////////
+	//////////////////////start of the html/////////
 %>
 
 
 <div class="page">
+
+<%-- placeholder for now will be replaced by shared header include file --%>
+	<div class="topbar">
+		<a class="brand" href="index.jsp">
+			<img class="logo" src="<%= request.getContextPath() %>/images/logo.png" alt="Vision Screening logo">
+			<div>
+				<div class="brandName">Vision Screening</div>
+				<div class="brandSub">Station Management System</div>
+			</div>
+		</a>
+		<nav class="navMenu">
+			<a href="">Overview</a>
+			<a href="browseEvents.jsp">Browse Event</a>
+			<a href="registeredEvents.jsp" class="active">My Sign-Up's</a>
+		</nav>
+		<div class="userBox">
+			<span class="userRole">Member</span>
+		</div>
+	</div>
 
 <h1> View My sign-ups</h1>
 
@@ -78,7 +97,7 @@ try {
 %>
 				<tr>
 					<td><%=event_name %></td>
-					<td><%=event_date %>/<%=location %></td>
+					<td><%=event_date %>/<br><%=location %></td>
 					<td><%=status%></td>
 					<td><%=registrationStatus%></td>
 					<td>
@@ -107,9 +126,9 @@ try {
 
 			</table>
 	</div>
+<jsp:include page="/footer.jsp"/>
 
 </div>
-<jsp:include page="/footer.jsp"/>
     			
 <%			}
 		}

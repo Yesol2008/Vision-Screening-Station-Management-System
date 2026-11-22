@@ -81,23 +81,41 @@
 					
 					//for users
 					 String[] usernames = {
-					            "admuser",
-					            "john123",
-					            "mary123",
-					            "alex123",
-					            "sarah123"
+								"admuser",
+								"john123",
+								"mary123",
+								"alex123",
+								"sarah123",
+								"david123",
+								"emma123",
+								"james123",
+								"lisa123",
+								"daniel123",
+								"sophia123"
 					        };
 
 					        String[] passwords = {
-					            "Staff@123",
-					            "Participant@123",
-					            "Participant@456",
-					            "Participant@789",
-					            "Participant@000"
+					        	"Staff@123",
+					        	"Participant@123",
+					       		"Participant@456",
+					    		"Participant@789",
+								"Participant@000",
+					  			"Participant@111",
+					  			"Participant@222",
+								"Participant@333",
+								"Participant@444",
+								"Participant@555",
+								"Participant@666"
 					        };
 
 					        String[] roles = {
 					            "STAFF",
+					            "PARTICIPANT",
+					            "PARTICIPANT",
+					            "PARTICIPANT",
+					            "PARTICIPANT",
+					            "PARTICIPANT",
+					            "PARTICIPANT",
 					            "PARTICIPANT",
 					            "PARTICIPANT",
 					            "PARTICIPANT",
@@ -128,12 +146,18 @@
 			 
 			String insertParticipants =
     			"INSERT INTO participants "
-    			+ "(user_id, full_name, date_of_birth, email, contact_number, address) "
+    			+ "(user_id, full_name, date_of_birth, email, contact_number) "
     			+ "VALUES "
-    			+ "(2, 'John Tan', '2003-05-12', 'john@gmail.com', '91234567', 'Tampines, Singapore'), "
-    			+ "(3, 'Mary Lim', '2004-08-21', 'mary@gmail.com', '92345678', 'Bedok, Singapore'), "
-   	 			+ "(4, 'Alex Wong', '2002-11-03', 'alex@gmail.com', '93456789', 'Jurong East, Singapore'), "
-    			+ "(5, 'Sarah Lee', '2003-02-15', 'sarah@gmail.com', '94567890', 'Woodlands, Singapore')";
+ 				+ "(2, 'John Tan', 'john@gmail.com', '91234567'), "
+ 				+ "(3, 'Mary Lim','mary@gmail.com', '92345678'), "
+   				+ "(4, 'Alex Wong', 'alex@gmail.com', '93456789'), "
+				+ "(5, 'Sarah Lee', 'sarah@gmail.com', '94567890'), "
+				+ "(6, 'David Tan', 'david@gmail.com', '95678901'), "
+				+ "(7, 'Emma Chua', 'emma@gmail.com', '96789012'), "
+  				+ "(8, 'James Koh', 'james@gmail.com', '97890123'), "
+    			+ "(9, 'Lisa Ng', 'lisa@gmail.com', '98901234'), "
+				+ "(10, 'Daniel Goh', 'daniel@gmail.com', '89012345'), "
+    			+ "(11, 'Sophia Lim', 'sophia@gmail.com', '90123456')";
 
 			stmt.executeUpdate(insertParticipants);
 			
@@ -143,11 +167,16 @@
     		"INSERT INTO events "
    				+ "(event_name, event_date, location, status) "
     			+ "VALUES "
-			    + "('Community Clean-Up', '2026-12-05', 'East Coast Park', 'Upcoming'), "
-    			+ "('Charity Run 2026', '2026-12-15', 'Marina Bay', 'Upcoming'), "
-    			+ "('Coding Workshop', '2026-11-10', 'Singapore Polytechnic', 'Completed'), "
-    			+ "('Volunteer Orientation', '2026-11-20', 'Community Centre', 'Upcoming'), "
-    			+ "('Food Donation Drive', '2026-11-01', 'Tampines Hub', 'Cancelled')";
+			    + "('Vision Screening Day', '2026-12-05', 'East Coast Park', 'Upcoming'), "
+    			+ "('Eye Health Screening', '2026-12-15', 'Marina Bay', 'Upcoming'), "
+    			+ "('Community Vision Screening', '2026-11-10', 'Singapore Polytechnic', 'Completed'), "
+    			+ "('Eye Care Awareness Day', '2026-12-20', 'Community Centre', 'Upcoming'), "
+    			+ "('Free Vision Screening', '2026-11-01', 'Tampines Hub', 'Cancelled'),"
+				+ "('Children Vision Screening', '2026-11-01', 'Tampines Hub', 'Cancelled'),"
+				+ "('Senior Vision Check', '2026-12-12', 'Toah Payoh Community Centre', 'Upcoming'),"
+				+ "('Diabetic Eye Screening', '2026-12-19', 'Jurong West Community Club', 'Ongoing'),"
+				+ "('Weekend Vision Screening', '2026-12-08', 'Bedok Community Centre', 'Ongoing'),"
+				+ "('Student Eye Health Day', '2026-11-10', 'Singapore Polytechnic', 'Upcoming')";
 
 			stmt.executeUpdate(insertEvents);
 
