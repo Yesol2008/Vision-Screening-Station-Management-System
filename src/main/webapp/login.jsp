@@ -22,13 +22,36 @@ private String escapeHtml(String input) {
 %>
 <% 
 
+String returnUrl = "login.jsp";
 String message = "";
 String usernameErr = null;
 String passwordErr = null;
+String errCode = request.getParameter("errCode");
+
 
 if ("registered".equals(request.getParameter("msg"))) {
 	message = "Account registered successfully. You can now sign in to your account.";
 	} 
+
+//for staff verification
+if ("sessionExpired".equals(errCode)) {
+	message = "Your session has expired. Please sign in again.";
+}
+else if ("notLoggedIn".equals(errCode)) {
+	message = "Please sign in to access this page.";
+}
+else if ("dbError".equals(errCode)) {
+	message = "Unable to connect to the server. Please try again later.";
+}
+else if ("accountNotFound".equals(errCode)) {
+	message = "Your account could not be found. Please contact the administrator.";
+}
+else if ("accountInactive".equals(errCode)) {
+	message = "Your account is inactive. Please contact the administrator.";
+}
+else if ("notAuthorised".equals(errCode)) {
+	message = "You are not authorised to access that page.";
+}
 
 
 
@@ -69,19 +92,19 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 		String connURL = dotenv.get("DB_URL");
 		String dbUser = dotenv.get("DB_USERNAME");
 		String dbPassword = dotenv.get("DB_PASSWORD");
+		String sql = "SELECT user_id, password_hash, role, is_active FROM users WHERE username = ?";
 
 		// Step 3: Establish connection
-		try (Connection conn = DriverManager.getConnection(connURL, dbUser, dbPassword)) {
+		//using try with statement so that connection will close automatically
+		try(Connection conn = DriverManager.getConnection(connURL, dbUser, dbPassword);
 
 		// Step 4: Retrieve user information
-		String sql = "SELECT user_id, password_hash, role, is_active FROM users WHERE username = ?";
 				
-			//using try with statement so that connection will close automatically
-			try (PreparedStatement ps = conn.prepareStatement(sql)) {
+			PreparedStatement ps = conn.prepareStatement(sql)) {
 
 				ps.setString(1, username.trim());
 
-				try (ResultSet rs = ps.executeQuery()) {
+				try (ResultSet rs = ps.executeQuery()){
 
 				if (rs.next()) {
 						String hashedPassword = rs.getString("password_hash");
@@ -111,11 +134,11 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 								//Redirect according to user role. it will be replaced when the page is implemented
 								if ("staff".equalsIgnoreCase(role)) {
 									
-									response.sendRedirect("staff/index.jsp");
+									response.sendRedirect("staff/listParticipants.jsp");
 									return;
 								} else if ("participant".equalsIgnoreCase(role)) {
 									
-									response.sendRedirect("participant/index.jsp");
+									response.sendRedirect("participant/browseEvents.jsp");
 									return;
 									
 								} else {
@@ -139,7 +162,7 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 					}
 				}
 
-			}
+			
 			}
 
 
@@ -219,8 +242,10 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 	</form>
 	</div>
 
+	<jsp:include page="/footer.jsp"/>
 
 </div>
+
 
 </body>
 </html>
