@@ -6,6 +6,7 @@
 <%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
 
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,11 +26,11 @@
 </head>
 <body>
 
-<%
 
 
 
-String successMsg = request.getParameter("msg");
+<% 
+String successMsg = request.getParameter("SuccessMsg");
 String successMessage ="";
 if("successCreate".equals(successMsg)){
 	successMessage = "Event Created Successfully";
@@ -44,15 +45,15 @@ if("successCreate".equals(successMsg)){
 
 String errCode = request.getParameter("errCode");
 String errorCode ="";
-if("invalidEventId".equals(errCode)){
+if("invalidEventId".equals(successMsg)){
 	successMessage = "No such event ID exist";
-}else if("eventNotFound".equals(errCode)){
+}else if("eventNotFound".equals(successMsg)){
 	successMessage = "No such event exist";	
-}else if("InvalidRequest".equals(errCode)){
+}else if("InvalidRequest".equals(successMsg)){
 	successMessage = "You're Accessing not validated";	
-}else if("alreadyInactive".equals(errCode)){
+}else if("alreadyInactive".equals(successMsg)){
 	successMessage = "Event is already inactive";	
-}else if("hasSignups".equals(errCode)){
+}else if("hasSignups".equals(successMsg)){
 	successMessage = "There is participant who has signed up for this event!";	
 }
 
@@ -105,8 +106,8 @@ try {
 %>
 
 <div class="page">
-<%@ include file="/WEB-INF/shared/header.jsp" %>
-
+<%-- placeholder for now will be replaced by shared header include file --%>
+	<%@ include file="/WEB-INF/shared/header.jsp" %>
 	
 	
 	<h1>Events</h1>
@@ -131,7 +132,7 @@ try {
 	<% } %>
 	
 	
-	<form action="createEvent.jsp" method="get">
+	<form action="creatEvent.jsp" method="get">
 		<input type="submit" value="Create New Event" class="btn btnPrimary">
 	</form>
 	
@@ -226,7 +227,7 @@ try {
 
 	</div>
 	
-	<%@ include file="/WEB-INF/shared/footer.html" %>
+	<jsp:include page="/footer.jsp"/>
 	
 </div>
 
