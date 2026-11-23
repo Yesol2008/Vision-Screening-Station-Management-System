@@ -83,7 +83,7 @@ try {
 				if(hasParticipants){
 
 %>
-			<table>
+			<table class="dataTable">
 				<tr>
 					<th>Participant</th>
 					<th>Contact</th>
@@ -123,8 +123,10 @@ try {
 			<p>No student has registered this event yet</p>
 				
 <%			}
-%>	
-		<a href="listEvents.jsp" class="btn btnPrimary">Back</a>
+%>		
+		<div>
+			<a href="listEvents.jsp" class="btn btnPrimary">Back</a>
+		</div>
     </div>
     
 	<%@ include file="/WEB-INF/shared/footer.html" %>

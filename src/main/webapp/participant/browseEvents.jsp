@@ -79,6 +79,10 @@ if("failedWithdrawn".equals(errCode)){
 	errorCode = "Faild to register the event";	
 }else if("Exception".equals(errCode)){
 	errorCode ="Unable to connect to the server for signup/withdrawal. Please try again later.";
+}else if("dbError".equals(errCode)){
+	errorCode ="Something went wrong. Please try again later.";
+}else if("invalidEventId".equals(errCode)){
+	errorCode ="No such event exist.";
 }
 
 try {
@@ -134,7 +138,10 @@ try {
 <div class="page">
 <%@ include file="/WEB-INF/shared/header.jsp" %>
 
-<h1>Browse Events</h1>
+	<div class="titleRow">
+			<h1>Browse Event</h1>
+	</div>
+	<p class="intro">Browse and sign-up for vision-screening events.</p>
 			<% if (!successMessage.isEmpty()) { %>
     			<p class="msgBox msgSuccess"><%= successMessage %></p>
 			<% } %>
@@ -177,17 +184,21 @@ try {
 						<p><strong>Status:</strong> <%= escapeHtml(status) %></p>
 <%
 					if("Registered".equals(registrationStatus) || "Attended".equals(registrationStatus)){ %>
+						<a href="viewEventDetails.jsp?eventId=<%=eventId%>">View Event Details</a>
 						<p><strong>You are signed up</strong></p>
 					<% } else if("Withdrawn".equals(registrationStatus)){%>
+						<a href="viewEventDetails.jsp?eventId=<%=eventId%>">View Event Details</a>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>" method="post">
 							<input type="submit" class="btn btnPrimary" value="Sign-up again">
 							<input type="hidden" name="registrationId" value="<%=registration_id%>">
 						</form>
 					<%} else if(date.isBefore(today) || "Completed".equals(status) || "Canceled".equals(status)){ %>
+						<a href="viewEventDetails.jsp?eventId=<%=eventId%>">View Event Details</a>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>>" method="post">
 							<input type="submit" class="btn" value="Sign-up closed" disabled>
 						</form>
 					<%} else{%>
+						<a href="viewEventDetails.jsp?eventId=<%=eventId%>">View Event Details</a>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>" method="post">
 							<input type="submit" class="btn btnPrimary" value="Sign up">
 							<input type="hidden" name="eventId" value="<%=eventId%>">
