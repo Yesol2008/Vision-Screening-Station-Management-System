@@ -218,6 +218,9 @@ try {
 
 		</form>
 		</div>
+		
+	<%@ include file="/WEB-INF/shared/footer.html" %>
+		
 	
 	</div>	
 			

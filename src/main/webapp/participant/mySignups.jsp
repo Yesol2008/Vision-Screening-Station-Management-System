@@ -14,6 +14,26 @@
 </head>
 <body>
 <%
+
+
+String successMsg = request.getParameter("msg");
+String errCode = request.getParameter("errCode");
+
+String successMessage ="";
+String errorCode ="";
+
+if("withdrawn".equals(successMsg)){
+	successMessage = "Event Withdrawn Successfully";
+}else if("registered".equals(successMsg)){
+	successMessage = "Event Registered Successfully";	
+}
+
+if("failedWithdrawn".equals(errCode)){
+	errorCode = "Failed to withdraw the event";
+}else if("failedRegistration".equals(errCode)){
+	errorCode = "Faild to register the event";	
+}
+
 try {
 	
 	// Step 1: Load environment variables
@@ -24,7 +44,7 @@ try {
 	String connURL = dotenv.get("DB_URL");
 	String username = dotenv.get("DB_USERNAME");
 	String password = dotenv.get("DB_PASSWORD");
-	String returnUrl = "registeredEvents.jsp";
+	String returnUrl = "mySignups.jsp";
 	Integer participantId = (Integer) session.getAttribute("userId");
 
     // Step 2: Load JDBC Driver (optional for newer drivers)
@@ -57,6 +77,13 @@ try {
 <h1> View My sign-ups</h1>
 
 	<div class="card">
+			<% if (!successMessage.isEmpty()) { %>
+    			<p class="msgBox msgSuccess"><%= successMessage %></p>
+			<% } %>
+			<% if (!errorCode.isEmpty()) { %>
+    			<p class="msgBox msgError"><%= errorCode %></p>
+			<% } %>
+	
 	
 			<table>
 				<tr>
@@ -109,7 +136,7 @@ try {
 
 			</table>
 	</div>
-<jsp:include page="/footer.jsp"/>
+	<%@ include file="/WEB-INF/shared/footer.html" %>
 
 </div>
     			

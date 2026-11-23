@@ -59,7 +59,7 @@ try {
 					response.sendRedirect(returnUrl+"?msg=registered");
 					return;
 				}else{
-					response.sendRedirect(returnUrl+ "?errCode=failedRegistration");
+					response.sendRedirect(returnUrl+"?errCode=failedRegistration");
 					return;
 				}
 				
@@ -78,7 +78,7 @@ try {
 				int rowsInserted = ps.executeUpdate();
 				
 				if (rowsInserted > 0) {
-					response.sendRedirect(returnUrl+ "?msg=registered");
+					response.sendRedirect(returnUrl+"?msg=registered");
 					return;
 				}else{
 					response.sendRedirect(returnUrl+"?errCode=failedRegistration");

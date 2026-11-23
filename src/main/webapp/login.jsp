@@ -216,7 +216,7 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 	</form>
 	</div>
 
-	<jsp:include page="/footer.jsp"/>
+	<%@ include file="/WEB-INF/shared/footer.html" %>
 
 </div>
 

@@ -195,6 +195,7 @@ if (status == null || status.trim().isEmpty()) {
 	</div>
 	
 	
+	<%@ include file="/WEB-INF/shared/footer.html" %>
 	
 </div>
 </body>

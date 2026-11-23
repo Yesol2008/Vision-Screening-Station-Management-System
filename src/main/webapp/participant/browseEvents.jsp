@@ -56,24 +56,24 @@
 <%
 
 
+
 String successMsg = request.getParameter("msg");
 String errCode = request.getParameter("errCode");
 
 String successMessage ="";
 String errorCode ="";
 
-if("withdrawn".equals(successMessage)){
+if("withdrawn".equals(successMsg)){
 	successMessage = "Event Withdrawn Successfully";
-}else if("registered".equals(successMessage)){
+}else if("registered".equals(successMsg)){
 	successMessage = "Event Registered Successfully";	
 }
 
-if("failedWithdrawn".equals(successMessage)){
+if("failedWithdrawn".equals(errCode)){
 	errorCode = "Failed to withdraw the event";
-}else if("failedRegistration".equals(successMessage)){
+}else if("failedRegistration".equals(errCode)){
 	errorCode = "Faild to register the event";	
 }
-
 
 try {
 	
@@ -208,7 +208,7 @@ try {
 		} %>
 		</div>	
 		
-		<jsp:include page="/footer.jsp"/>
+	<%@ include file="/WEB-INF/shared/footer.html" %>
 	
 	</div>	
 	

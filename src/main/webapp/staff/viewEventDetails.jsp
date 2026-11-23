@@ -82,6 +82,8 @@ try {
 			}%>
 			<a href="listEvents.jsp" class="btn btnPrimary">Back</a>
 		</div>
+			<%@ include file="/WEB-INF/shared/footer.html" %>
+		
 	
 	</div>	
 			
