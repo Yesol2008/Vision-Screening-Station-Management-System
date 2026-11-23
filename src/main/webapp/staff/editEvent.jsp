@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.time.format.DateTimeParseException" %>
+
 <%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
 
 
@@ -58,13 +61,19 @@ if (isPost) {
 	if (eventName == null || eventName.trim().isEmpty()) {
 		eventNameErr = "Event name cannot be empty.";
 
-	} else if (!eventName.matches("[A-Za-z '\\-]{2,100}")) {
+	} else if (!eventName.trim().matches("[A-Za-z '\\-]{2,100}")) {
 		eventNameErr = "Use 2-100 letters. Spaces, hyphens and apostrophes are allowed.";
 	}
 
 	// Event date validation
 	if (eventDate == null || eventDate.trim().isEmpty()) {
 		eventDateErr = "Event date cannot be empty.";
+	}else {
+		try {
+			LocalDate.parse(eventDate);
+		} catch (DateTimeParseException e) {
+			eventDateErr = "Please enter a valid event date.";
+		}
 	}
 
 	// Event location validation
@@ -78,6 +87,8 @@ if (isPost) {
 	// Status validation
 	if (status == null || status.trim().isEmpty()) {
 		statusErr = "Please select an event status.";
+	}else if (!status.equals("Upcoming") &&!status.equals("Completed") &&!status.equals("Ongoing")) {
+		statusErr = "Invalid event status.";
 	}
 }
 
@@ -225,10 +236,21 @@ try {
 	</div>	
 			
 <%			
+	} catch (ClassNotFoundException e) {
+		System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
+		response.sendRedirect("listEvents.jsp?errCode=dbError");
+		return;
+	} catch (SQLException e) {
+		System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
+		response.sendRedirect("listEvents.jsp?errCode=dbError");
+		return;
+	} catch (DotenvException e) {
+		System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
+		response.sendRedirect("listEvents.jsp?errCode=dbError");
+		return;
 	}catch (Exception e) {
-		e.printStackTrace();
-		application.log("Database connection error", e);
-		out.println("Unable to connect to the database.");
+		System.err.println("Database connection error"+ e);
+	    response.sendRedirect("listEvents.jsp?errCode=dbError");
 	}
 
 

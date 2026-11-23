@@ -96,10 +96,21 @@ try {
         }
     }
  		
+} catch (ClassNotFoundException e) {
+	System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+} catch (SQLException e) {
+	System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+} catch (DotenvException e) {
+	System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
 }catch (Exception e) {
-	e.printStackTrace();
-	application.log("Database connection error", e);
-	out.println("Unable to connect to the database.");
+	System.err.println("Database connection error"+ e);
+    response.sendRedirect("listEvents.jsp?errCode=dbError");
 }
 
 

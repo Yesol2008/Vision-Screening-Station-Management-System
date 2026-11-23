@@ -70,11 +70,11 @@ try {
 					String status = rs.getString("status");
 					String created_at = rs.getString("created_at");
 %>					
-				<p><strong>Event Name: </strong><%= name%></p>
-				<p><strong>Event Date: </strong><%=date %></p>
-				<p><strong>Event Location: </strong><%= location%></p>
-				<p><strong>Event Status : </strong><%= status%></p>
-				<p><strong>Event Posted:</strong><%= created_at%></p>
+				<p><strong>Event Name: </strong><%= escapeHtml(name)%></p>
+				<p><strong>Event Date: </strong><%=escapeHtml(date) %></p>
+				<p><strong>Event Location: </strong><%= escapeHtml(location)%></p>
+				<p><strong>Event Status : </strong><%= escapeHtml(status)%></p>
+				<p><strong>Event Posted:</strong><%= escapeHtml(created_at)%></p>
 					
 					
 <%				}
@@ -89,6 +89,18 @@ try {
 			
 <%		}
     	
+	} catch (ClassNotFoundException e) {
+		System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
+		response.sendRedirect("listEvents.jsp?errCode=dbError");
+		return;
+	} catch (SQLException e) {
+		System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
+		response.sendRedirect("listEvents.jsp?errCode=dbError");
+		return;
+	} catch (DotenvException e) {
+		System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
+		response.sendRedirect("listEvents.jsp?errCode=dbError");
+		return;
 	}catch (Exception e) {
     e.printStackTrace();
     application.log("Database connection error", e);

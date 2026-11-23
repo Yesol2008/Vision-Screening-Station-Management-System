@@ -67,8 +67,34 @@ try {
     		
  // Step 3: Establish database connection. Used try-with so that connection will close automatically
  		try(Connection conn = DriverManager.getConnection(connURL, username, password)){
- 			String sql="SELECT * FROM registrations WHERE event_id=?";
+ 			String sql="SELECT COUNT(*) AS registrationCount FROM registrations WHERE event_id=?";
  			////////////////////start of html////////////////////////////////
+ 			
+ 		// Step 4: Create Statement object
+ 	 		try(PreparedStatement ps = conn.prepareStatement(sql)){
+ 	 				ps.setInt(1, intEventId);
+ 	 			
+ 	 			try(ResultSet rs = ps.executeQuery()){
+ 	 				
+ 	 	 			if(rs.next()){
+ 	 	 				count = rs.getInt("registrationCount");
+ 	 	 			}	
+ 	 	 			if(count>0){
+ 	 	 				isRegistered = true;		
+ 	 	 			}
+ 	 			}
+ 	 		}
+ 			
+
+ 	 		if(isRegistered){
+ 	 			isRegisteredMsg = count + " participant(s) have registered for this event. By deleting this event, you will delete the registration records aswell.";
+ 	 		}else{
+ 	 			isRegisteredMsg = "By deleting this event, you will delete the registration records aswell.";
+ 	 		}
+ 		}
+ 
+
+
 %>
 <div class="page">
 <%@ include file="/WEB-INF/shared/header.jsp" %>
@@ -77,23 +103,6 @@ try {
 	<div class="card">
 	
 
-
-<% 	
- 		// Step 4: Create Statement object
- 		try(PreparedStatement ps = conn.prepareStatement(sql)){
- 				ps.setInt(1, intEventId);
- 			
- 			try(ResultSet rs = ps.executeQuery()){
- 				
- 	 			while(rs.next()){
- 	 				count = count +1;
- 	 				isRegistered = true;		
- 	 			}	
- 			}
- 		}
- 		if(isRegistered){
- 			isRegisteredMsg = count + " participant(s) have registered for this event. By deleting this event, you will delete the registration records aswell.";
-%>
 		<h1>Delete Event</h1>
 		<p><%=isRegisteredMsg%></p>
 		<form method="post" action="deleteEvent.jsp">
@@ -102,30 +111,6 @@ try {
  			 <a href="listEvents.jsp" class="btn btnPrimary">Back</a>
  			
  		</form>
-
-
-
-<%  			
- 		}else{
- %>
- 		<h1>Delete Event</h1>
- 		<p>By deleting this event, you will delete the registration records aswell.</p>
- 		<form method="post" action="deleteEvent.jsp">
- 			<input type="submit" class="btn btnPrimary" value="Delete">
- 			<input type="hidden" name="eventId" value="<%=intEventId%>">
- 			 <a href="listEvents.jsp" class="btn btnPrimary">Back</a>
- 			
- 		</form>
- 
- 
- 
- <%  			
- 			
- 		}
- 
- 		}
- %>
- 
  
 	</div>
 	
@@ -133,8 +118,19 @@ try {
 	
 
 </div>
- 
- <%
+<%
+} catch (ClassNotFoundException e) {
+	System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+} catch (SQLException e) {
+	System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+} catch (DotenvException e) {
+	System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
 }catch (Exception e) {
     e.printStackTrace();
     application.log("Database connection error", e);

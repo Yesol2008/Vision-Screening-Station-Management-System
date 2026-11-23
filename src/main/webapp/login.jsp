@@ -6,6 +6,8 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
 <%@ page import="org.mindrot.jbcrypt.BCrypt" %>
+<%@ page import="io.github.cdimascio.dotenv.DotenvException" %>
+
 
 <% 
 
@@ -155,7 +157,19 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 			}
 
 
-	} catch (Exception e) {
+	} catch (ClassNotFoundException e) {
+		System.err.println("JDBC Driver not found"+ e);
+	    message = "Unable to connect to the server. Please try again later.";
+
+	} catch (SQLException e) {
+		System.err.println("Database error in login.jsp"+ e);
+	    message = "Unable to connect to the server. Please try again later.";
+
+	}catch (DotenvException e) {
+		System.err.println("Environment configuration error in browseEvents.jsp"+ e);
+		message="Something went wrong. Please try again later.";
+
+	}catch (Exception e) {
 
 		System.err.println("login.jsp - " + e);
 		message = "Something went wrong. Please try again.";

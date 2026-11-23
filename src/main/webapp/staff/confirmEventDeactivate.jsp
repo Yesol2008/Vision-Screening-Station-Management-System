@@ -69,29 +69,31 @@ try {
  		try(Connection conn = DriverManager.getConnection(connURL, username, password)){
  			String sql="SELECT * FROM registrations WHERE event_id=?";
  			////////////////////start of html////////////////////////////////
+ 			
+ 		// Step 4: Create Statement object
+ 	 		try(PreparedStatement ps = conn.prepareStatement(sql)){
+ 	 				ps.setInt(1, intEventId);
+ 	 			
+ 	 			try(ResultSet rs = ps.executeQuery()){
+ 	 				
+ 	 	 			while(rs.next()){
+ 	 	 				count++;	
+ 	 	 			}	
+ 	 	 			
+ 	 	 			if(count>0){
+ 	 	 				cantDeactive = true;	
+ 	 	 			}
+ 	 			}
+ 	 		}
 %>
 <div class="page">
 
 <%@ include file="/WEB-INF/shared/header.jsp" %>
 
-
 	<div class="card">
-	
 
 
 <% 	
- 		// Step 4: Create Statement object
- 		try(PreparedStatement ps = conn.prepareStatement(sql)){
- 				ps.setInt(1, intEventId);
- 			
- 			try(ResultSet rs = ps.executeQuery()){
- 				
- 	 			if(rs.next()){
- 	 				count = count +1;
- 	 				cantDeactive = true;		
- 	 			}	
- 			}
- 		}
  		if(cantDeactive){
  			cantDeactivateMsg = "You have " + count + " number of participants who has signed up for this event. Withdraw from these events before deactivating this record.";
 %>
@@ -118,10 +120,8 @@ try {
  <%  			
  			
  		}
- 
- 		}
+	}
  %>
- 
  
 	</div>
 	<%@ include file="/WEB-INF/shared/footer.html" %>
@@ -129,9 +129,20 @@ try {
 </div>
  
  <%
+} catch (ClassNotFoundException e) {
+	System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+} catch (SQLException e) {
+	System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+} catch (DotenvException e) {
+	System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
 }catch (Exception e) {
-    e.printStackTrace();
-    application.log("Database connection error", e);
+	System.err.println("Database connection error"+ e);
     out.println("Unable to connect to the database.");
 }
 

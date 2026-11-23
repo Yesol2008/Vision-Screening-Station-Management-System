@@ -2,7 +2,11 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.time.format.DateTimeParseException" %>
+
 <%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
+
 
 <%
 
@@ -30,6 +34,12 @@ if (eventName == null || eventName.trim().isEmpty()) {
 // Event date validation
 if (eventDate == null || eventDate.trim().isEmpty()) {
 	eventDateErr = "Event date cannot be empty.";
+}else {
+	try {
+		LocalDate.parse(eventDate);
+	} catch (DateTimeParseException e) {
+		eventDateErr = "Please enter a valid event date.";
+	}
 }
 
 // Event location validation
@@ -43,9 +53,11 @@ if (eventLocation == null || eventLocation.trim().isEmpty()) {
 // Status validation
 if (status == null || status.trim().isEmpty()) {
 	statusErr = "Please select an event status.";
+}else if (!status.equals("Upcoming") &&!status.equals("Completed") &&!status.equals("Ongoing")) {
+	statusErr = "Invalid event status.";
 }
 
-	// Only insert if there are no validation errors
+	// Only insert if theres no validation errors
 	if (eventNameErr == null && eventDateErr == null &&
 	eventLocationErr == null && statusErr == null) {
 	try {
@@ -73,7 +85,7 @@ if (status == null || status.trim().isEmpty()) {
 			 boolean eventExists = false;
 			 
 			try (PreparedStatement checkPs = conn.prepareStatement(sql2)) {
-				checkPs.setString(1, eventName);
+				checkPs.setString(1, eventName.trim());
 
 					try (ResultSet rs = checkPs.executeQuery()) {
 						if (rs.next()) {
@@ -103,10 +115,23 @@ if (status == null || status.trim().isEmpty()) {
 				}
 				
 				response.sendRedirect("listEvents.jsp?msg=successCreate");
+				return;
 			}
 			
 		
 		}
+	} catch (ClassNotFoundException e) {
+		System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
+		response.sendRedirect("listEvents.jsp?errCode=dbError");
+		return;
+	} catch (SQLException e) {
+		System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
+		response.sendRedirect("listEvents.jsp?errCode=dbError");
+		return;
+	} catch (DotenvException e) {
+		System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
+		response.sendRedirect("listEvents.jsp?errCode=dbError");
+		return;
 	}catch (Exception e) {
         e.printStackTrace();
         application.log("Database connection error", e);
