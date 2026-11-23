@@ -8,24 +8,6 @@ Description: ST0510/JAD Assignment 1 - Staff: list and search participants
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
 <%-- staff only: redirects anyone who is not a logged-in, active staff member --%>
 <%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
-<%!
-	//helper method to escape HTML special characters
-	private String escapeHtml(String input) {
-		if (input == null) {
-			return "";
-		}
-		return input.replace("&", "&amp;")
-				.replace("<", "&lt;")
-				.replace(">", "&gt;")
-				.replace("\"", "&quot;")
-				.replace("'", "&#39;");
-	}
-
-	//helper method to pad an id to two digits (1 -> 01) for P01 / E01
-	private String twoDigits(int n) {
-		return (n < 10) ? "0" + n : String.valueOf(n);
-	}
-%>
 <%
 	//1. match known msg / errCode values to a message; raw values are never printed
 	String msg = request.getParameter("msg");
@@ -150,10 +132,12 @@ Description: ST0510/JAD Assignment 1 - Staff: list and search participants
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 </head>
 <body>
+	
 	<%-- TODO: shared signed-in header (brand, user box, log out) --%>
 	<%-- TODO: staff nav (Overview, Participants, Events) with Participants active --%>
 
 	<main class="page">
+	<%@ include file="/WEB-INF/shared/header.jsp" %>
 		<div class="titleRow">
 			<h1>Participants</h1>
 			<a class="btn btnDark" href="addParticipant.jsp">+ Add participant</a>
@@ -227,7 +211,8 @@ Description: ST0510/JAD Assignment 1 - Staff: list and search participants
 								<span class="badge badgeInactive">Inactive</span>
 							<% } %>
 						</td>
-						<td class="actions">
+						<td>
+							<div class="actions">
 							<%-- the id is embedded in a hidden field and sent to the next page --%>
 							<form action="viewParticipant.jsp" method="get">
 								<input type="hidden" name="id" value="<%= participantId %>">
@@ -244,6 +229,7 @@ Description: ST0510/JAD Assignment 1 - Staff: list and search participants
 									<button type="submit" class="btn">Deactivate</button>
 								</form>
 							<% } %>
+							</div>
 						</td>
 					</tr>
 				<% } %>
