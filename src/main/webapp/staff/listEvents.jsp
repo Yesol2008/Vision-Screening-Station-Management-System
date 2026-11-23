@@ -38,6 +38,8 @@ if("successCreate".equals(successMsg)){
 	successMessage = "Event Updated Successfully";	
 }else if("deactivated".equals(successMsg)){
 	successMessage = "Event Deactivated Successfully";	
+}else if("deleted".equals(successMsg)){
+	successMessage = "Event Deleted Successfully";
 }
 
 
@@ -190,7 +192,7 @@ try {
 							class="btn btnPrimary">View</a>
 						<a href="editEvent.jsp?eventId=<%=eventId%>"
 							class="btn btnPrimary">Edit</a>
-						<form action="confirmEventDelete.jsp" method="post" onsubmit="return confirm('Are you sure you want to delete this event?');">
+						<form action="confirmEventDelete.jsp" method="post">
 							<input type="hidden" name="eventId" value="<%=eventId%>">
 							<button type="submit" class="btn btnPrimary">
 								Delete
@@ -224,7 +226,7 @@ try {
 						<input type="hidden" name="eventId" value="<%=eventId%>">
 						<button type="submit" class="btn btnPrimary">Deactivate</button>
 					</form>
-					<form action="confirmEventDelete.jsp" method="post" onsubmit="return confirm('Are you sure you want to delete this event?');">
+					<form action="confirmEventDelete.jsp" method="post">
 						<input type="hidden" name="eventId" value="<%=eventId%>">
 						<button type="submit" class="btn btnPrimary">Delete</button>
 					</form>		

@@ -91,12 +91,12 @@ try {
  			}
  		}
  		if(isRegistered){
- 			isRegisteredMsg = "You have " + count + " number of participants who has signed up for this event. By deleting this event, you will delete the registration records alwell.";
+ 			isRegisteredMsg = "You have " + count + " number of participants who has signed up for this event. By deleting this event, you will delete the registration records aswell.";
 %>
 		<h1>Event cannot be deactivated</h1>
 		<p><%=isRegisteredMsg%></p>
 		<form method="post" action="deleteEvent.jsp">
- 			<input type="submit" class="btn btnPrimary">
+ 			<input type="submit" class="btn btnPrimary" value="Delete">
  			<input type="hidden" name="eventId" value="<%=intEventId%>">
  			 <a href="listEvents.jsp" class="btn btnPrimary">Back</a>
  			
@@ -108,9 +108,9 @@ try {
  		}else{
  %>
  		<h1>Deactivate Event</h1>
- 		<p>The record will remain visible with an Inactive status. It will no longer accept new registrations.</p>
+ 		<p>By deleting this event, you will delete the registration records aswell.</p>
  		<form method="post" action="deleteEvent.jsp">
- 			<input type="submit" class="btn btnPrimary">
+ 			<input type="submit" class="btn btnPrimary" value="Delete">
  			<input type="hidden" name="eventId" value="<%=intEventId%>">
  			 <a href="listEvents.jsp" class="btn btnPrimary">Back</a>
  			

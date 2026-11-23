@@ -32,17 +32,17 @@ if (eventId != null && eventId.matches("\\d+")) {
 		intEventId = Integer.parseInt(eventId);
 
 		if (intEventId <= 0) {
-			response.sendRedirect("listEvents.jsp?error=invalidEventId");
+			response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 			return;
 		}
 
 	} catch (NumberFormatException e) {
-		response.sendRedirect("listEvents.jsp?error=invalidEventId");
+		response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 		return;
 	}
 
 } else {
-	response.sendRedirect("listEvents.jsp?error=invalidEventId");
+	response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 	return;
 }
 
@@ -105,7 +105,7 @@ try {
  		<h1>Deactivate Event</h1>
  		<p>The record will remain visible with an Inactive status. It will no longer accept new registrations.</p>
  		<form method="post" action="deactivateEvent.jsp">
- 			<input type="submit" class="btn btnPrimary">
+ 			<input type="submit" class="btn btnPrimary" value="Deactivate">
  			<input type="hidden" name="eventId" value="<%=intEventId%>">
  			 <a href="listEvents.jsp" class="btn btnPrimary">Back</a>
  			
