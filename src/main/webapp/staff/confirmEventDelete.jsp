@@ -104,7 +104,7 @@ try {
 	
 
 		<h1>Delete Event</h1>
-		<p><%=isRegisteredMsg%></p>
+		<p class="msgBox msgError"><%=isRegisteredMsg%></p>
 		<form method="post" action="deleteEvent.jsp">
  			<input type="submit" class="btn btnPrimary" value="Delete">
  			<input type="hidden" name="eventId" value="<%=intEventId%>">

@@ -98,7 +98,7 @@ try {
  			cantDeactivateMsg = "You have " + count + " number of participants who has signed up for this event. Withdraw from these events before deactivating this record.";
 %>
 		<h1>Event cannot be deactivated</h1>
-		<p><%=cantDeactivateMsg%></p>
+		<p class="msgBox msgError"><%=cantDeactivateMsg%></p>
 		<a href="listEvents.jsp" class="btn btnPrimary">Back</a>
 
 

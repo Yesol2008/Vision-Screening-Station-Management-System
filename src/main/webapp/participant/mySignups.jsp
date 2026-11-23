@@ -79,8 +79,11 @@ try {
 
 <%@ include file="/WEB-INF/shared/header.jsp" %>
 
-<h1> View My sign-ups</h1>
 
+	<div class="titleRow">
+			<h1>My Sign-up's</h1>
+	</div>
+	<p class="intro">View and manage the events that you have registered.</p>
 	<div class="card">
 			<% if (!successMessage.isEmpty()) { %>
     			<p class="msgBox msgSuccess"><%= successMessage %></p>
@@ -90,7 +93,7 @@ try {
 			<% } %>
 	
 	
-			<table>
+			<table class="dataTable">
 				<tr>
 					<th>Event</th>
 					<th>Date/Location</th>
@@ -108,6 +111,7 @@ try {
 					String registrationStatus = rs.getString("registration_status");
                     int registration_id = rs.getInt("registration_id");
     				LocalDate date = LocalDate.parse(event_date);
+
 					
 %>
 				<tr>
@@ -145,8 +149,10 @@ try {
 
 </div>
     			
-<%			}
+<%			
+			}
 		}
+		
 	} catch (SQLException e) {
 		System.err.println("Database error in mySignups.jsp"+ e);
 	    errorCode="Unable to connect to the server. Please try again later.";
@@ -164,7 +170,7 @@ try {
         System.err.println("Database connection error"+ e);
         out.println("Unable to connect to the database.");
     }
-
+		
 %>
 
 

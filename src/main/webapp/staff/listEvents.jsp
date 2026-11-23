@@ -21,6 +21,24 @@
     gap: 20px;
     padding: 20px;
 	}
+	.btnGrid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 8px;
+	width: 220px;
+	}
+
+	.btnGrid form {
+	margin: 0;
+	}
+
+	.btnGrid .btn {
+	display: block;
+	width: 100%;
+	padding: 8px 10px;
+	font-size: 14px;
+	text-align: center;
+	}
 
 </style>
 </head>
@@ -30,7 +48,7 @@
 
 
 <% 
-String successMsg = request.getParameter("SuccessMsg");
+String successMsg = request.getParameter("msg");
 String successMessage ="";
 if("successCreate".equals(successMsg)){
 	successMessage = "Event Created Successfully";
@@ -111,7 +129,14 @@ try {
 	<%@ include file="/WEB-INF/shared/header.jsp" %>
 	
 	
-	<h1>Events</h1>
+	<div class="titleRow">
+			<h1>Events</h1>
+		<form action="createEvent.jsp" method="get">
+			<input type="submit" value="Create New Event" class="btn btnDark">
+		</form>
+	</div>
+	<p class="intro">Manage event record and view the sign-ups.</p>
+		<label class="searchLabel">Search events</label>
 		<form action="listEvents.jsp" method="get" class="searchBar">
 			<input type="text" class="grid" name="search" placeholder="Search event name..." value="<%= escapeHtml(search) %>">
 			<select name="status" class="grid">
@@ -132,13 +157,8 @@ try {
     		<p class="msgBox msgError"><%= errorCode %></p>
 	<% } %>
 	
-	
-	<form action="creatEvent.jsp" method="get">
-		<input type="submit" value="Create New Event" class="btn btnPrimary">
-	</form>
-	
-		
-		<table>
+
+		<table class="dataTable">
 			<tr>
 				<th>Event</th>
 				<th>Date</th>
@@ -164,7 +184,7 @@ try {
 				<td><%=escapeHtml(event_name) %></td>
 				<td><%=escapeHtml(event_date)%></td>
 				<td><%=escapeHtml(location)%></td>
-				<td><%=escapeHtml(status)%></td>
+				<td><span class="badge badgeInactive"><%=escapeHtml(status)%></span></td>
 				<td>
 					<form action="viewEventParticipants.jsp" method="post">
 						<input type="submit" class="btn btnPrimary" value="<%=participants%> signed up">
@@ -172,18 +192,18 @@ try {
 					</form>
 				</td>
 				<td>
-					
-						<a href="viewEvent.jsp?eventId=<%=eventId%>"
-							class="btn btnPrimary">View</a>
-						<a href="editEvent.jsp?eventId=<%=eventId%>"
-							class="btn btnPrimary">Edit</a>
-						<form action="confirmEventDelete.jsp" method="post">
-							<input type="hidden" name="eventId" value="<%=eventId%>">
-							<button type="submit" class="btn btnPrimary">
+					<div class="btnGrid">
+					<a href="viewEvent.jsp?eventId=<%=eventId%>"
+						class="btn">View</a>
+					<a href="editEvent.jsp?eventId=<%=eventId%>"
+						class="btn">Edit</a>
+					<form action="confirmEventDelete.jsp" method="post">
+						<input type="hidden" name="eventId" value="<%=eventId%>">
+							<button type="submit" class="btn">
 								Delete
 							</button>
-						</form>				
-					
+					</form>				
+					</div>
 				</td>
 			</tr>
                     	<%
@@ -195,7 +215,7 @@ try {
 				<td><%=escapeHtml(event_name) %></td>
 				<td><%=escapeHtml(event_date)%></td>
 				<td><%=escapeHtml(location)%></td>
-				<td><%=escapeHtml(status)%></td>
+				<td><span class="badge"><%=escapeHtml(status)%></span></td>
 				<td>
 					<form action="viewEventParticipants.jsp" method="post">
 						<input type="submit" class="btn btnPrimary" value="<%=participants%> signed up">
@@ -203,18 +223,20 @@ try {
 					</form>
 				</td>
 				<td>
+					<div class="btnGrid">
 					<a href="viewEventDetails.jsp?eventId=<%=eventId%>"
-						class="btn btnPrimary">View</a>
+						class="btn">View</a>
 					<a href="editEvent.jsp?eventId=<%=eventId%>"
-						class="btn btnPrimary">Edit</a>
+						class="btn">Edit</a>
 					<form action="confirmEventDeactivate.jsp" method="post">
 						<input type="hidden" name="eventId" value="<%=eventId%>">
-						<button type="submit" class="btn btnPrimary">Deactivate</button>
+						<button type="submit" class="btn">Deactivate</button>
 					</form>
 					<form action="confirmEventDelete.jsp" method="post">
 						<input type="hidden" name="eventId" value="<%=eventId%>">
-						<button type="submit" class="btn btnPrimary">Delete</button>
+						<button type="submit" class="btn">Delete</button>
 					</form>		
+					</div>
 				</td>
 			</tr>
                     
