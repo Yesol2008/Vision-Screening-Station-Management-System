@@ -10,7 +10,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Events</title>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 <style>
 
@@ -45,15 +45,18 @@ if("successCreate".equals(successMsg)){
 String errCode = request.getParameter("errCode");
 String errorCode ="";
 if("invalidEventId".equals(errCode)){
-	successMessage = "No such event ID exist";
+	errorCode = "Invalid event ID.";
 }else if("eventNotFound".equals(errCode)){
-	successMessage = "No such event exist";	
+	errorCode = "No such event exist";	
 }else if("InvalidRequest".equals(errCode)){
-	successMessage = "You're Accessing not validated";	
+	errorCode = "Invalid request. Please try again.";
 }else if("alreadyInactive".equals(errCode)){
-	successMessage = "Event is already inactive";	
+	errorCode = "Event is already inactive";	
 }else if("hasSignups".equals(errCode)){
-	successMessage = "There is participant who has signed up for this event!";	
+	errorCode = "There is participant who has signed up for this event!";	
+}else if("dbError".equals(errCode)){
+	errorCode="Something went wrong. Please try again later.";
+	
 }
 
 
@@ -73,9 +76,7 @@ try {
     		
     		
     String sql = "{CALL view_all_events(?, ?)}";
-    
-    Integer participantId = (Integer) session.getAttribute("userId");
-	String search = request.getParameter("search");
+    	String search = request.getParameter("search");
 	String statusFilter = request.getParameter("status");
 	
 
@@ -83,7 +84,7 @@ try {
 		    search = null;
 		}
 	
-		if (statusFilter != null && statusFilter.isEmpty()) {
+		if (statusFilter != null && statusFilter.trim().isEmpty()) {
 		    statusFilter = null;
 		}
 
@@ -159,10 +160,10 @@ try {
 					%>
                     	
 			<tr>
-				<td><%=event_name %></td>
-				<td><%= event_date%></td>
-				<td><%= location%></td>
-				<td><%=status%></td>
+				<td><%=escapeHtml(event_name) %></td>
+				<td><%=escapeHtml(event_date)%></td>
+				<td><%=escapeHtml(location)%></td>
+				<td><%=escapeHtml(status)%></td>
 				<td>
 					<form action="viewEventParticipants.jsp" method="post">
 						<input type="submit" class="btn btnPrimary" value="<%=participants%> signed up">
@@ -190,10 +191,10 @@ try {
                     %>
                     
             <tr>
-				<td><%=event_name %></td>
-				<td><%= event_date%></td>
-				<td><%= location%></td>
-				<td><%=status%></td>
+				<td><%=escapeHtml(event_name) %></td>
+				<td><%=escapeHtml(event_date)%></td>
+				<td><%=escapeHtml(location)%></td>
+				<td><%=escapeHtml(status)%></td>
 				<td>
 					<form action="viewEventParticipants.jsp" method="post">
 						<input type="submit" class="btn btnPrimary" value="<%=participants%> signed up">
@@ -235,10 +236,21 @@ try {
     			
 			}
 		}
+	}catch (ClassNotFoundException e) {
+		System.err.println("JDBC Driver not found"+ e);
+		errorCode = "Unable to connect to the server. Please try again later.";
+
+	} catch (SQLException e) {
+		System.err.println("Database error in login.jsp"+ e);
+		errorCode = "Unable to connect to the server. Please try again later.";
+
+	}catch (DotenvException e) {
+		System.err.println("Environment configuration error in browseEvents.jsp"+ e);
+		errorCode="Something went wrong. Please try again later.";
+
 	}catch (Exception e) {
-        e.printStackTrace();
-        application.log("Database connection error", e);
-        out.println("Unable to connect to the database.");
+        System.err.println("Database connection error"+ e);
+		errorCode="Something went wrong. Please try again later.";
     }
 
 

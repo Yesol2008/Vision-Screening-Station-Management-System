@@ -2,8 +2,12 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
-<%@ include file="/WEB-INF/auth/participantGuard.jsp" %>
+<%@ page import="io.github.cdimascio.dotenv.DotenvException" %>
+<%@ page import="java.time.format.DateTimeParseException" %>
 <%@ page import="java.time.LocalDate" %>
+
+
+<%@ include file="/WEB-INF/auth/participantGuard.jsp" %>
 
 <!DOCTYPE html>
 <html>
@@ -73,6 +77,8 @@ if("failedWithdrawn".equals(errCode)){
 	errorCode = "Failed to withdraw the event";
 }else if("failedRegistration".equals(errCode)){
 	errorCode = "Faild to register the event";	
+}else if("Exception".equals(errCode)){
+	errorCode ="Unable to connect to the server for signup/withdrawal. Please try again later.";
 }
 
 try {
@@ -101,7 +107,7 @@ try {
 	    search = null;
 	}
 
-	if (statusFilter != null && statusFilter.isEmpty()) {
+	if (statusFilter != null && statusFilter.trim().isEmpty()) {
 	    statusFilter = null;
 	}
 
@@ -165,10 +171,10 @@ try {
 %>
 					<div class="eventCard">
 					
-						<h2><%= event_name %></h2>
-						<p><strong>Date:</strong> <%= event_date %></p>
-						<p><strong>Location:</strong> <%= location %></p>
-						<p><strong>Status:</strong> <%= status %></p>
+						<h2><%= escapeHtml(event_name) %></h2>
+						<p><strong>Date:</strong> <%= escapeHtml(event_date) %></p>
+						<p><strong>Location:</strong> <%= escapeHtml(location) %></p>
+						<p><strong>Status:</strong> <%= escapeHtml(status) %></p>
 <%
 					if("Registered".equals(registrationStatus) || "Attended".equals(registrationStatus)){ %>
 						<p><strong>You are signed up</strong></p>
@@ -213,6 +219,22 @@ try {
 	</div>	
 	
 		<%
+	} catch (ClassNotFoundException e) {
+		System.err.println("JDBC Driver not found"+ e);
+		errorCode = "Unable to connect to the server. Please try again later.";
+
+	} catch (SQLException e) {
+		System.err.println("Database error in login.jsp"+ e);
+		errorCode = "Unable to connect to the server. Please try again later.";
+
+	}catch (DotenvException e) {
+		System.err.println("Environment configuration error in browseEvents.jsp"+ e);
+		errorCode="Something went wrong. Please try again later.";
+
+	} catch (DateTimeParseException e) {
+		System.err.println("Invalid event date format in browseEvents.jsp"+ e);
+		errorCode = "Unable to display event information. Please try again later.";
+
 	}catch (Exception e) {
         e.printStackTrace();
         application.log("Database connection error", e);

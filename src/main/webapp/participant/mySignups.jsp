@@ -2,8 +2,11 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
-<%@ include file="/WEB-INF/auth/participantGuard.jsp" %>
+<%@ page import="io.github.cdimascio.dotenv.DotenvException" %>
+<%@ page import="java.time.format.DateTimeParseException" %>
 <%@ page import="java.time.LocalDate" %>
+
+<%@ include file="/WEB-INF/auth/participantGuard.jsp" %>
 
 <!DOCTYPE html>
 <html>
@@ -32,6 +35,8 @@ if("failedWithdrawn".equals(errCode)){
 	errorCode = "Failed to withdraw the event";
 }else if("failedRegistration".equals(errCode)){
 	errorCode = "Faild to register the event";	
+}else if("Exception".equals(errCode)){
+	errorCode ="Unable to connect to the server for signup/withdrawal. Please try again later.";
 }
 
 try {
@@ -142,9 +147,21 @@ try {
     			
 <%			}
 		}
+	} catch (SQLException e) {
+		System.err.println("Database error in mySignups.jsp"+ e);
+	    errorCode="Unable to connect to the server. Please try again later.";
+	} catch (DotenvException e) {
+		System.err.println("Environment configuration error in mySignups.jsp"+ e);
+		errorCode="Something went wrong. Please try again later.";
+
+
+	} catch (DateTimeParseException e) {
+		System.err.println("Invalid event date format in mySignups.jsp"+ e);
+		errorCode = "Unable to display event information. Please try again later.";
+
 	}catch (Exception e) {
         e.printStackTrace();
-        application.log("Database connection error", e);
+        System.err.println("Database connection error"+ e);
         out.println("Unable to connect to the database.");
     }
 

@@ -20,6 +20,8 @@ if (currentPwd == null || currentPwd.trim().isEmpty() || newPwd == null || newPw
 	passwordErr = "Password must be 8-64 characters.";
 } else if (!newPwd.matches("(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,64}")) {
 	passwordErr = "Password must be 8-64 characters and contain at least one uppercase letter, one lowercase letter, one number and one symbol.";
+}else if(!newPwdConfirm.equals(newPwd)) {
+    passwordErr = "Confirm password doesn't match with new password.";
 }
 
 Integer participantId = (Integer) session.getAttribute("userId");
@@ -38,6 +40,9 @@ if (participantId != null) {
 	response.sendRedirect("myProfile.jsp?errCode=Invalid");
 	return;
 }
+
+if (passwordErr.isEmpty()) {
+
 try {
 	
 	// Step 1: Load environment variables
@@ -90,41 +95,44 @@ try {
 			 
 			 
 			 if(pwdMatch){
-				 
-				 if(newPwdConfirm.equals(newPwd)){
-						
-					 String update = "UPDATE users SET password = ? WHERE user_id=?";
-							 
-						try(PreparedStatement ps = conn.prepareStatement(update)){
-							String hashedPassword = BCrypt.hashpw(newPwd, BCrypt.gensalt(10));
-							ps.setString(1, hashedPassword);
-							ps.setInt(2, participantId); 
+				 						
+				 String update = "UPDATE users SET password = ? WHERE user_id=?";
+						 
+					try(PreparedStatement ps = conn.prepareStatement(update)){
+						String hashedPassword = BCrypt.hashpw(newPwd, BCrypt.gensalt(10));
+						ps.setString(1, hashedPassword);
+						ps.setInt(2, participantId); 
 							
-							int rows = ps.executeUpdate();
-							if (rows > 0) {
-							    response.sendRedirect(request.getContextPath() + "/login.jsp?msg=successUpdate");
-							    return;
-							}else{
-								response.sendRedirect(request.getContextPath() + "myProfile.jsp?errCode=failUpdate");
-							    return;
-								
-							}
+						int rows = ps.executeUpdate();
+						if (rows > 0) {
+						   response.sendRedirect(request.getContextPath() + "/login.jsp?msg=successUpdate");
+						    return;
+						}else{
+							response.sendRedirect(request.getContextPath() + "myProfile.jsp?errCode=failUpdate");
+						    return;
 							
 						}
+							
+					}
 					 
-				 }else{
-					 passwordErr = "Confirm password doesn't match with new password.";
-					 
-				 }
+				 
 			 }
 		
 		}
+	}catch (ClassNotFoundException e) {
+		System.err.println("JDBC Driver not found"+ e);
+		passwordErr = "Unable to connect to the server. Please try again later.";
+
+	} catch (SQLException e) {
+		System.err.println("Database error in login.jsp"+ e);
+		passwordErr = "Unable to connect to the server. Please try again later.";
+
 	}catch (Exception e) {
         e.printStackTrace();
         application.log("Database connection error", e);
         out.println("Unable to connect to the database.");
     }
-
+}
 %>
 <!DOCTYPE html>
 <html>

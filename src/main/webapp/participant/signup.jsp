@@ -6,6 +6,12 @@
 <%@ include file="/WEB-INF/auth/participantGuard.jsp" %>
 
 <%
+
+String returnUrl = request.getParameter("returnUrl");
+
+if (returnUrl == null || returnUrl.isEmpty()) {
+    returnUrl = "browseEvents.jsp";
+}
 try {
 	Integer participantId = (Integer) session.getAttribute("userId");
 	
@@ -14,11 +20,6 @@ try {
 		return;
 	}
 	
-	String returnUrl = request.getParameter("returnUrl");
-
-    if (returnUrl == null || returnUrl.isEmpty()) {
-        returnUrl = "browseEvents.jsp";
-    }
 	// Step 1: Load environment variables
 	Dotenv dotenv =  Dotenv.configure()
 	        .directory(application.getRealPath("/WEB-INF"))
@@ -40,6 +41,44 @@ try {
 		String registrationId = request.getParameter("registrationId");
 		String eventId = request.getParameter("eventId");
 		String registrationIdForWithraw = request.getParameter("registrationIdForWithraw");
+		
+		//to make sure that there's only one parameter provided.
+		int actionCount = 0;
+
+		if (registrationId != null && !registrationId.trim().isEmpty()) {
+			actionCount++;
+		}
+
+	 	if (eventId != null && !eventId.trim().isEmpty()) {
+			actionCount++;
+	 	}
+
+	 	if (registrationIdForWithraw != null &&
+			!registrationIdForWithraw.trim().isEmpty()) {
+			actionCount++;
+		}
+		
+	 	//redirected to previous page when there's no exactly 1 parameter
+		if (actionCount != 1) {
+			response.sendRedirect(returnUrl+"?errCode=InvalidRequest");
+			return;
+		}
+	 	
+	 	
+		int id;
+
+		if (registrationId != null && !registrationId.trim().isEmpty()) {
+			id = Integer.parseInt(registrationId.trim());
+		} else if (eventId != null && !eventId.trim().isEmpty()) {
+			id = Integer.parseInt(eventId.trim());
+		} else {
+			id = Integer.parseInt(registrationIdForWithraw.trim());
+		}
+
+		if (id <= 0) {
+			response.sendRedirect(returnUrl + "?errCode=InvalidRequest");
+			return;
+		}
 
 		if(registrationId != null && !registrationId.isEmpty()){
 			
@@ -120,22 +159,21 @@ try {
 			
 			
 		}
+	} catch (ClassNotFoundException e) {
+		System.err.println("JDBC Driver not found"+ e);
+		response.sendRedirect(returnUrl+"?errCode=Exception");
+		return;
+
+	} catch (SQLException e) {
+		System.err.println("Database error in login.jsp"+ e);
+		response.sendRedirect(returnUrl+"?errCode=Exception");
+		return;
 	}catch (Exception e) {
         e.printStackTrace();
-        application.log("Database connection error", e);
-        
+        System.err.println("Database connection error"+ e);
+		response.sendRedirect(returnUrl+"?errCode=Exception");
+        return;
     }
 
 
 %>
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-</body>
-</html>
