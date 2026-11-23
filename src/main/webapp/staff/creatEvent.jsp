@@ -36,7 +36,7 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 // Event name validation
 if (eventName == null || eventName.trim().isEmpty()) {
 	eventNameErr = "Event name cannot be empty.";
-}else if (!eventName.matches("[A-Za-z '\\-]{1,99}")) {
+}else if (!eventName.matches("[A-Za-z '\\-]{2,100}")) {
 	eventNameErr = "Use 2-100 letters. Spaces, hyphens and apostrophes are allowed.";
 }
 
@@ -77,30 +77,57 @@ if (status == null || status.trim().isEmpty()) {
     // Step 2: Load JDBC Driver (optional for newer drivers)
     Class.forName("com.mysql.cj.jdbc.Driver");
     		
-    		
-	String sql = "INSERT INTO events (event_name, event_date, location, status) VALUES (?,?,?,?)";
-
+    	
     	// Step 3: Establish database connection. Used try-with so that connection will close automatically
-		try(Connection conn = DriverManager.getConnection(connURL, username, password);
+		try(Connection conn = DriverManager.getConnection(connURL, username, password)){
+			
+			String sql2 ="SELECT event_name FROM events WHERE event_name = ?";
 
-	
-		// Step 4: Create Statement object
-		PreparedStatement ps = conn.prepareStatement(sql)){
-			ps.setString(1, eventName);
-			ps.setString(2, eventDate);
-			ps.setString(3, eventLocation);
-			ps.setString(4, status);
+			 boolean eventExists = false;
+			 
+			try (PreparedStatement checkPs = conn.prepareStatement(sql2)) {
+				checkPs.setString(1, eventName);
+
+					try (ResultSet rs = checkPs.executeQuery()) {
+						if (rs.next()) {
+							eventExists = true;
+							}
+					}
+			}
 			
-			ps.executeUpdate();
 			
+			if (eventExists) {
 				
+				message = "This event already exists.";
+
+			}else{
+				
+				String sql = "INSERT INTO events (event_name, event_date, location, status) VALUES (?,?,?,?)";
+
+				try(PreparedStatement ps = conn.prepareStatement(sql)){
+					ps.setString(1, eventName.trim());
+					ps.setString(2, eventDate);
+					ps.setString(3, eventLocation.trim());
+					ps.setString(4, status);
+					
+					ps.executeUpdate();
+					
+					
+				}
+				
+				response.sendRedirect("listEvents.jsp?SuccessMsg=successCreate");
+			}
+			
+		
 		}
 	}catch (Exception e) {
         e.printStackTrace();
         application.log("Database connection error", e);
         out.println("Unable to connect to the database.");
     }
-	}
+	
+	
+}
 }
 
 
@@ -136,7 +163,10 @@ if (status == null || status.trim().isEmpty()) {
 	
 	<div class="card">
 	<h1>Create Event</h1>
-		<form class="formGrid" method="post" action="listEvents.jsp">
+		<% if (!message.isEmpty()) { %>
+    		<p class="msgBox msgError"><%= message %></p>
+		<% } %>
+		<form class="formGrid" method="post">
 			<div class="field">
 				<label>Event Name :<span class="req">*</span> </label>
 				<input type="text" name="event_name" 

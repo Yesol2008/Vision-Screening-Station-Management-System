@@ -67,6 +67,7 @@ private String escapeHtml(String input) {
 </head>
 <body>
 <%
+
 try {
 	
 	// Step 1: Load environment variables
@@ -138,8 +139,6 @@ try {
 	</div>
 <h1>Browse Events</h1>
 
-	
-			
 			
 		<form action="browseEvents.jsp" method="get" class="searchBar">
 			<input type="text" class="grid" name="search" placeholder="Search event name..." value="<%= escapeHtml(search) %>">
