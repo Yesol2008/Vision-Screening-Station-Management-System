@@ -48,7 +48,7 @@
 
 
 <% 
-String successMsg = request.getParameter("SuccessMsg");
+String successMsg = request.getParameter("msg");
 String successMessage ="";
 if("successCreate".equals(successMsg)){
 	successMessage = "Event Created Successfully";
