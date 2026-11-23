@@ -21,7 +21,7 @@ int intEventId =0;
 if (eventId != null && eventId.matches("\\d+")) {
 	intEventId = Integer.parseInt(eventId);
 } else {
-	response.sendRedirect("listEvents.jsp?error=invalidEventId");
+	response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 	return;
 }
 
@@ -54,6 +54,9 @@ try {
 %>
 	
 	<div class="page">
+	
+	<%@ include file="/WEB-INF/shared/header.jsp" %>
+	
 		<div class="card">
 	
 	

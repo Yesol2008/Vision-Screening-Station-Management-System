@@ -7,19 +7,6 @@
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
 <%@ page import="org.mindrot.jbcrypt.BCrypt" %>
 
-<%!
-private String escapeHtml(String input) {
-    if (input == null) {
-        return "";
-    }
-
-    return input.replace("&", "&amp;")
-                .replace("<", "&lt;")
-             	.replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&#39;");
-}
-%>
 <% 
 
 String returnUrl = "login.jsp";
@@ -31,7 +18,9 @@ String successMessage ="";
 
 if ("registered".equals(request.getParameter("msg"))) {
 	successMessage = "Account registered successfully. You can now sign in to your account.";
-	} 
+} else if("successUpdate".equals(request.getParameter("msg"))){
+	successMessage = "Account password updated successfully. Please log in again.";
+}
 
 //for staff verification
 if ("sessionExpired".equals(errCode)) {
@@ -189,25 +178,7 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 <body>
 <div class="page">
 
-	<%-- placeholder for now will be replaced by shared header include file --%>
-	<div class="topbar">
-		<a class="brand" href="index.jsp">
-			<img class="logo" src="<%= request.getContextPath() %>/images/logo.png" alt="Vision Screening logo">
-			<div>
-				<div class="brandName">Vision Screening</div>
-				<div class="brandSub">Station Management System</div>
-			</div>
-		</a>
-		<nav class="navMenu">
-			<a href="index.jsp">Overview</a>
-			<a href="login.jsp" class="active">Sign in</a>
-			<a href="register.jsp">Create account</a>
-		</nav>
-		<div class="userBox">
-			<span class="userRole">Guest</span>
-		</div>
-	</div>
-
+<%@ include file="/WEB-INF/shared/header.jsp" %>
 
 	<div class="card">
 		

@@ -5,19 +5,6 @@
 <%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
 
 
-<%!
-private String escapeHtml(String input) {
-    if (input == null) {
-        return "";
-    }
-
-    return input.replace("&", "&amp;")
-                .replace("<", "&lt;")
-             	.replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&#39;");
-}
-%>
 
 <!DOCTYPE html>
 <html>
@@ -38,17 +25,17 @@ if (eventId != null && eventId.matches("\\d+")) {
 		intEventId = Integer.parseInt(eventId);
 
 		if (intEventId <= 0) {
-			response.sendRedirect("listEvents.jsp?error=invalidEventId");
+			response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 			return;
 		}
 
 	} catch (NumberFormatException e) {
-		response.sendRedirect("listEvents.jsp?error=invalidEventId");
+		response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 		return;
 	}
 
 } else {
-	response.sendRedirect("listEvents.jsp?error=invalidEventId");
+	response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 	return;
 }
 
@@ -132,7 +119,7 @@ try {
 					int rowsUpdated = ps1.executeUpdate();
 
 					if (rowsUpdated > 0) {
-						response.sendRedirect("listEvents.jsp?SuccessMsg=successUpdate");
+						response.sendRedirect("listEvents.jsp?msg=successUpdate");
 							return;
 					}
 				}
@@ -149,6 +136,9 @@ try {
 %>
 			    	
 		<div class="page">
+		
+		<%@ include file="/WEB-INF/shared/header.jsp" %>
+		
 			<div class="card">
 			    	
 			    	
@@ -217,7 +207,7 @@ try {
 <%
 
 				} else {
-					response.sendRedirect("listEvents.jsp?error=eventNotFound");
+					response.sendRedirect("listEvents.jsp?errCode=eventNotFound");
 					return;
 				}
 			}

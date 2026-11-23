@@ -33,7 +33,7 @@ try {
     if (eventId != null && eventId.matches("\\d+")) {
 		intEventId = Integer.parseInt(eventId);
 	} else {
-		response.sendRedirect("listEvents.jsp?error=invalidEventId");
+		response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 		return;
     }
     		
@@ -67,24 +67,7 @@ try {
 %>
 <div class="page">
 	
-	<%-- placeholder for now will be replaced by shared header include file --%>
-	<div class="topbar">
-		<a class="brand" href="index.jsp">
-			<img class="logo" src="<%= request.getContextPath() %>/images/logo.png" alt="Vision Screening logo">
-			<div>
-				<div class="brandName">Vision Screening</div>
-				<div class="brandSub">Station Management System</div>
-			</div>
-		</a>
-		<nav class="navMenu">
-			<a href="">Overview</a>
-			<a href="listEvents.jsp" class="active">Event</a>
-			<a href="">Participants</a>
-		</nav>
-		<div class="userBox">
-			<span class="userRole">Staff</span>
-		</div>
-	</div>
+	<%@ include file="/WEB-INF/shared/header.jsp" %>
 	
 	<div class="card">
 			<h2><%= eventName%>: Participant for event</h2>
@@ -92,7 +75,7 @@ try {
 			
 <%
 						} else {
-						    response.sendRedirect("listEvents.jsp?error=eventNotFound");
+						    response.sendRedirect("listEvents.jsp?errCode=eventNotFound");
 						    return;
 						}
 					}

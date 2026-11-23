@@ -4,7 +4,6 @@
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
     
 <%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
-<%@ include file="/WEB-INF/shared/helpers.jsp" %>
 
 <!DOCTYPE html>
 <html>
@@ -72,6 +71,9 @@ try {
  			////////////////////start of html////////////////////////////////
 %>
 <div class="page">
+
+<%@ include file="/WEB-INF/shared/header.jsp" %>
+
 
 	<div class="card">
 	

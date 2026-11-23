@@ -3,19 +3,6 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
 <%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
-<%!
-private String escapeHtml(String input) {
-    if (input == null) {
-        return "";
-    }
-
-    return input.replace("&", "&amp;")
-                .replace("<", "&lt;")
-             	.replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&#39;");
-}
-%>
 
 <%
 
@@ -115,7 +102,7 @@ if (status == null || status.trim().isEmpty()) {
 					
 				}
 				
-				response.sendRedirect("listEvents.jsp?SuccessMsg=successCreate");
+				response.sendRedirect("listEvents.jsp?msg=successCreate");
 			}
 			
 		
@@ -142,25 +129,8 @@ if (status == null || status.trim().isEmpty()) {
 </head>
 <body>
 <div class="page">
-<%-- placeholder for now will be replaced by shared header include file --%>
-	<div class="topbar">
-		<a class="brand" href="index.jsp">
-			<img class="logo" src="<%= request.getContextPath() %>/images/logo.png" alt="Vision Screening logo">
-			<div>
-				<div class="brandName">Vision Screening</div>
-				<div class="brandSub">Station Management System</div>
-			</div>
-		</a>
-		<nav class="navMenu">
-			<a href="">Overview</a>
-			<a href="listEvents.jsp" class="active">Events</a>
-			<a href="">Participants</a>
-		</nav>
-		<div class="userBox">
-			<span class="userRole">Staff</span>
-		</div>
-	</div>
-	
+<%@ include file="/WEB-INF/shared/header.jsp" %>
+
 	<div class="card">
 	<h1>Create Event</h1>
 		<% if (!message.isEmpty()) { %>

@@ -11,25 +11,8 @@
 
 <div class="page">
 
+<%@ include file="/WEB-INF/shared/header.jsp" %>
 
-<%-- placeholder for now will be replaced by shared header include file --%>
-	<div class="topbar">
-		<a class="brand" href="index.jsp">
-			<img class="logo" src="<%= request.getContextPath() %>/images/logo.png" alt="Vision Screening logo">
-			<div>
-				<div class="brandName">Vision Screening</div>
-				<div class="brandSub">Station Management System</div>
-			</div>
-		</a>
-		<nav class="navMenu">
-			<a href="index.jsp"class="active">Overview</a>
-			<a href="login.jsp">Sign in</a>
-			<a href="register.jsp">Create account</a>
-		</nav>
-		<div class="userBox">
-			<span class="userRole">Guest</span>
-		</div>
-	</div>
 
 	<div class="card">
 		<h1> Vision Screening Management System</h1>

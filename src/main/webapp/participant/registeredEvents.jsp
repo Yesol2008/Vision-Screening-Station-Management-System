@@ -52,24 +52,7 @@ try {
 
 <div class="page">
 
-<%-- placeholder for now will be replaced by shared header include file --%>
-	<div class="topbar">
-		<a class="brand" href="index.jsp">
-			<img class="logo" src="<%= request.getContextPath() %>/images/logo.png" alt="Vision Screening logo">
-			<div>
-				<div class="brandName">Vision Screening</div>
-				<div class="brandSub">Station Management System</div>
-			</div>
-		</a>
-		<nav class="navMenu">
-			<a href="">Overview</a>
-			<a href="browseEvents.jsp">Browse Event</a>
-			<a href="registeredEvents.jsp" class="active">My Sign-Up's</a>
-		</nav>
-		<div class="userBox">
-			<span class="userRole">Member</span>
-		</div>
-	</div>
+<%@ include file="/WEB-INF/shared/header.jsp" %>
 
 <h1> View My sign-ups</h1>
 
