@@ -27,10 +27,10 @@ String message = "";
 String usernameErr = null;
 String passwordErr = null;
 String errCode = request.getParameter("errCode");
-
+String successMessage ="";
 
 if ("registered".equals(request.getParameter("msg"))) {
-	message = "Account registered successfully. You can now sign in to your account.";
+	successMessage = "Account registered successfully. You can now sign in to your account.";
 	} 
 
 //for staff verification
@@ -213,6 +213,9 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 		
 	<h1 class="pageTitle">Login form</h1>
 	<p class="pageSub">Login to your vision screening appointments and results.</p>
+		<% if (!successMessage.isEmpty()) { %>
+    		<div class="msgBox msgSuccess"><%= successMessage %></div>
+		<% } %>	
 		<% if (!message.isEmpty()) { %>
     		<div class="msgBox msgError"><%= message %></div>
 		<% } %>	
