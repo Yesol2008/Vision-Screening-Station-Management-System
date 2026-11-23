@@ -4,7 +4,6 @@
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
     
 <%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
-<%@ include file="/WEB-INF/shared/helpers.jsp" %>
 
 <!DOCTYPE html>
 <html>
@@ -32,17 +31,17 @@ if (eventId != null && eventId.matches("\\d+")) {
 		intEventId = Integer.parseInt(eventId);
 
 		if (intEventId <= 0) {
-			response.sendRedirect("listEvents.jsp?error=invalidEventId");
+			response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 			return;
 		}
 
 	} catch (NumberFormatException e) {
-		response.sendRedirect("listEvents.jsp?error=invalidEventId");
+		response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 		return;
 	}
 
 } else {
-	response.sendRedirect("listEvents.jsp?error=invalidEventId");
+	response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 	return;
 }
 
@@ -72,6 +71,8 @@ try {
  			////////////////////start of html////////////////////////////////
 %>
 <div class="page">
+<%@ include file="/WEB-INF/shared/header.jsp" %>
+
 
 	<div class="card">
 	
@@ -84,16 +85,16 @@ try {
  			
  			try(ResultSet rs = ps.executeQuery()){
  				
- 	 			if(rs.next()){
+ 	 			while(rs.next()){
  	 				count = count +1;
  	 				isRegistered = true;		
  	 			}	
  			}
  		}
  		if(isRegistered){
- 			isRegisteredMsg = "You have " + count + " number of participants who has signed up for this event. By deleting this event, you will delete the registration records aswell.";
+ 			isRegisteredMsg = count + " participant(s) have registered for this event. By deleting this event, you will delete the registration records aswell.";
 %>
-		<h1>Event cannot be deactivated</h1>
+		<h1>Delete Event</h1>
 		<p><%=isRegisteredMsg%></p>
 		<form method="post" action="deleteEvent.jsp">
  			<input type="submit" class="btn btnPrimary" value="Delete">
@@ -107,7 +108,7 @@ try {
 <%  			
  		}else{
  %>
- 		<h1>Deactivate Event</h1>
+ 		<h1>Delete Event</h1>
  		<p>By deleting this event, you will delete the registration records aswell.</p>
  		<form method="post" action="deleteEvent.jsp">
  			<input type="submit" class="btn btnPrimary" value="Delete">
@@ -127,6 +128,9 @@ try {
  
  
 	</div>
+	
+		<%@ include file="/WEB-INF/shared/footer.html" %>
+	
 
 </div>
  

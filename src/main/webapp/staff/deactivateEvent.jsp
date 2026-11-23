@@ -22,17 +22,17 @@
 			intEventId = Integer.parseInt(eventId);
 
 			if (intEventId <= 0) {
-				response.sendRedirect("listEvents.jsp?error=invalidEventId");
+				response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 				return;
 			}
 
 		} catch (NumberFormatException e) {
-			response.sendRedirect("listEvents.jsp?error=invalidEventId");
+			response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 			return;
 		}
 
 	} else {
-		response.sendRedirect("listEvents.jsp?error=invalidEventId");
+		response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 		return;
 	}
 
@@ -93,7 +93,7 @@ try {
 
  	 						// Step 6b: Process result
  	 						if (rows > 0) {
- 	 	 						response.sendRedirect("listEvents.jsp?SuccessMsg=deactivated");
+ 	 	 						response.sendRedirect("listEvents.jsp?msg=deactivated");
  	 	 						return;
 
  	 						} else {

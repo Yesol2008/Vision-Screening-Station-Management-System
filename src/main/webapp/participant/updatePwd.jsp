@@ -5,19 +5,6 @@
 <%@ include file="/WEB-INF/auth/participantGuard.jsp" %>
 <%@ page import="org.mindrot.jbcrypt.BCrypt" %>
 
-<%!
-private String escapeHtml(String input) {
-    if (input == null) {
-        return "";
-    }
-
-    return input.replace("&", "&amp;")
-                .replace("<", "&lt;")
-             	.replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&#39;");
-}
-%>
 
 <%
 
@@ -27,9 +14,9 @@ String newPwdConfirm = request.getParameter("newPwdConfirm");
 
 String passwordErr ="";
 
-if (newPwd.trim().isEmpty()) {
-	passwordErr = "Password cannot be empty.";
-} else if (newPwd.length() < 8 || newPwd.length() > 64) {
+if (currentPwd == null || currentPwd.trim().isEmpty() || newPwd == null || newPwd.trim().isEmpty()|| newPwdConfirm == null || newPwdConfirm.trim().isEmpty()) {
+	passwordErr = "All password fields are required.";
+}else if (newPwd.length() < 8 || newPwd.length() > 64) {
 	passwordErr = "Password must be 8-64 characters.";
 } else if (!newPwd.matches("(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,64}")) {
 	passwordErr = "Password must be 8-64 characters and contain at least one uppercase letter, one lowercase letter, one number and one symbol.";
@@ -109,13 +96,19 @@ try {
 					 String update = "UPDATE users SET password = ? WHERE user_id=?";
 							 
 						try(PreparedStatement ps = conn.prepareStatement(update)){
-							
-							ps.setString(1, newPwd);
+							String hashedPassword = BCrypt.hashpw(newPwd, BCrypt.gensalt(10));
+							ps.setString(1, hashedPassword);
 							ps.setInt(2, participantId); 
 							
-							ps.executeUpdate();
-							
-							response.sendRedirect("/login.jsp?msg=successUpdate");
+							int rows = ps.executeUpdate();
+							if (rows > 0) {
+							    response.sendRedirect(request.getContextPath() + "/login.jsp?msg=successUpdate");
+							    return;
+							}else{
+								response.sendRedirect(request.getContextPath() + "myProfile.jsp?errCode=failUpdate");
+							    return;
+								
+							}
 							
 						}
 					 
@@ -137,17 +130,40 @@ try {
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Update Password</title>
 </head>
 <body>
 
-<div>
-	<div>
-	
-		
+<div class="page">
+<%@ include file="/WEB-INF/shared/header.jsp" %>
+
+	<div class="cardGrid">
+		<% if (passwordErr != null) { %>
+			<div class="fieldError"><%= escapeHtml(passwordErr) %></div>
+		<% } %>
+		<form>
+			<div>
+				<label>Current password:</label>
+				<input type="password" name="currentPwd">
+			</div>
+			<div>
+				<label>New Password</label>
+				<input type="password" name="newPwd">
+			</div>
+			<div>
+				<label>Confirm New Password</label>
+				<input type="password" name="newPwdConfirm">
+			</div>
+			<div>
+				<input type="submit" value="Update">
+				<a href="myProfile.jsp">Back</a>
+			</div>
+			
+		</form>
 	
 	</div>
 
+	<%@ include file="/WEB-INF/shared/footer.html" %>
 
 </div>
 

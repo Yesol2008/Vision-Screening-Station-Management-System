@@ -87,7 +87,7 @@ try {
  	            // commit for transaction if the deletion success
  	            conn.commit();
 
- 	            response.sendRedirect("listEvents.jsp?SuccessMsg=deleted");
+ 	            response.sendRedirect("listEvents.jsp?msg=deleted");
  		
 			
 		} catch (Exception e) {

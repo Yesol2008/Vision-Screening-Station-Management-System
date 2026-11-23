@@ -4,19 +4,6 @@
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
 <%@ include file="/WEB-INF/auth/participantGuard.jsp" %>
 <%@ page import="java.time.LocalDate" %>
-<%!
-private String escapeHtml(String input) {
-    if (input == null) {
-        return "";
-    }
-
-    return input.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&#39;");
-}
-%>
 
 <!DOCTYPE html>
 <html>
@@ -67,6 +54,26 @@ private String escapeHtml(String input) {
 </head>
 <body>
 <%
+
+
+
+String successMsg = request.getParameter("msg");
+String errCode = request.getParameter("errCode");
+
+String successMessage ="";
+String errorCode ="";
+
+if("withdrawn".equals(successMsg)){
+	successMessage = "Event Withdrawn Successfully";
+}else if("registered".equals(successMsg)){
+	successMessage = "Event Registered Successfully";	
+}
+
+if("failedWithdrawn".equals(errCode)){
+	errorCode = "Failed to withdraw the event";
+}else if("failedRegistration".equals(errCode)){
+	errorCode = "Faild to register the event";	
+}
 
 try {
 	
@@ -119,25 +126,15 @@ try {
 %>	
 
 <div class="page">
-<%-- placeholder for now will be replaced by shared header include file --%>
-	<div class="topbar">
-		<a class="brand" href="index.jsp">
-			<img class="logo" src="<%= request.getContextPath() %>/images/logo.png" alt="Vision Screening logo">
-			<div>
-				<div class="brandName">Vision Screening</div>
-				<div class="brandSub">Station Management System</div>
-			</div>
-		</a>
-		<nav class="navMenu">
-			<a href="">Overview</a>
-			<a href="browseEvents.jsp" class="active">Browse Event</a>
-			<a href="registeredEvents.jsp">My Sign-Up's</a>
-		</nav>
-		<div class="userBox">
-			<span class="userRole">Member</span>
-		</div>
-	</div>
+<%@ include file="/WEB-INF/shared/header.jsp" %>
+
 <h1>Browse Events</h1>
+			<% if (!successMessage.isEmpty()) { %>
+    			<p class="msgBox msgSuccess"><%= successMessage %></p>
+			<% } %>
+			<% if (!errorCode.isEmpty()) { %>
+    			<p class="msgBox msgError"><%= errorCode %></p>
+			<% } %>
 
 			
 		<form action="browseEvents.jsp" method="get" class="searchBar">
@@ -211,7 +208,7 @@ try {
 		} %>
 		</div>	
 		
-		<jsp:include page="/footer.jsp"/>
+	<%@ include file="/WEB-INF/shared/footer.html" %>
 	
 	</div>	
 	

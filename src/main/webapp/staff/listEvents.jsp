@@ -4,7 +4,6 @@
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
 <%@ page import="org.mindrot.jbcrypt.BCrypt" %>
 <%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
-<%@ include file="/WEB-INF/shared/helpers.jsp" %>
 
 
 <!DOCTYPE html>
@@ -30,7 +29,7 @@
 
 
 
-String successMsg = request.getParameter("SuccessMsg");
+String successMsg = request.getParameter("msg");
 String successMessage ="";
 if("successCreate".equals(successMsg)){
 	successMessage = "Event Created Successfully";
@@ -45,15 +44,15 @@ if("successCreate".equals(successMsg)){
 
 String errCode = request.getParameter("errCode");
 String errorCode ="";
-if("invalidEventId".equals(successMsg)){
+if("invalidEventId".equals(errCode)){
 	successMessage = "No such event ID exist";
-}else if("eventNotFound".equals(successMsg)){
+}else if("eventNotFound".equals(errCode)){
 	successMessage = "No such event exist";	
-}else if("InvalidRequest".equals(successMsg)){
+}else if("InvalidRequest".equals(errCode)){
 	successMessage = "You're Accessing not validated";	
-}else if("alreadyInactive".equals(successMsg)){
+}else if("alreadyInactive".equals(errCode)){
 	successMessage = "Event is already inactive";	
-}else if("hasSignups".equals(successMsg)){
+}else if("hasSignups".equals(errCode)){
 	successMessage = "There is participant who has signed up for this event!";	
 }
 
@@ -106,24 +105,8 @@ try {
 %>
 
 <div class="page">
-<%-- placeholder for now will be replaced by shared header include file --%>
-	<div class="topbar">
-		<a class="brand" href="index.jsp">
-			<img class="logo" src="<%= request.getContextPath() %>/images/logo.png" alt="Vision Screening logo">
-			<div>
-				<div class="brandName">Vision Screening</div>
-				<div class="brandSub">Station Management System</div>
-			</div>
-		</a>
-		<nav class="navMenu">
-			<a href="">Overview</a>
-			<a href="listEvents.jsp" class="active">Events</a>
-			<a href="">Participants</a>
-		</nav>
-		<div class="userBox">
-			<span class="userRole">Staff</span>
-		</div>
-	</div>
+<%@ include file="/WEB-INF/shared/header.jsp" %>
+
 	
 	
 	<h1>Events</h1>
@@ -148,7 +131,7 @@ try {
 	<% } %>
 	
 	
-	<form action="creatEvent.jsp" method="get">
+	<form action="createEvent.jsp" method="get">
 		<input type="submit" value="Create New Event" class="btn btnPrimary">
 	</form>
 	
@@ -243,7 +226,7 @@ try {
 
 	</div>
 	
-	<jsp:include page="/footer.jsp"/>
+	<%@ include file="/WEB-INF/shared/footer.html" %>
 	
 </div>
 

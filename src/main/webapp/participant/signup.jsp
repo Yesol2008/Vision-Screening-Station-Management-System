@@ -59,7 +59,7 @@ try {
 					response.sendRedirect(returnUrl+"?msg=registered");
 					return;
 				}else{
-					response.sendRedirect(returnUrl+ "?msg=failedRegistration");
+					response.sendRedirect(returnUrl+"?errCode=failedRegistration");
 					return;
 				}
 				
@@ -78,10 +78,10 @@ try {
 				int rowsInserted = ps.executeUpdate();
 				
 				if (rowsInserted > 0) {
-					response.sendRedirect(returnUrl+ "?msg=registered");
+					response.sendRedirect(returnUrl+"?msg=registered");
 					return;
 				}else{
-					response.sendRedirect(returnUrl+"?msg=failedRegistration");
+					response.sendRedirect(returnUrl+"?errCode=failedRegistration");
 					return;
 				}
 			}
@@ -104,7 +104,7 @@ try {
 					response.sendRedirect(returnUrl+"?msg=withdrawn");
 					return;
 				}else{
-					response.sendRedirect(returnUrl+"?msg=failedWithdrawn");
+					response.sendRedirect(returnUrl+"?errCode=failedWithdrawn");
 					return;
 				}
 				
@@ -112,7 +112,7 @@ try {
 			
 			
 		}else{
-			response.sendRedirect(returnUrl+"?msg=failedRegistration");
+			response.sendRedirect(returnUrl+"?errCode=failedRegistration");
 			return;
 		}
 		
