@@ -6,6 +6,7 @@
 <%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
 
 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,11 +26,11 @@
 </head>
 <body>
 
-<%
 
 
 
-String successMsg = request.getParameter("msg");
+<% 
+String successMsg = request.getParameter("SuccessMsg");
 String successMessage ="";
 if("successCreate".equals(successMsg)){
 	successMessage = "Event Created Successfully";
@@ -106,8 +107,8 @@ try {
 %>
 
 <div class="page">
-<%@ include file="/WEB-INF/shared/header.jsp" %>
-
+<%-- placeholder for now will be replaced by shared header include file --%>
+	<%@ include file="/WEB-INF/shared/header.jsp" %>
 	
 	
 	<h1>Events</h1>
@@ -132,7 +133,7 @@ try {
 	<% } %>
 	
 	
-	<form action="createEvent.jsp" method="get">
+	<form action="creatEvent.jsp" method="get">
 		<input type="submit" value="Create New Event" class="btn btnPrimary">
 	</form>
 	
@@ -227,7 +228,7 @@ try {
 
 	</div>
 	
-	<%@ include file="/WEB-INF/shared/footer.html" %>
+	<jsp:include page="/footer.jsp"/>
 	
 </div>
 
