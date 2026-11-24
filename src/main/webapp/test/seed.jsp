@@ -6,8 +6,12 @@
 
 <%
 
-// password for each users
+// password for users
+//admin
 // "admuser", "Staff@123"
+// "yesol123", "Staff@456"
+// "yamin123", "Staff@789"
+//participants
 // "john123" "Participant@123"
 // "mary123" "Participant@456"
 // "alex123" "Participant@789"
@@ -84,7 +88,9 @@
 								"james123",
 								"lisa123",
 								"daniel123",
-								"sophia123"
+								"sophia123",
+								"yesol123",
+								"yamin123"
 					        };
 
 					        String[] passwords = {
@@ -98,7 +104,9 @@
 								"Participant@333",
 								"Participant@444",
 								"Participant@555",
-								"Participant@666"
+								"Participant@666",
+								"Staff@456",
+								"Staff@789"
 					        };
 
 					        String[] roles = {
@@ -112,7 +120,9 @@
 					            "PARTICIPANT",
 					            "PARTICIPANT",
 					            "PARTICIPANT",
-					            "PARTICIPANT"
+					            "PARTICIPANT",
+					            "STAFF",
+					            "STAFF"
 					        };
 					        
 					String sql = "INSERT INTO users "
