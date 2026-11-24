@@ -108,7 +108,7 @@ try {
 		}
 
     		
-	
+		boolean hasEvent = false;
     	// Step 3: Establish database connection. Used try-with so that connection will close automatically
 		try(Connection conn = DriverManager.getConnection(connURL, username, password);
 
@@ -144,7 +144,7 @@ try {
 				<option value="Upcoming" <%= "Upcoming".equals(statusFilter) ? "selected" : "" %>>Upcoming</option>
 				<option value="Ongoing" <%= "Ongoing".equals(statusFilter) ? "selected" : "" %>>Ongoing</option>
 				<option value="Completed" <%= "Completed".equals(statusFilter) ? "selected" : "" %>>Completed </option>
-				<option value="Cancelled" <%= "Cancelled".equals(statusFilter) ? "selected" : "" %>>Cancelled</option>
+				<option value="Inactive" <%= "Inactive".equals(statusFilter) ? "selected" : "" %>>Inactive</option>
 			</select>
 		<button type="submit" class="btn btnPrimary">Search</button>
 		</form>
@@ -176,8 +176,9 @@ try {
 					String location = rs.getString("location");
 					String status = rs.getString("status");
 					int participants = rs.getInt("participant_count");
+					hasEvent = true;
                     
-                    if(status.equals("Cancelled") || status.equals("Inactive")){
+                    if(status.equals("Inactive")){
 					%>
                     	
 			<tr>
@@ -193,7 +194,7 @@ try {
 				</td>
 				<td>
 					<div class="btnGrid">
-					<a href="viewEvent.jsp?eventId=<%=eventId%>"
+					<a href="viewEventDetails.jsp?eventId=<%=eventId%>"
 						class="btn">View</a>
 					<a href="editEvent.jsp?eventId=<%=eventId%>"
 						class="btn">Edit</a>
@@ -243,14 +244,24 @@ try {
 					
 <%				
 					}
-				}
+				}				
+
 
 %>
 		</table>
+		
+<%if (!hasEvent) {
+%>
+    				<div class="noResults">
+        				<h3>No events found</h3>
+        				<p>Try searching with a different keyword or changing your filters.</p>
+    				</div>
+<%
+				}%>
 
 	</div>
 	
-	<jsp:include page="/footer.jsp"/>
+	<%@ include file="/footer.html" %>
 	
 </div>
 

@@ -220,7 +220,7 @@ if (status == null || status.trim().isEmpty()) {
 	</div>
 	
 	
-	<%@ include file="/WEB-INF/shared/footer.html" %>
+	<%@ include file="/footer.html" %>
 	
 </div>
 </body>

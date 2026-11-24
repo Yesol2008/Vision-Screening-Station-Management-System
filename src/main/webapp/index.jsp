@@ -173,7 +173,7 @@ if (userId != null) {
 	</div>
 
 
-	<jsp:include page="/footer.jsp"/>
+	<%@ include file="/footer.html" %>
 
 
 </div>

@@ -230,7 +230,7 @@ try {
 		</form>
 		</div>
 		
-	<%@ include file="/WEB-INF/shared/footer.html" %>
+	<%@ include file="/footer.html" %>
 		
 	
 	</div>	

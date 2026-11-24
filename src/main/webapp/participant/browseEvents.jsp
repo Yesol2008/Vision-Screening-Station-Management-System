@@ -157,7 +157,7 @@ try {
 				<option value="Upcoming" <%= "Upcoming".equals(statusFilter) ? "selected" : "" %>>Upcoming</option>
 				<option value="Ongoing" <%= "Ongoing".equals(statusFilter) ? "selected" : "" %>>Ongoing</option>
 				<option value="Completed" <%= "Completed".equals(statusFilter) ? "selected" : "" %>>Completed </option>
-				<option value="Cancelled" <%= "Cancelled".equals(statusFilter) ? "selected" : "" %>>Cancelled</option>
+				<option value="Inactive" <%= "Inactive".equals(statusFilter) ? "selected" : "" %>>Inactive</option>
 			</select>
 		<button type="submit" class="btn btnPrimary">Search</button>
 		</form>
@@ -192,7 +192,7 @@ try {
 							<input type="submit" class="btn btnPrimary" value="Sign-up again">
 							<input type="hidden" name="registrationId" value="<%=registration_id%>">
 						</form>
-					<%} else if(date.isBefore(today) || "Completed".equals(status) || "Canceled".equals(status)){ %>
+					<%} else if(date.isBefore(today) || "Completed".equals(status) || "Inactive".equals(status)){ %>
 						<a href="viewEventDetails.jsp?eventId=<%=eventId%>">View Event Details</a>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>>" method="post">
 							<input type="submit" class="btn" value="Sign-up closed" disabled>
@@ -225,7 +225,7 @@ try {
 		} %>
 		</div>	
 		
-	<%@ include file="/WEB-INF/shared/footer.html" %>
+	<%@ include file="/footer.html" %>
 	
 	</div>	
 	

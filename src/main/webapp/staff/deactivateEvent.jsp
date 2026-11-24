@@ -73,7 +73,7 @@ try {
  						response.sendRedirect("listEvents.jsp?errCode=eventNotFound");
  						return;
  						
- 					} else if ("Inactive".equals(rs.getString("status"))||"Cancelled".equals(rs.getString("status"))) {
+ 					} else if ("Inactive".equals(rs.getString("status"))) {
  						response.sendRedirect("listEvents.jsp?errCode=alreadyInactive");
  						return;
 

@@ -130,7 +130,7 @@ try {
 							<input type="submit" class="btn btnPrimary" value="Sign-up again">
 							<input type="hidden" name="registrationId" value="<%=registration_id%>">
 						</form>
-					<%} else if(date.isBefore(today) || "Completed".equals(status) || "Canceled".equals(status) || "Attended".equals(registrationStatus)){ %>
+					<%} else if(date.isBefore(today) || "Completed".equals(status) || "Inactive".equals(status) || "Attended".equals(registrationStatus)){ %>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>>" method="post">
 							<input type="submit" class="btn btnPrimary" value="Withdawal Closed" disabled>
 						</form>
@@ -145,7 +145,7 @@ try {
 
 			</table>
 	</div>
-	<%@ include file="/WEB-INF/shared/footer.html" %>
+	<%@ include file="/footer.html" %>
 
 </div>
     			
