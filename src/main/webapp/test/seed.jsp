@@ -3,13 +3,6 @@
 <%@page import="io.github.cdimascio.dotenv.Dotenv"%>
 <%@page import ="java.sql.*"%>
 <%@page import = "org.mindrot.jbcrypt.BCrypt"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 
 <%
 
@@ -195,18 +188,15 @@
 
 			stmt.executeUpdate(insertRegistrations);
 
-			
+	        out.println("Data Seeded Successfully!");
+
 		
     	stmt.close();
 		conn.close();
-		
-		 response.sendRedirect(returnUrl +"?msg=success");
-		
+				
     } catch (Exception e) {
         e.printStackTrace();
         application.log("Database connection error", e);
         out.println("Unable to connect to the database.");
     }
 %>
-</body>
-</html>

@@ -11,7 +11,6 @@
 
 <% 
 
-String returnUrl = "login.jsp";
 String message = "";
 String usernameErr = null;
 String passwordErr = null;
