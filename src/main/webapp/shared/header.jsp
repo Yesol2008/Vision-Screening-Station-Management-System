@@ -6,7 +6,7 @@ Description: ST0510/JAD Assignment 1 - Shared header file
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
-<%@ include file="/WEB-INF/shared/helpers.jsp" %>
+<%@ include file="helpers.jsp" %>
 <%
 	//base URL excluding the file names
 	String base = request.getContextPath();

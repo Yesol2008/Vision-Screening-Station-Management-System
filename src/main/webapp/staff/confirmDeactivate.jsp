@@ -8,7 +8,7 @@ Description: ST0510/JAD Assignment 1 - Staff: confirm deactivation of a particip
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
 
 <%-- staff only: redirects anyone who is not a logged-in, active staff member --%>
-<%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
+<%@ include file="/auth/staffGuard.jsp" %>
 <%
 	//1. only reachable from the Deactivate button, which submits by POST
 	if (!"POST".equals(request.getMethod())) {
@@ -125,8 +125,8 @@ Description: ST0510/JAD Assignment 1 - Staff: confirm deactivation of a particip
 </head>
 <body>
 	<%-- shared header--%>
-	<%@ include file="/WEB-INF/shared/header.jsp" %>
-	<%-- TODO: staff nav (Overview, Participants, Events) with Participants active --%>
+	<%@ include file="/shared/header.jsp" %>
+	
 
 	<main class="container">
 		<div class="card">

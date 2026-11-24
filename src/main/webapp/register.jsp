@@ -202,7 +202,7 @@
 </head>
 <body>
 <div class="page">
-	<%@ include file="/WEB-INF/shared/header.jsp" %>
+	<%@ include file="/shared/header.jsp" %>
 	<div class="card">
 		<h1 class="pageTitle">Create a participant account</h1>
 

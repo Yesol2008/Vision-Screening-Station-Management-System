@@ -7,7 +7,7 @@ Description: ST0510/JAD Assignment 1 - Staff: view one participant's details
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
 <%-- fragments kept in WEB-INF so they cannot be opened directly --%>
-<%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
+<%@ include file="/auth/staffGuard.jsp" %>
 <%
 	//1. the id arrives as text from the hidden field in listParticipants.jsp
 	String idText = request.getParameter("id");
@@ -129,7 +129,7 @@ Description: ST0510/JAD Assignment 1 - Staff: view one participant's details
 </head>
 <body>
 	<main class="page">
-		<%@ include file="/WEB-INF/shared/header.jsp" %>
+		<%@ include file="/shared/header.jsp" %>
 
 		<div class="card">
 			<h1 class="pageTitle">Participant details</h1>

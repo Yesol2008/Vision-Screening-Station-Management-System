@@ -7,7 +7,7 @@ Description: ST0510/JAD Assignment 1 - Staff: list and search participants
 <%@ page import="java.sql.*, java.util.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
 <%-- staff only: redirects anyone who is not a logged-in, active staff member --%>
-<%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
+<%@ include file="/auth/staffGuard.jsp" %>
 <%
 	//1. match known msg / errCode values to a message; raw values are never printed
 	String msg = request.getParameter("msg");
@@ -137,7 +137,7 @@ Description: ST0510/JAD Assignment 1 - Staff: list and search participants
 	<%-- TODO: staff nav (Overview, Participants, Events) with Participants active --%>
 
 	<main class="page">
-	<%@ include file="/WEB-INF/shared/header.jsp" %>
+	<%@ include file="/shared/header.jsp" %>
 		<div class="titleRow">
 			<h1>Participants</h1>
 			<a class="btn btnDark" href="addParticipant.jsp">+ Add participant</a>

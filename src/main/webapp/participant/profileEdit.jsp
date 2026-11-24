@@ -15,7 +15,7 @@
 	Whose profile is edited comes from the session (via the guard), never from the form,
 	so a participant can only change their own details. The role cannot be changed here.
 --%>
-<%@ include file="/WEB-INF/auth/participantGuard.jsp" %>
+<%@ include file="/auth/participantGuard.jsp" %>
 <%
 	// values shown in the form
 	// GET: filled from the database below; POST: what the user typed
@@ -258,7 +258,7 @@
 <div class="page">
 
 	<%--  shared header for signed-in users goes here --%>
-	<%@ include file="/WEB-INF/shared/header.jsp" %>
+	<%@ include file="/shared/header.jsp" %>
 
 	<div class="card">
 		<h1 class="pageTitle">Edit my profile</h1>

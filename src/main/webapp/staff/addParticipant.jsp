@@ -15,7 +15,7 @@ Passwords are hashed with bcrypt before they are stored.
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
 <%@ page import="org.mindrot.jbcrypt.BCrypt" %>
 <%-- fragments kept in WEB-INF so they cannot be opened directly --%>
-<%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
+<%@ include file="/auth/staffGuard.jsp" %>
 <%
 	// values to put back into the form (empty on the first visit)
 	// passwords are never put back into the page
@@ -204,7 +204,7 @@ Passwords are hashed with bcrypt before they are stored.
 </head>
 <body>
 	<main class="page">
-		<%@ include file="/WEB-INF/shared/header.jsp" %>
+		<%@ include file="/shared/header.jsp" %>
 
 		<div class="card">
 			<h1 class="pageTitle">Add participant</h1>

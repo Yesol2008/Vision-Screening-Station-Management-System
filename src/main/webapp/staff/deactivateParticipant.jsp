@@ -7,7 +7,7 @@ Description: ST0510/JAD Assignment 1 - Staff: deactivate a participant account
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
 <%-- fragments kept in WEB-INF so they cannot be opened directly --%>
-<%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
+<%@ include file="/auth/staffGuard.jsp" %>
 <%
 	//1. only reachable from the confirmation page, which submits by POST
 	if (!"POST".equals(request.getMethod())) {

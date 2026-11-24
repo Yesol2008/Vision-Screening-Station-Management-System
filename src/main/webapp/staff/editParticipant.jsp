@@ -14,7 +14,7 @@ The participant id comes from a hidden field, so it is checked like any other us
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
 <%-- fragments kept in WEB-INF so they cannot be opened directly --%>
-<%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
+<%@ include file="/auth/staffGuard.jsp" %>
 <%
 	//1. the id arrives as text: from the Edit button (GET) or the hidden field in this form (POST)
 	String idText = request.getParameter("id");
@@ -291,7 +291,7 @@ The participant id comes from a hidden field, so it is checked like any other us
 </head>
 <body>
 	<main class="page">
-		<%@ include file="/WEB-INF/shared/header.jsp" %>
+		<%@ include file="/shared/header.jsp" %>
 
 		<div class="card">
 			<h1 class="pageTitle">Edit participant</h1>

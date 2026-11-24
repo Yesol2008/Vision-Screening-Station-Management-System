@@ -12,7 +12,7 @@
 	"Edit my profile" -> profileEdit.jsp, which redirects back here with ?msg=updated or a specific errCode
 --%>
 
-<%@ include file="/WEB-INF/auth/participantGuard.jsp" %>
+<%@ include file="/auth/participantGuard.jsp" %>
 <%
 	// messages sent here by other pages
 	String msg = request.getParameter("msg");
@@ -109,7 +109,7 @@
 <body>
 
 <div class="page">
-<%@ include file="/WEB-INF/shared/header.jsp" %>
+<%@ include file="/shared/header.jsp" %>
 	<div><h2>PARTICIPANT WORKSPACE</h2></div>
 	<div class="titleRow">
 		<h1>My profile</h1>
