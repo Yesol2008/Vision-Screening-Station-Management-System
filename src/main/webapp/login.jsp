@@ -191,7 +191,7 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 <body>
 <div class="page">
 
-<%@ include file="/WEB-INF/shared/header.jsp" %>
+<%@ include file="/shared/header.jsp" %>
 
 	<div class="card">
 		
@@ -229,7 +229,7 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 	</form>
 	</div>
 
-	<%@ include file="/footer.html" %>
+	<%@ include file="shared/footer.html" %>
 
 </div>
 

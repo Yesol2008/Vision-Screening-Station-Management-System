@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
-<%@ include file="/WEB-INF/auth/participantGuard.jsp" %>
+<%@ include file="/auth/participantGuard.jsp" %>
 <%@ page import="org.mindrot.jbcrypt.BCrypt" %>
 
 
@@ -143,7 +143,7 @@ try {
 <body>
 
 <div class="page">
-<%@ include file="/WEB-INF/shared/header.jsp" %>
+<%@ include file="/shared/header.jsp" %>
 
 	<div class="cardGrid">
 		<% if (passwordErr != null) { %>
@@ -171,7 +171,7 @@ try {
 	
 	</div>
 
-	<%@ include file="/footer.html" %>
+	<%@ include file="/shared/footer.html" %>
 
 </div>
 

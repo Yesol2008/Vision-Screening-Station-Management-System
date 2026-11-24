@@ -5,7 +5,7 @@
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="java.time.format.DateTimeParseException" %>
 
-<%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
+<%@ include file="/auth/staffGuard.jsp" %>
 
 
 
@@ -148,7 +148,7 @@ try {
 			    	
 		<div class="page">
 		
-		<%@ include file="/WEB-INF/shared/header.jsp" %>
+		<%@ include file="/shared/header.jsp" %>
 		
 			<div class="card">
 			    	
@@ -230,7 +230,7 @@ try {
 		</form>
 		</div>
 		
-	<%@ include file="/footer.html" %>
+	<%@ include file="/shared/footer.html" %>
 		
 	
 	</div>	

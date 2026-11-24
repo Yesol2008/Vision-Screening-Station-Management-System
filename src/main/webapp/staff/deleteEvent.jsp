@@ -3,7 +3,7 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
 <%-- fragments kept in WEB-INF so they cannot be opened directly --%>
-<%@ include file="/WEB-INF/auth/staffGuard.jsp" %> 
+<%@ include file="/auth/staffGuard.jsp" %>
 <%
 if (!"POST".equals(request.getMethod())) {
 		response.sendRedirect("listEvents.jsp?errCode=InvalidRequest");

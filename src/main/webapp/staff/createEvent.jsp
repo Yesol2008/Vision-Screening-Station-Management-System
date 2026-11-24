@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
-<%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
+<%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="java.time.format.DateTimeParseException" %>
 
-<%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
+<%@ include file="/auth/staffGuard.jsp" %>
 
 
 <%
@@ -154,7 +154,7 @@ if (status == null || status.trim().isEmpty()) {
 </head>
 <body>
 <div class="page">
-<%@ include file="/WEB-INF/shared/header.jsp" %>
+<%@ include file="/shared/header.jsp" %>
 
 	<div class="card">
 	<h1>Create Event</h1>
@@ -220,7 +220,7 @@ if (status == null || status.trim().isEmpty()) {
 	</div>
 	
 	
-	<%@ include file="/footer.html" %>
+	<%@ include file="/shared/footer.html" %>
 	
 </div>
 </body>

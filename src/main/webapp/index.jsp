@@ -97,7 +97,7 @@ if (userId != null) {
 
 <div class="page">
 
-<%@ include file="/WEB-INF/shared/header.jsp" %>
+<%@ include file="/shared/header.jsp" %>
 
 	<div class="card">
 		<h1> Vision Screening Management System</h1>
@@ -173,7 +173,7 @@ if (userId != null) {
 	</div>
 
 
-	<%@ include file="/footer.html" %>
+	<%@ include file="shared/footer.html" %>
 
 
 </div>

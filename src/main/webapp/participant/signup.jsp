@@ -3,7 +3,7 @@
     <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
 <%@ page import="org.mindrot.jbcrypt.BCrypt" %>
-<%@ include file="/WEB-INF/auth/participantGuard.jsp" %>
+<%@ include file="/auth/participantGuard.jsp" %>
 
 <%
 

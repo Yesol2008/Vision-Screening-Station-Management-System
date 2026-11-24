@@ -3,7 +3,7 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
 <%@ page import="org.mindrot.jbcrypt.BCrypt" %>
-<%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
+<%@ include file="/auth/staffGuard.jsp" %>
 
 
 
@@ -126,7 +126,7 @@ try {
 
 <div class="page">
 <%-- placeholder for now will be replaced by shared header include file --%>
-	<%@ include file="/WEB-INF/shared/header.jsp" %>
+	<%@ include file="/shared/header.jsp" %>
 	
 	
 	<div class="titleRow">
@@ -261,8 +261,7 @@ try {
 
 	</div>
 	
-	<%@ include file="/footer.html" %>
-	
+	<%@ include file="/shared/footer.html" %>
 </div>
 
 

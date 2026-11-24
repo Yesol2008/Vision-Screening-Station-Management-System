@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
-<%@ include file="/WEB-INF/auth/staffGuard.jsp" %>
+<%@ include file="/auth/staffGuard.jsp" %>
 
 <!DOCTYPE html>
 <html>
@@ -67,7 +67,7 @@ try {
 %>
 <div class="page">
 	
-	<%@ include file="/WEB-INF/shared/header.jsp" %>
+	<%@ include file="/shared/header.jsp" %>
 	
 	<div class="card">
 			<h2><%= eventName%>: Participant for event</h2>
@@ -129,7 +129,7 @@ try {
 		</div>
     </div>
     
-	<%@ include file="/footer.html" %>
+	<%@ include file="/shared/footer.html" %>
     
     	
 </div>
