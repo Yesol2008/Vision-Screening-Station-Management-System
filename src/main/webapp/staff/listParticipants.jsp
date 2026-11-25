@@ -1,7 +1,7 @@
 <%--
 Author: Htet Yamin Aung (P2535607)
-Date: 20/11/2026
-Description: ST0510/JAD Assignment 1 - Staff: list and search participants
+Date: 25/11/2026
+Description: ST0510/JAD Assignment 1 - Staff: list, search and filter participants
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.sql.*, java.util.*" %>
@@ -43,14 +43,20 @@ Description: ST0510/JAD Assignment 1 - Staff: list and search participants
 		}
 	}
 
-	//2. search keyword from the search box (optional)
+	//2. search keyword (optional): an empty box means no search
 	String keyword = request.getParameter("keyword");
 	if (keyword == null) {
 		keyword = "";
 	}
 	keyword = keyword.trim();
 
-	//3. load the participants; each row is stored so the connection can close before the HTML
+	//3. status filter (optional): only the two known values are accepted, anything else means all
+	String status = request.getParameter("status");
+	if (!"active".equals(status) && !"inactive".equals(status)) {
+		status = "";
+	}
+
+	//4. load the participants; each row is stored so the connection can close before the HTML
 	List<Map<String, Object>> participants = new ArrayList<>();
 	boolean loadErr = false;
 	Connection conn = null;
@@ -68,26 +74,25 @@ Description: ST0510/JAD Assignment 1 - Staff: list and search participants
 		// Step 3: Establish connection
 		conn = DriverManager.getConnection(connURL, dbUser, dbPassword);
 
-		// Step 4: PreparedStatement; withdrawn sign-ups are not counted
-		String sql = "SELECT p.participant_id, p.full_name, p.contact_number, u.username, u.is_active, "
-				+ "GROUP_CONCAT(r.event_id ORDER BY r.event_id) AS event_ids, "
-				+ "COUNT(r.event_id) AS signup_count "
-				+ "FROM participants p "
-				+ "JOIN users u ON p.user_id = u.user_id "
-				+ "LEFT JOIN registrations r ON r.participant_id = p.participant_id AND r.status <> 'Withdrawn' "
-				+ "WHERE p.full_name LIKE ? OR u.username LIKE ? OR p.contact_number LIKE ? "
-				+ "GROUP BY p.participant_id, p.full_name, p.contact_number, u.username, u.is_active "
-				+ "ORDER BY p.participant_id";
-		PreparedStatement ps = conn.prepareStatement(sql);
+		// Step 4: CallableStatement for the stored procedure; NULL means "don't filter on this"
+		CallableStatement cs = conn.prepareCall("{ call view_all_participants(?, ?) }");
 
-		//an empty keyword gives %% which matches every row
-		String pattern = "%" + keyword + "%";
-		ps.setString(1, pattern);
-		ps.setString(2, pattern);
-		ps.setString(3, pattern);
+		if (keyword.isEmpty()) {
+			cs.setNull(1, Types.VARCHAR);
+		} else {
+			cs.setString(1, keyword);
+		}
+
+		if (status.equals("active")) {
+			cs.setBoolean(2, true);
+		} else if (status.equals("inactive")) {
+			cs.setBoolean(2, false);
+		} else {
+			cs.setNull(2, Types.BOOLEAN);
+		}
 
 		// Step 5: Execute query
-		ResultSet rs = ps.executeQuery();
+		ResultSet rs = cs.executeQuery();
 
 		// Step 6: Process result - while, as there can be many rows
 		while (rs.next()) {
@@ -98,7 +103,6 @@ Description: ST0510/JAD Assignment 1 - Staff: list and search participants
 			row.put("username", rs.getString("username"));
 			row.put("isActive", rs.getBoolean("is_active"));
 			row.put("eventIds", rs.getString("event_ids"));
-			row.put("signupCount", rs.getInt("signup_count"));
 			participants.add(row);
 		}
 	} catch (ClassNotFoundException e) {
@@ -132,112 +136,110 @@ Description: ST0510/JAD Assignment 1 - Staff: list and search participants
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 </head>
 <body>
-	
-	<%-- TODO: shared signed-in header (brand, user box, log out) --%>
-	<%-- TODO: staff nav (Overview, Participants, Events) with Participants active --%>
-
 	<main class="page">
-	<%@ include file="/shared/header.jsp" %>
+		<%@ include file="/shared/header.jsp" %>
+
 		<div class="titleRow">
 			<h1>Participants</h1>
 			<a class="btn btnDark" href="addParticipant.jsp">+ Add participant</a>
 		</div>
 		<p class="intro">Manage participant accounts and view their event sign-ups.</p>
 
-		<%-- success / error messages --%>
-		<% if (msgText != null) { %>
-			<div class="msgBox msgSuccess"><%= msgText %></div>
-		<% } %>
-		<% if (errMessage != null) { %>
-			<div class="msgBox msgError"><%= errMessage %></div>
-		<% } %>
-
-		<%-- search: GET so the keyword stays in the URL --%>
-		<form action="listParticipants.jsp" method="get">
-			<label class="searchLabel" for="keyword">Search participants</label>
-			<div class="searchRow">
-				<input type="text" id="keyword" name="keyword" maxlength="100"
-					placeholder="Try Alex, Tan, U01, or a phone number"
-					value="<%= escapeHtml(keyword) %>">
-				<button type="submit" class="btn">Search</button>
-				<% if (!keyword.isEmpty()) { %>
-					<a class="btn" href="listParticipants.jsp">Clear</a>
-				<% } %>
-			</div>
+		<%-- search and filter: GET so the choices stay in the URL --%>
+		<label class="searchLabel" for="keyword">Search participants</label>
+		<form action="listParticipants.jsp" method="get" class="searchBar">
+			<input type="text" id="keyword" name="keyword" maxlength="100"
+				placeholder="Try Alex, Tan, alex123, or a phone number"
+				value="<%= escapeHtml(keyword) %>">
+			<select name="status">
+				<option value="">All statuses</option>
+				<option value="active" <%= "active".equals(status) ? "selected" : "" %>>Active</option>
+				<option value="inactive" <%= "inactive".equals(status) ? "selected" : "" %>>Inactive</option>
+			</select>
+			<button type="submit" class="btn btnPrimary">Search</button>
 		</form>
 
-		<% if (loadErr) { %>
-			<div class="msgBox msgError">Participants could not be loaded. Please try again later.</div>
-		<% } else if (participants.isEmpty()) { %>
-			<p class="note">No participants found.</p>
-		<% } else { %>
-			<table class="dataTable">
-				<thead>
-					<tr>
-						<th>Participant</th>
-						<th>Contact</th>
-						<th>Event sign-ups</th>
-						<th>Status</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-				<% for (Map<String, Object> row : participants) {
-					int participantId = (Integer) row.get("participantId");
-					boolean isActive = (Boolean) row.get("isActive");
-					int signupCount = (Integer) row.get("signupCount");
-					String eventIds = (String) row.get("eventIds");
-				%>
-					<tr>
-						<td>
-							<%= escapeHtml((String) row.get("fullName")) %>
-							<div class="small">P<%= twoDigits(participantId) %> · <%= escapeHtml((String) row.get("username")) %></div>
-						</td>
-						<td><%= escapeHtml((String) row.get("contactNum")) %></td>
-						<td>
-							<%-- event_ids is "1,3" from GROUP_CONCAT, shown as E01 / E03 --%>
-							<% if (eventIds == null) { %>
-								<span class="small">None</span>
-							<% } else {
-								for (String eventId : eventIds.split(",")) { %>
-									<div>E<%= twoDigits(Integer.parseInt(eventId)) %></div>
-							<%	}
-							} %>
-						</td>
-						<td>
-							<% if (isActive) { %>
-								<span class="badge">Active</span>
-							<% } else { %>
-								<span class="badge badgeInactive">Inactive</span>
-							<% } %>
-						</td>
-						<td>
-							<div class="actions">
-							<%-- the id is embedded in a hidden field and sent to the next page --%>
-							<form action="viewParticipant.jsp" method="get">
-								<input type="hidden" name="id" value="<%= participantId %>">
-								<button type="submit" class="btn">View</button>
-							</form>
-							<form action="editParticipant.jsp" method="get">
-								<input type="hidden" name="id" value="<%= participantId %>">
-								<button type="submit" class="btn">Edit</button>
-							</form>
-							<%-- shown for every active participant; confirmDeactivate.jsp checks sign-ups --%>
-							<% if (isActive) { %>
-								<form action="confirmDeactivate.jsp" method="post">
-									<input type="hidden" name="id" value="<%= participantId %>">
-									<button type="submit" class="btn">Deactivate</button>
-								</form>
-							<% } %>
-							</div>
-						</td>
-					</tr>
-				<% } %>
-				</tbody>
-			</table>
-		<% } %>
-	</main>
+		<div class="card">
+			<%-- success / error messages --%>
+			<% if (msgText != null) { %>
+				<div class="msgBox msgSuccess"><%= msgText %></div>
+			<% } %>
+			<% if (errMessage != null) { %>
+				<div class="msgBox msgError"><%= errMessage %></div>
+			<% } %>
 
-	<%-- TODO: shared footer --%>
+			<% if (loadErr) { %>
+				<div class="msgBox msgError">Participants could not be loaded. Please try again later.</div>
+			<% } else if (participants.isEmpty()) { %>
+				<p class="note">No participants found. Try a different keyword or status.</p>
+			<% } else { %>
+				<table class="dataTable">
+					<thead>
+						<tr>
+							<th>Participant</th>
+							<th>Contact</th>
+							<th>Event sign-ups</th>
+							<th>Status</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+					<% for (Map<String, Object> row : participants) {
+						int participantId = (Integer) row.get("participantId");
+						boolean isActive = (Boolean) row.get("isActive");
+						String eventIds = (String) row.get("eventIds");
+					%>
+						<tr>
+							<td>
+								<%= escapeHtml((String) row.get("fullName")) %>
+								<div class="small">P<%= twoDigits(participantId) %> · <%= escapeHtml((String) row.get("username")) %></div>
+							</td>
+							<td><%= escapeHtml((String) row.get("contactNum")) %></td>
+							<td>
+								<%-- event_ids is "1,3" from GROUP_CONCAT, shown as E01 / E03 --%>
+								<% if (eventIds == null) { %>
+									<span class="small">None</span>
+								<% } else {
+									for (String eventId : eventIds.split(",")) { %>
+										<div>E<%= twoDigits(Integer.parseInt(eventId)) %></div>
+								<%	}
+								} %>
+							</td>
+							<td>
+								<% if (isActive) { %>
+									<span class="badge">Active</span>
+								<% } else { %>
+									<span class="badge badgeInactive">Inactive</span>
+								<% } %>
+							</td>
+							<td>
+								<div class="actions">
+									<%-- the id is embedded in a hidden field and sent to the next page --%>
+									<form action="viewParticipant.jsp" method="get">
+										<input type="hidden" name="id" value="<%= participantId %>">
+										<button type="submit" class="btn">View</button>
+									</form>
+									<form action="editParticipant.jsp" method="get">
+										<input type="hidden" name="id" value="<%= participantId %>">
+										<button type="submit" class="btn">Edit</button>
+									</form>
+									<%-- shown for every active participant; confirmDeactivate.jsp checks sign-ups --%>
+									<% if (isActive) { %>
+										<form action="confirmDeactivate.jsp" method="post">
+											<input type="hidden" name="id" value="<%= participantId %>">
+											<button type="submit" class="btn">Deactivate</button>
+										</form>
+									<% } %>
+								</div>
+							</td>
+						</tr>
+					<% } %>
+					</tbody>
+				</table>
+			<% } %>
+		</div>
+
+		<%@ include file="/shared/footer.html" %>
+	</main>
 </body>
 </html>
