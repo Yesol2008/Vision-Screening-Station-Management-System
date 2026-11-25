@@ -127,11 +127,7 @@ try {
 <html>
 <head>
 <meta charset="UTF-8">
-<<<<<<< HEAD
 <title>Browse Events - Vision Screening</title>
-=======
-<title>Browse events - Vision Screening</title>
->>>>>>> 2b63a17f6650590abb7b7d048a9130e4cbe96660
 	<style>
 	.card{
 	display: grid;
