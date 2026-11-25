@@ -25,6 +25,8 @@ if (currentPwd == null || currentPwd.trim().isEmpty() || newPwd == null || newPw
 	passwordErr = "Password must be 8-64 characters and contain at least one uppercase letter, one lowercase letter, one number and one symbol.";
 }else if(!newPwdConfirm.equals(newPwd)) {
     passwordErr = "Confirm password doesn't match with new password.";
+}else if (newPwd.equals(currentPwd)) {
+	passwordErr = "The new password must be different from your current password.";
 }
 
 Integer participantId = (Integer) session.getAttribute("userId");
@@ -64,7 +66,7 @@ try {
 	
     	// Step 3: Establish database connection. Used try-with so that connection will close automatically
 		try(Connection conn = DriverManager.getConnection(connURL, username, password)){
-			 String sql = "SELECT password FROM users WHERE user_id =?";
+			 String sql = "SELECT password_hash FROM users WHERE user_id =?";
 			 
 			 try(PreparedStatement ps = conn.prepareStatement(sql)){
 				 
@@ -74,7 +76,7 @@ try {
 					 
 					if(rs.next()){
 						 
-						 if(BCrypt.checkpw(currentPwd, rs.getString("password"))){
+						 if(BCrypt.checkpw(currentPwd, rs.getString("password_hash"))){
 							 pwdMatch = true;
 							 
 						 }else{
@@ -99,7 +101,7 @@ try {
 			 
 			 if(pwdMatch){
 				 						
-				 String update = "UPDATE users SET password = ? WHERE user_id=?";
+				 String update = "UPDATE users SET password_hash = ? WHERE user_id=?";
 						 
 					try(PreparedStatement ps = conn.prepareStatement(update)){
 						String hashedPassword = BCrypt.hashpw(newPwd, BCrypt.gensalt(10));
@@ -108,6 +110,7 @@ try {
 							
 						int rows = ps.executeUpdate();
 						if (rows > 0) {
+						   session.invalidate();
 						   response.sendRedirect(request.getContextPath() + "/login.jsp?msg=successUpdate");
 						    return;
 						}else{
