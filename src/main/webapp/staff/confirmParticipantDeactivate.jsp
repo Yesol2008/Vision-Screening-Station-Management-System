@@ -76,19 +76,19 @@ Description: ST0510/JAD Assignment 1 - Staff: confirm deactivation of a particip
 			signupCount = rs.getInt("signup_count");
 		}
 	} catch (ClassNotFoundException e) {
-		System.err.println("confirmDeactivate.jsp - driver not found: " + e);
+		System.err.println("confirmParticipantDeactivate.jsp - driver not found: " + e);
 		response.sendRedirect("listParticipants.jsp?errCode=dbError");
 		return;
 	} catch (SQLException e) {
-		System.err.println("confirmDeactivate.jsp - SQL error: " + e);
+		System.err.println("confirmParticipantDeactivate.jsp - SQL error: " + e);
 		response.sendRedirect("listParticipants.jsp?errCode=dbError");
 		return;
 	} catch (DotenvException e) {
-		System.err.println("confirmDeactivate.jsp - .env error: " + e);
+		System.err.println("confirmParticipantDeactivate.jsp - .env error: " + e);
 		response.sendRedirect("listParticipants.jsp?errCode=dbError");
 		return;
 	} catch (Exception e) {
-		System.err.println("confirmDeactivate.jsp - " + e);
+		System.err.println("confirmParticipantDeactivate.jsp - " + e);
 		response.sendRedirect("listParticipants.jsp?errCode=dbError");
 		return;
 	} finally {
@@ -124,11 +124,10 @@ Description: ST0510/JAD Assignment 1 - Staff: confirm deactivation of a particip
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 </head>
 <body>
+	<main class="page">
 	<%-- shared header--%>
 	<%@ include file="/shared/header.jsp" %>
 	
-
-	<main class="container">
 		<div class="card">
 			<h1 class="pageTitle">Deactivate participant?</h1>
 			<p class="pageSub">
@@ -149,8 +148,7 @@ Description: ST0510/JAD Assignment 1 - Staff: confirm deactivation of a particip
 				</form>
 			</div>
 		</div>
+		<%@ include file="/shared/footer.html" %>
 	</main>
-
-	<%-- TODO: shared footer --%>
 </body>
 </html>

@@ -172,8 +172,8 @@ Description: ST0510/JAD Assignment 1 - Staff: view one participant's details
 				</form>
 			</div>
 		</div>
+		<%@ include file="/shared/footer.html" %>
 	</main>
 
-	<%-- TODO: shared footer --%>
 </body>
 </html>

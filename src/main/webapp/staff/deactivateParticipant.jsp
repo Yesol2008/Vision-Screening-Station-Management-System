@@ -6,7 +6,7 @@ Description: ST0510/JAD Assignment 1 - Staff: deactivate a participant account
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
-<%-- fragments kept in WEB-INF so they cannot be opened directly --%>
+
 <%@ include file="/auth/staffGuard.jsp" %>
 <%
 	//1. only reachable from the confirmation page, which submits by POST
@@ -15,7 +15,7 @@ Description: ST0510/JAD Assignment 1 - Staff: deactivate a participant account
 		return;
 	}
 
-	//2. the id arrives as text from the hidden field in confirmDeactivate.jsp
+	//2. the id arrives as text from the hidden field in confirmParticipantDeactivate.jsp
 	String idText = request.getParameter("id");
 
 	if (idText == null) {
@@ -36,19 +36,19 @@ Description: ST0510/JAD Assignment 1 - Staff: deactivate a participant account
 	Connection conn = null;
 
 	try {
-		// Step 1: Load JDBC Driver
+		//Load JDBC Driver
 		Class.forName("com.mysql.cj.jdbc.Driver");
 
-		// Step 2: Read connection details from .env in WEB-INF
+		//Read connection details from .env in WEB-INF
 		Dotenv dotenv = Dotenv.configure().directory(application.getRealPath("/WEB-INF")).load();
 		String connURL = dotenv.get("DB_URL");
 		String dbUser = dotenv.get("DB_USERNAME");
 		String dbPassword = dotenv.get("DB_PASSWORD");
 
-		// Step 3: Establish connection
+		//Establish connection
 		conn = DriverManager.getConnection(connURL, dbUser, dbPassword);
 
-		// Step 4a: PreparedStatement to look up the account and its active sign-ups
+		//  PreparedStatement to look up the account and its active sign-ups
 		String checkSql = "SELECT u.user_id, u.is_active, COUNT(r.event_id) AS signup_count "
 				+ "FROM participants p "
 				+ "JOIN users u ON p.user_id = u.user_id "
@@ -58,10 +58,10 @@ Description: ST0510/JAD Assignment 1 - Staff: deactivate a participant account
 		PreparedStatement checkPs = conn.prepareStatement(checkSql);
 		checkPs.setInt(1, participantId);
 
-		// Step 5a: Execute query
+		// Execute query
 		ResultSet rs = checkPs.executeQuery();
 
-		// Step 6: Process result :we will use if instead of while
+		//  Process result :we will use if instead of while
 		//because it will return one row at most
 		if (!rs.next()) {
 			result = "errCode=notFound";
@@ -70,15 +70,15 @@ Description: ST0510/JAD Assignment 1 - Staff: deactivate a participant account
 		} else if (rs.getInt("signup_count") > 0) {
 			result = "errCode=hasSignups";
 		} else {
-			// Step 4b: PreparedStatement to deactivate; is_active is kept only in users
+			// PreparedStatement to deactivate; is_active is kept only in users
 			int userId = rs.getInt("user_id");
 			PreparedStatement ps = conn.prepareStatement("UPDATE users SET is_active = FALSE WHERE user_id = ?");
 			ps.setInt(1, userId);
 
-			// Step 5b: Execute update - returns the number of rows changed
+			// Execute update - returns the number of rows changed
 			int rows = ps.executeUpdate();
 
-			// Step 6b: Process result
+			//  Process result
 			if (rows == 1) {
 				result = "msg=deactivated";
 			} else {
@@ -98,7 +98,7 @@ Description: ST0510/JAD Assignment 1 - Staff: deactivate a participant account
 		System.err.println("deactivateParticipant.jsp - " + e);
 		result = "errCode=dbError";
 	} finally {
-		// Step 7: Close connection
+		//Close connection
 		if (conn != null) {
 			try {
 				conn.close();

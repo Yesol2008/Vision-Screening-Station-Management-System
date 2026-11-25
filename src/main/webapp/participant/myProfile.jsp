@@ -23,11 +23,16 @@
 	if (msg != null && msg.equals("updated")) {
 		successMessage = "Your profile has been updated.";
 	}
-	if (errCode != null && errCode.equals("notAuthorised")) {
-		// a participant tried to open a staff page
-		errMessage = "You don't have access to that page.";
+	if (errCode != null) {
+		if (errCode.equals("notAuthorised")) {
+			// a participant tried to open a staff page
+			errMessage = "You don't have access to that page.";
+		} else if (errCode.equals("failUpdate")) {
+			errMessage = "Your password couldn't be updated. Please try again.";
+		} else if (errCode.equals("noResult")) {
+			errMessage = "Your account could not be found.";
+		}
 	}
-
 	// values shown in the details card (filled from the database below)
 	int participantId = 0;
 	String username = null;

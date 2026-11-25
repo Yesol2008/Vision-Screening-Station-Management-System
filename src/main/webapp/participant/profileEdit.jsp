@@ -315,7 +315,6 @@
 			<div class="formActions">
 			<%-- separate page, so the password is never part of the profile form --%>
 			<a class="btn" href="updatePwd.jsp">Change password</a>
-				<span></span>
 				<span>
 					<a class="btn" href="myProfile.jsp">Cancel</a>
 					<input type="submit" class="btn btnDark" value="Save profile">
