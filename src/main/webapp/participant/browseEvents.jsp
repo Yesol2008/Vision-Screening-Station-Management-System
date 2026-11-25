@@ -215,15 +215,15 @@ try {
 							<a href="viewEventDetails.jsp?eventId=<%=eventId%>">View Event Details</a>
 							
 <%
-					if("Registered".equals(registrationStatus) || "Attended".equals(registrationStatus)){ %>
+					 if(past || "Completed".equals(status) || "Inactive".equals(status)){ %>
+					<input type="button" class="btn" value="Sign-up closed" disabled>
+					<%}else if("Registered".equals(registrationStatus) || "Attended".equals(registrationStatus)){ %>
 						<p><strong>You are signed up</strong></p>
 					<% } else if("Withdrawn".equals(registrationStatus)){%>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>" method="post">
 							<input type="submit" class="btn btnPrimary" value="Sign-up again">
 							<input type="hidden" name="registrationId" value="<%=ev.get("regId")%>">
 						</form>
-					<%}else if(past || "Completed".equals(status) || "Inactive".equals(status)){ %>
-						<input type="button" class="btn" value="Sign-up closed" disabled>
 					<%}else{%>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>" method="post">
 							<input type="submit" class="btn btnPrimary" value="Sign up">
