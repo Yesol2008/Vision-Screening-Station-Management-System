@@ -14,6 +14,9 @@ String newPwdConfirm = request.getParameter("newPwdConfirm");
 
 String passwordErr ="";
 
+
+if ("POST".equalsIgnoreCase(request.getMethod())) {
+
 if (currentPwd == null || currentPwd.trim().isEmpty() || newPwd == null || newPwd.trim().isEmpty()|| newPwdConfirm == null || newPwdConfirm.trim().isEmpty()) {
 	passwordErr = "All password fields are required.";
 }else if (newPwd.length() < 8 || newPwd.length() > 64) {
@@ -133,6 +136,7 @@ try {
         out.println("Unable to connect to the database.");
     }
 }
+}
 %>
 <!DOCTYPE html>
 <html>
@@ -145,11 +149,11 @@ try {
 <div class="page">
 <%@ include file="/shared/header.jsp" %>
 
-	<div class="cardGrid">
-		<% if (passwordErr != null) { %>
+	<div class="card">
+		<% if (!passwordErr.trim().isEmpty()) { %>
 			<div class="fieldError"><%= escapeHtml(passwordErr) %></div>
-		<% } %>
-		<form>
+		<%} %>
+		<form method="post">
 			<div>
 				<label>Current password:</label>
 				<input type="password" name="currentPwd">
@@ -163,8 +167,8 @@ try {
 				<input type="password" name="newPwdConfirm">
 			</div>
 			<div>
-				<input type="submit" value="Update">
-				<a href="myProfile.jsp">Back</a>
+				<input type="submit" value="Update" class="btn btnPrimary">
+				<a class="btn btnPrimary" href="myProfile.jsp">Back</a>
 			</div>
 			
 		</form>
