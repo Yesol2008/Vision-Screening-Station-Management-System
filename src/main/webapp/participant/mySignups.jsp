@@ -1,21 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*" %>
+<%@ page import="java.sql.*, java.util.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
 <%@ page import="io.github.cdimascio.dotenv.DotenvException" %>
 <%@ page import="java.time.format.DateTimeParseException" %>
 <%@ page import="java.time.LocalDate" %>
 
 <%@ include file="/auth/participantGuard.jsp" %>
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Events Registered - Vision Screening</title>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
-</head>
-<body>
 <%
 
 
@@ -38,7 +29,13 @@ if("failedWithdrawn".equals(errCode)){
 }else if("Exception".equals(errCode)){
 	errorCode ="Unable to connect to the server for signup/withdrawal. Please try again later.";
 }
-
+String returnUrl = "mySignups.jsp";
+Integer participantId = (Integer) session.getAttribute("userId");
+			
+			
+List<Map<String, String>> signups = new ArrayList<>();
+LocalDate today = LocalDate.now();			
+			
 try {
 	
 	// Step 1: Load environment variables
@@ -49,8 +46,7 @@ try {
 	String connURL = dotenv.get("DB_URL");
 	String username = dotenv.get("DB_USERNAME");
 	String password = dotenv.get("DB_PASSWORD");
-	String returnUrl = "mySignups.jsp";
-	Integer participantId = (Integer) session.getAttribute("userId");
+
 
     // Step 2: Load JDBC Driver (optional for newer drivers)
     Class.forName("com.mysql.cj.jdbc.Driver");
@@ -69,10 +65,53 @@ try {
 			
 			
 			try(ResultSet rs = cs.executeQuery();){
-				LocalDate today = LocalDate.now();
 				
-	//////////////////////start of the html/////////
-%>
+				while(rs.next()){
+					 Map<String, String> ev = new HashMap<>();
+						ev.put("id", String.valueOf(rs.getInt("event_id")));
+						ev.put("name", rs.getString("event_name"));
+						ev.put("location", rs.getString("location"));
+						ev.put("status", rs.getString("status"));
+						ev.put("regStatus", rs.getString("registration_status"));
+						ev.put("regId", String.valueOf(rs.getInt("registration_id")));
+						java.sql.Date d = rs.getDate("event_date");
+						ev.put("date", d == null ? "" : d.toString());
+						boolean past = !ev.get("date").isEmpty()&& LocalDate.parse(ev.get("date")).isBefore(today);
+						ev.put("past", String.valueOf(past));
+						signups.add(ev);      
+  				
+				}
+			}
+		}
+			
+	} catch (SQLException e) {
+		System.err.println("Database error in mySignups.jsp"+ e);
+	    errorCode="Unable to connect to the server. Please try again later.";
+	} catch (DotenvException e) {
+		System.err.println("Environment configuration error in mySignups.jsp"+ e);
+		errorCode="Something went wrong. Please try again later.";
+
+
+	} catch (DateTimeParseException e) {
+		System.err.println("Invalid event date format in mySignups.jsp"+ e);
+		errorCode = "Unable to display event information. Please try again later.";
+
+	}catch (Exception e) {
+	    e.printStackTrace();
+	  	System.err.println("Database connection error"+ e);
+	 	out.println("Unable to connect to the database.");
+	}
+			
+%>			
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Events Registered - Vision Screening</title>
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
+</head>
+<body>
 
 
 <div class="page">
@@ -102,23 +141,22 @@ try {
 					<th>Action</th>
 				</tr>
 <%			
-				while(rs.next()){
-					int eventId = rs.getInt("event_id");
-					String event_name = rs.getString("event_name");
-                    String event_date = rs.getString("event_date");
-                    String location = rs.getString("location");
-                    String status = rs.getString("status");
-					String registrationStatus = rs.getString("registration_status");
-                    int registration_id = rs.getInt("registration_id");
-    				LocalDate date = LocalDate.parse(event_date);
+			for (Map<String, String> ev : signups) {
+				String event_name = ev.get("name");
+				String event_date = ev.get("date");
+			    String registration_id   = ev.get("regId");
+			    String registrationStatus = ev.get("regStatus");
+			    String location = ev.get("location");
+			    String status    = ev.get("status");
+			    boolean past     = Boolean.parseBoolean(ev.get("past"));
 
 					
 %>
 				<tr>
-					<td><%=event_name %></td>
-					<td><%=event_date %>/<br><%=location %></td>
-					<td><%=status%></td>
-					<td><%=registrationStatus%></td>
+					<td><%=escapeHtml(event_name) %></td>
+					<td><%=escapeHtml(event_date)%>/<br><%=location %></td>
+					<td><%=escapeHtml(status)%></td>
+					<td><%=escapeHtml(registrationStatus)%></td>
 					<td>
 <% 					if("Registered".equals(registrationStatus)){ %>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>" method="post">
@@ -130,7 +168,7 @@ try {
 							<input type="submit" class="btn btnPrimary" value="Sign-up again">
 							<input type="hidden" name="registrationId" value="<%=registration_id%>">
 						</form>
-					<%} else if(date.isBefore(today) || "Completed".equals(status) || "Inactive".equals(status) || "Attended".equals(registrationStatus)){ %>
+					<%} else if(past || "Completed".equals(status) || "Inactive".equals(status) || "Attended".equals(registrationStatus)){ %>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>>" method="post">
 							<input type="submit" class="btn btnPrimary" value="Withdawal Closed" disabled>
 						</form>
@@ -148,30 +186,6 @@ try {
 	<%@ include file="/shared/footer.html" %>
 
 </div>
-    			
-<%			
-			}
-		}
-		
-	} catch (SQLException e) {
-		System.err.println("Database error in mySignups.jsp"+ e);
-	    errorCode="Unable to connect to the server. Please try again later.";
-	} catch (DotenvException e) {
-		System.err.println("Environment configuration error in mySignups.jsp"+ e);
-		errorCode="Something went wrong. Please try again later.";
-
-
-	} catch (DateTimeParseException e) {
-		System.err.println("Invalid event date format in mySignups.jsp"+ e);
-		errorCode = "Unable to display event information. Please try again later.";
-
-	}catch (Exception e) {
-        e.printStackTrace();
-        System.err.println("Database connection error"+ e);
-        out.println("Unable to connect to the database.");
-    }
-		
-%>
 
 
 </body>

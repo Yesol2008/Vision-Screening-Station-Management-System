@@ -225,7 +225,6 @@ try {
 					<%}else if(past || "Completed".equals(status) || "Inactive".equals(status)){ %>
 						<input type="button" class="btn" value="Sign-up closed" disabled>
 					<%}else{%>
-						<a href="viewEventDetails.jsp?eventId=<%=eventId%>">View Event Details</a>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>" method="post">
 							<input type="submit" class="btn btnPrimary" value="Sign up">
 							<input type="hidden" name="eventId" value="<%=eventId%>">
