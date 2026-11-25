@@ -46,6 +46,15 @@ if (eventId != null && eventId.matches("\\d+")) {
 	return;
 }
 boolean isRegistered = false;
+boolean found = false;
+String returnUrl = "registeredEvents.jsp";
+Integer participantId = (Integer) session.getAttribute("userId");
+String name = "";
+String date = "";
+String location = "";
+String status = "";
+String created_at = "";
+
 
 try {
 	
@@ -57,8 +66,6 @@ try {
 	String connURL = dotenv.get("DB_URL");
 	String username = dotenv.get("DB_USERNAME");
 	String password = dotenv.get("DB_PASSWORD");
-	String returnUrl = "registeredEvents.jsp";
-	Integer participantId = (Integer) session.getAttribute("userId");
 
     // Step 2: Load JDBC Driver (optional for newer drivers)
     Class.forName("com.mysql.cj.jdbc.Driver");
@@ -74,6 +81,46 @@ try {
 
 			PreparedStatement ps = conn.prepareStatement(sql);
 			ps.setInt(1, intEventId);
+			
+			try(ResultSet rs = ps.executeQuery()){
+				while(rs.next()){
+                    found = true;
+					name = rs.getString("event_name");
+					date = rs.getString("event_date");
+					location = rs.getString("location");
+					status = rs.getString("status");
+					created_at = rs.getString("created_at");
+				}
+			}
+			
+		
+		if (participantId != null) {
+			try (PreparedStatement ps1 = conn.prepareStatement(sql1)) {
+				ps1.setInt(1, participantId);
+				ps1.setInt(2, intEventId);
+				try (ResultSet rs1 = ps1.executeQuery()) {
+					isRegistered = rs1.next();   // true if a row exists
+				}
+			}
+		}
+	}
+} catch (ClassNotFoundException e) {
+	System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
+	response.sendRedirect("browseEvents.jsp?errCode=dbError");
+	return;
+} catch (SQLException e) {
+	System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
+	response.sendRedirect("browseEvents.jsp?errCode=dbError");
+	return;
+} catch (DotenvException e) {
+	System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
+	response.sendRedirect("browseEvents.jsp?errCode=dbError");
+	return;
+}catch (Exception e) {
+e.printStackTrace();
+application.log("Database connection error", e);
+out.println("Unable to connect to the database.");
+}
 	////////////////////////html start here/////////////////////
 %>
 	
@@ -83,17 +130,7 @@ try {
 	
 		<div class="card">
 	
-	
-			
-<%			try(ResultSet rs = ps.executeQuery()){
-				while(rs.next()){
-				
-					String name = rs.getString("event_name");
-					String date = rs.getString("event_date");
-					String location = rs.getString("location");
-					String status = rs.getString("status");
-					String created_at = rs.getString("created_at");
-%>					
+					
 				<p><strong>Event Name: </strong><%= escapeHtml(name)%></p>
 				<p><strong>Event Date: </strong><%=escapeHtml(date) %></p>
 				<p><strong>Event Location: </strong><%= escapeHtml(location)%></p>
@@ -101,20 +138,7 @@ try {
 				<p><strong>Event Posted: </strong><%= escapeHtml(created_at)%></p>
 					
 					
-<%				}
-			
-			}
-			
-			if (participantId != null) {
-				try (PreparedStatement ps1 = conn.prepareStatement(sql1)) {
-					ps1.setInt(1, participantId);
-					ps1.setInt(2, intEventId);
-					try (ResultSet rs1 = ps1.executeQuery()) {
-						isRegistered = rs1.next();   // true if a row exists
-					}
-				}
-			}
-	%>
+
 		<div class="btnGrid">
 			<a href="browseEvents.jsp" class="btn btnPrimary">Back</a>
 <%		if(!isRegistered){	
@@ -124,42 +148,18 @@ try {
 				<input type="hidden" name="eventId" value="<%=eventId%>">
 			</form>	
 		
-	<%
+<%
 		}else{
 %>
 			<a href="mySignups.jsp" class="btn btnPrimary">Manage Your Registrations</a>
-		
-
 <%			
 		}
-	%>
+%>
 		</div>
 		</div>
 		
 	<%@ include file="/shared/footer.html" %>
 	
 	</div>	
-			
-<%		}
-    	
-	} catch (ClassNotFoundException e) {
-		System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
-		response.sendRedirect("browseEvents.jsp?errCode=dbError");
-		return;
-	} catch (SQLException e) {
-		System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
-		response.sendRedirect("browseEvents.jsp?errCode=dbError");
-		return;
-	} catch (DotenvException e) {
-		System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
-		response.sendRedirect("browseEvents.jsp?errCode=dbError");
-		return;
-	}catch (Exception e) {
-    e.printStackTrace();
-    application.log("Database connection error", e);
-    out.println("Unable to connect to the database.");
-	}
-
-%>
 </body>
 </html>
