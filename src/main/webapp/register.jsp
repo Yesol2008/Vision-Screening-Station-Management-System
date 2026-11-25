@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.sql.*" %>
-<%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
+<%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
 <%@ page import="org.mindrot.jbcrypt.BCrypt" %>
 <%--
 	Author: Htet Yamin Aung (P2535607)
@@ -16,6 +16,9 @@
 --%>
 
 <%
+	//read form data as UTF-8
+	request.setCharacterEncoding("UTF-8");
+	
 	// values to put back into the form (empty on the first visit)
 	// passwords are never put back into the page
 	String username = "";
@@ -67,7 +70,7 @@
 			if (username.isEmpty()) {
 				usernameErr = "Username cannot be empty.";
 			} else if (!username.matches("[A-Za-z0-9_]{3,20}")) {
-				usernameErr = "Username must be 3-20 letters long, and contain only numbers or underscores (no spaces).";
+				usernameErr = "Username must be 3-20 characters long, using only letters, numbers or underscores (no spaces).";
 			}
 
 			// ----- full name -----
@@ -164,12 +167,20 @@
 					}
 				 //error catching
 				} catch (SQLIntegrityConstraintViolationException e) {
-					// someone took the same username between the username check and the insert (before the insert and after the check)
-					System.err.println("register.jsp - " + e);
+					// someone took the same username between the check and the insert
+					System.err.println("register.jsp - duplicate username: " + e);
 					usernameErr = "The username is already taken. Please try again with a different username.";
+				} catch (ClassNotFoundException e) {
+					System.err.println("register.jsp - driver not found: " + e);
+					formErr = "Sorry, we couldn't create your account right now. Please try again later.";
+				} catch (SQLException e) {
+					System.err.println("register.jsp - SQL error: " + e);
+					formErr = "Sorry, we couldn't create your account right now. Please try again later.";
+				} catch (DotenvException e) {
+					System.err.println("register.jsp - .env error: " + e);
+					formErr = "Sorry, we couldn't create your account right now. Please try again later.";
 				} catch (Exception e) {
-					// we will print details to the console and  a plain sentence to the user
-					//because we do not want to reveal the database details to the user
+					// details go to the console only; the user sees a plain sentence
 					System.err.println("register.jsp - " + e);
 					formErr = "Sorry, we couldn't create your account right now. Please try again later.";
 				} finally {
@@ -191,6 +202,7 @@
 			}
 		}
 	}
+		
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -219,10 +231,10 @@
 
 				<div class="field">
 					<label for="username">Username <span class="req">*</span></label>
-					<!-- if this field has an error, give the box the inputError class otherwise no class -->
+					<%-- if this field has an error, give the box the inputError class otherwise no class --%>
 					<input type="text" id="username" name="username" maxlength="20" placeholder="e.g. alex_tan"
 						value="<%= escapeHtml(username) %>" class="<%= usernameErr != null ? "inputError" : "" %>">
-					<!-- if usernameErr is not null, print the usernameErr inside the class fieldError -->
+					<%-- if usernameErr is not null, print the usernameErr inside the class fieldError --%>
 					<% if (usernameErr != null) { %><div class="fieldError"><%= usernameErr %></div><% } %>
 					<div class="fieldHint">Use 3-20 letters, numbers or underscores.</div>
 				</div>
@@ -273,7 +285,7 @@
 			</div>
 		</form>
 	</div>
-
+	<%@ include file="/shared/footer.html" %>
 </div>
 </body>
 </html>

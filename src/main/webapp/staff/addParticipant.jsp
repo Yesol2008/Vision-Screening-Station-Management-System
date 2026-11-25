@@ -14,9 +14,13 @@ Passwords are hashed with bcrypt before they are stored.
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
 <%@ page import="org.mindrot.jbcrypt.BCrypt" %>
-<%-- fragments kept in WEB-INF so they cannot be opened directly --%>
+
+<%--staff only page: redirect anyone who is not a staff --%>
 <%@ include file="/auth/staffGuard.jsp" %>
-<%
+<% 
+	//read form data as UTF-8
+	request.setCharacterEncoding("UTF-8");
+	
 	// values to put back into the form (empty on the first visit)
 	// passwords are never put back into the page
 	String username = "";
@@ -277,8 +281,9 @@ Passwords are hashed with bcrypt before they are stored.
 				</div>
 			</form>
 		</div>
+		
+		<%@ include file="/shared/footer.html" %>
 	</main>
 
-	<%-- TODO: shared footer --%>
 </body>
 </html>

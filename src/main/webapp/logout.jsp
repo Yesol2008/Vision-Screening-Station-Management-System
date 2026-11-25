@@ -8,6 +8,6 @@ Description: ST0510/JAD Assignment 1 - Log out (no HTML; redirects only)
 	//end the session: removes userId and every other attribute stored in it
 	session.invalidate();
 
-	//back to the login page with a confirmation message (Post/Redirect/Get)
+	//back to the login page with a confirmation message
 	response.sendRedirect("login.jsp?msg=loggedOut");
 %>

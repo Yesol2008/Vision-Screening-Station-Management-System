@@ -5,7 +5,7 @@ Description: ST0510/JAD Assignment 1 - Shared header file
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.sql.*" %>
-<%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
+<%@ page import="io.github.cdimascio.dotenv.Dotenv , io.github.cdimascio.dotenv.DotenvException" %>
 <%@ include file="helpers.jsp" %>
 <%
 	//base URL excluding the file names
@@ -55,8 +55,14 @@ Description: ST0510/JAD Assignment 1 - Shared header file
 					headerName = headerUsername;
 				}
 			}
+		} catch (ClassNotFoundException e) {
+			System.err.println("header.jsp - driver not found: " + e);
+		} catch (SQLException e) {
+			System.err.println("header.jsp - SQL error: " + e);
+		} catch (DotenvException e) {
+			System.err.println("header.jsp - .env error: " + e);
 		} catch (Exception e) {
-			//a header error should not break the page; it falls back to the guest header
+			//any other error: log it; the page still shows, with the guest header
 			System.err.println("header.jsp - " + e);
 		} finally {
 			// Step 7: Close connection

@@ -17,6 +17,9 @@
 --%>
 <%@ include file="/auth/participantGuard.jsp" %>
 <%
+	//read form data as UTF-8
+	request.setCharacterEncoding("UTF-8");
+
 	// values shown in the form
 	// GET: filled from the database below; POST: what the user typed
 	String username = "";
@@ -257,7 +260,7 @@
 
 <div class="page">
 
-	<%--  shared header for signed-in users goes here --%>
+	<%--  shared header for signed-in users --%>
 	<%@ include file="/shared/header.jsp" %>
 
 	<div class="card">
@@ -310,18 +313,16 @@
 			<% } %>
 
 			<div class="formActions">
-				<span></span>
+			<%-- separate page, so the password is never part of the profile form --%>
+			<a class="btn" href="updatePwd.jsp">Change password</a>
 				<span>
 					<a class="btn" href="myProfile.jsp">Cancel</a>
 					<input type="submit" class="btn btnDark" value="Save profile">
 				</span>
 			</div>
 		</form>
-	</div>
-
-	<%-- TODO: shared footer goes here, e.g.
-	     <%@ include file="/WEB-INF/includes/footer.jsp" %> --%>
-
+	</div>	     
+	<%@ include file="/shared/footer.html" %>
 </div>
 </body>
 </html>

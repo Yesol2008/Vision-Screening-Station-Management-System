@@ -23,11 +23,16 @@
 	if (msg != null && msg.equals("updated")) {
 		successMessage = "Your profile has been updated.";
 	}
-	if (errCode != null && errCode.equals("notAuthorised")) {
-		// a participant tried to open a staff page
-		errMessage = "You don't have access to that page.";
+	if (errCode != null) {
+		if (errCode.equals("notAuthorised")) {
+			// a participant tried to open a staff page
+			errMessage = "You don't have access to that page.";
+		} else if (errCode.equals("failUpdate")) {
+			errMessage = "Your password couldn't be updated. Please try again.";
+		} else if (errCode.equals("noResult")) {
+			errMessage = "Your account could not be found.";
+		}
 	}
-
 	// values shown in the details card (filled from the database below)
 	int participantId = 0;
 	String username = null;
@@ -73,16 +78,16 @@
 		// Catch errors: print details to the console for debugging,
 		// but show the user a general message
 	} catch (ClassNotFoundException e) {
-		System.err.println("profile.jsp - JDBC driver not found :" + e);
+		System.err.println("myProfile.jsp - JDBC driver not found :" + e);
 		loadErr = "Sorry, your profile could not be loaded. Please try again later.";
 	} catch (SQLException e) {
-		System.err.println("profile.jsp - database error :" + e);
+		System.err.println("myProfile.jsp - database error :" + e);
 		loadErr = "Sorry, your profile could not be loaded. Please try again later.";
 	} catch (DotenvException e) {
-		System.err.println("profile.jsp - .env file error :" + e);
+		System.err.println("myProfile.jsp - .env file error :" + e);
 		loadErr = "Sorry, your profile could not be loaded. Please try again later.";
 	} catch (Exception e) {
-		System.err.println("profile.jsp - unexpected error :" + e);
+		System.err.println("myProfile.jsp - unexpected error :" + e);
 		loadErr = "Sorry, your profile could not be loaded. Please try again later.";
 	} finally {
 		// Step 7: Close the connection
@@ -94,9 +99,6 @@
 			}
 		}
 	}
-
-	// tells the header which menu item to underline
-	String activeNav = "profile";
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -110,7 +112,6 @@
 
 <div class="page">
 <%@ include file="/shared/header.jsp" %>
-	<div><h2>PARTICIPANT WORKSPACE</h2></div>
 	<div class="titleRow">
 		<h1>My profile</h1>
 		<a class="btn btnDark" href="profileEdit.jsp">Edit my profile</a>
@@ -140,9 +141,8 @@
 			<div class="detailRow"><span class="detailLabel">Email</span><span><%= escapeHtml(email) %></span></div>
 		</div>
 	<% } %>
-
 	
-
+	<%@ include file="/shared/footer.html" %>
 </div>
 </body>
 </html>

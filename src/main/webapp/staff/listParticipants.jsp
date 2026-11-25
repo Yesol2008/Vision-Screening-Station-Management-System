@@ -225,7 +225,7 @@ Description: ST0510/JAD Assignment 1 - Staff: list, search and filter participan
 									</form>
 									<%-- shown for every active participant; confirmDeactivate.jsp checks sign-ups --%>
 									<% if (isActive) { %>
-										<form action="confirmDeactivate.jsp" method="post">
+										<form action="confirmParticipantDeactivate.jsp" method="post">
 											<input type="hidden" name="id" value="<%= participantId %>">
 											<button type="submit" class="btn">Deactivate</button>
 										</form>
@@ -238,7 +238,6 @@ Description: ST0510/JAD Assignment 1 - Staff: list, search and filter participan
 				</table>
 			<% } %>
 		</div>
-
 		<%@ include file="/shared/footer.html" %>
 	</main>
 </body>

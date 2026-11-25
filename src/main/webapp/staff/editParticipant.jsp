@@ -13,9 +13,13 @@ The participant id comes from a hidden field, so it is checked like any other us
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
-<%-- fragments kept in WEB-INF so they cannot be opened directly --%>
+
+<%-- staff only page --%>
 <%@ include file="/auth/staffGuard.jsp" %>
 <%
+	//read form data as UTF-8
+	request.setCharacterEncoding("UTF-8");
+
 	//1. the id arrives as text: from the Edit button (GET) or the hidden field in this form (POST)
 	String idText = request.getParameter("id");
 
@@ -352,8 +356,7 @@ The participant id comes from a hidden field, so it is checked like any other us
 				</div>
 			</form>
 		</div>
+		<%@ include file="/shared/footer.html" %>
 	</main>
-
-	<%-- TODO: shared footer --%>
 </body>
 </html>
