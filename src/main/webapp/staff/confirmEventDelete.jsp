@@ -9,14 +9,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Delete event - Vision Screening</title>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 </head>
 <body>
 <%
 
 if (!"POST".equals(request.getMethod())) {
-	response.sendRedirect("listEvents.jsp?errCode=InvalidRequest");
+	response.sendRedirect("listEvents.jsp?errCode=invalidRequest");
 	return;
 }
 

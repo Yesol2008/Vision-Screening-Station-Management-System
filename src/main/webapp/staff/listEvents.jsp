@@ -11,7 +11,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Events</title>
+<title>Events - Vision Screening</title>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 <style>
 
@@ -67,7 +67,7 @@ if("invalidEventId".equals(errCode)){
 	errorCode = "Invalid event ID.";
 }else if("eventNotFound".equals(errCode)){
 	errorCode = "No such event exist";	
-}else if("InvalidRequest".equals(errCode)){
+}else if("invalidRequest".equals(errCode)){
 	errorCode = "Invalid request. Please try again.";
 }else if("alreadyInactive".equals(errCode)){
 	errorCode = "Event is already inactive";	

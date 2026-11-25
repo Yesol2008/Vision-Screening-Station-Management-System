@@ -13,7 +13,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Browse Events - Vision Screening</title>
 	<style>
 	.card{
 	display: grid;

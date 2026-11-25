@@ -7,7 +7,7 @@
     
    
 <%if (!"POST".equals(request.getMethod())) {
-		response.sendRedirect("listEvents.jsp?errCode=InvalidRequest");
+		response.sendRedirect("listEvents.jsp?errCode=invalidRequest");
 		return;
 	}
 

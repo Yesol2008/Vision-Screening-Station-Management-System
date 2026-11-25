@@ -60,7 +60,7 @@ try {
 		
 	 	//redirected to previous page when there's no exactly 1 parameter
 		if (actionCount != 1) {
-			response.sendRedirect(returnUrl+"?errCode=InvalidRequest");
+			response.sendRedirect(returnUrl+"?errCode=invalidRequest");
 			return;
 		}
 	 	
@@ -76,7 +76,7 @@ try {
 		}
 
 		if (id <= 0) {
-			response.sendRedirect(returnUrl + "?errCode=InvalidRequest");
+			response.sendRedirect(returnUrl + "?errCode=invalidRequest");
 			return;
 		}
 

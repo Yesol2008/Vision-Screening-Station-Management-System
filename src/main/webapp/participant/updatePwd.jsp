@@ -142,7 +142,7 @@ try {
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Update Password</title>
+<title>Update password - Vision Screening</title>
 </head>
 <body>
 

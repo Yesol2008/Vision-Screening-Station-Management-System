@@ -149,7 +149,7 @@ if (status == null || status.trim().isEmpty()) {
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Create event - Vision Screening</title>
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 </head>
 <body>
