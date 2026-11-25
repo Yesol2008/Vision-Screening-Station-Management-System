@@ -577,3 +577,11 @@ textarea.inputError {
 		text-align: center;
 	}
 }
+
+/* search box, filter dropdown and Search button on one row (list pages) */
+.searchBar {
+	display: grid;
+	grid-template-columns: 6fr 2fr 1fr;
+	gap: 20px;
+	margin-bottom: 20px;
+}
