@@ -5,31 +5,34 @@
    Link it in each JSP:
    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 
-   Sections
-     1. Colours (CSS variables)
-     2. Base
-     3. Top bar and navigation
-     4. Cards and headings
-     5. Forms
-     6. Buttons
-     7. Message boxes
-     8. Tables and badges (for other pages)
-     8b. Signed-in pages (header, detail cards, list page)
-     9. Small screens (keep last)
+   Sections 
+     1.  Colours (CSS variables)       - change a colour once, it updates everywhere
+     2.  Base and page width           - every page
+     3.  Header and navigation         - shared/header.jsp
+     4.  Cards and page titles         - forms, detail pages, confirm pages
+     5.  Forms                         - register, add/edit participant, profileEdit, login, updatePwd
+     6.  Buttons                       - every page
+     7.  Message boxes                 - success / error / warning messages
+     8.  List pages                    - listParticipants, listEvents (title, search, table, badges)
+     9.  Detail pages                  - myProfile, viewParticipant
+     10. Confirm pages                 - confirmParticipantDeactivate (and other confirm pages)
+     11. Small screens                 - keep LAST so it can override the rules above
    ===================================================================== */
 
-/* ---------- 1. Colours ---------- */
-:root {
-	--navy: #15324F;
-	--teal: #087F8C;
-	--tealDark: #066A75;
-	--ice: #F2F8FA;
-	--white: #FFFFFF;
-	--amber: #F3A54B;
 
-	--red: #D92D20;
+/* ---------- 1. Colours ---------- */
+/* used by every rule below through var(--name) */
+:root {
+	--navy: #15324F;        /* main text, dark buttons */
+	--teal: #087F8C;        /* links, primary buttons */
+	--tealDark: #066A75;    /* hover for teal */
+	--ice: #F2F8FA;         /* page background */
+	--white: #FFFFFF;
+	--amber: #F3A54B;       /* accents: active tab, title bar, required * */
+
+	--red: #D92D20;         /* errors */
 	--redLight: #FEF3F2;
-	--green: #12805C;
+	--green: #12805C;       /* success */
 	--greenLight: #E8F6EF;
 
 	--grey: #5B6B7B;        /* help text */
@@ -41,7 +44,8 @@
 	--font: "Segoe UI", Arial, Helvetica, sans-serif;
 }
 
-/* ---------- 2. Base ---------- */
+
+/* ---------- 2. Base and page width ---------- */
 * {
 	box-sizing: border-box;
 }
@@ -74,14 +78,17 @@ h2 {
 	font-size: 22px;
 }
 
-/* centred column that holds every page */
+/* centred column that holds every page: <main class="page"> or <div class="page"> */
 .page {
 	max-width: 1100px;
 	margin: 0 auto;
 	padding: 0 20px 40px;
 }
 
-/* ---------- 3. Top bar and navigation ---------- */
+
+/* ---------- 3. Header and navigation (shared/header.jsp) ---------- */
+/* guest: brand, nav and "Guest" on one row inside .topbar
+   signed in: brand and user box in .topbar, nav on its own row underneath (3b) */
 .topbar {
 	display: flex;
 	align-items: center;
@@ -91,6 +98,7 @@ h2 {
 	border-bottom: 1px solid var(--borderLight);
 }
 
+/* logo + "Vision Screening / Station Management System" */
 .brand {
 	display: flex;
 	align-items: center;
@@ -98,7 +106,7 @@ h2 {
 	text-decoration: none;
 }
 
-/* round amber badge with a "+" */
+/* round amber badge with a "+" (only if a text logo is used) */
 .logo {
 	width: 40px;
 	height: 40px;
@@ -111,7 +119,7 @@ h2 {
 	text-align: center;
 }
 
-/* logo image in the top bar (the round .logo badge is for text "+" logos) */
+/* logo image (images/logo.png) */
 img.logo {
 	width: auto;
 	height: 48px;
@@ -119,6 +127,7 @@ img.logo {
 	background: none;
 }
 
+/* the two brand lines; spans made block so they stack */
 .brandName {
 	display: block;
 	font-size: 20px;
@@ -133,6 +142,7 @@ img.logo {
 	color: var(--grey);
 }
 
+/* nav links: Overview / Participants / Events, or Browse events / My sign-ups / My profile */
 .navMenu {
 	display: flex;
 	gap: 4px;
@@ -151,14 +161,14 @@ img.logo {
 	color: var(--navy);
 }
 
-/* current page: dark text with an amber underline */
+/* current page: dark text with an amber underline (class="active" set in header.jsp) */
 .navMenu a.active {
 	color: var(--navy);
 	font-weight: 700;
 	border-bottom-color: var(--amber);
 }
 
-/* user box sits on the far right of the top bar */
+/* right side of the top bar: "Guest", or name + role + Log out */
 .userBox {
 	display: flex;
 	align-items: center;
@@ -166,7 +176,7 @@ img.logo {
 	margin-left: auto;
 }
 
-/* grey pill showing who is signed in */
+/* guest: grey "Guest" pill */
 .userRole {
 	padding: 6px 14px;
 	border-radius: 20px;
@@ -182,14 +192,41 @@ img.logo {
 	align-items: flex-end;
 }
 
-/* role under the name is plain text, not the Guest pill */
+.userName {
+	font-weight: 600;
+	color: var(--navy);
+}
+
+/* signed in: role under the name is plain text, not the Guest pill */
 .userInfo .userRole {
 	padding: 0;
 	background: none;
 	font-size: 13px;
 }
 
-/* ---------- 4. Cards and headings ---------- */
+/* 3b. signed in: the nav comes AFTER .topbar, so it sits on its own row */
+.topbar:has(+ .navMenu) {
+	margin-bottom: 0;
+	border-bottom: none;
+	padding: 28px 0 22px;
+}
+
+.topbar + .navMenu {
+	margin-left: 0;
+	gap: 30px;
+	margin-bottom: 40px;
+	border-bottom: 1px solid var(--borderLight);
+}
+
+.topbar + .navMenu a {
+	padding: 12px 0;
+	font-size: 17px;
+}
+
+
+/* ---------- 4. Cards and page titles ---------- */
+/* white box: register, profileEdit, addParticipant, editParticipant, viewParticipant,
+   confirmParticipantDeactivate, updatePwd, the table on listParticipants, login */
 .card {
 	background: var(--white);
 	border: 1px solid var(--borderLight);
@@ -199,38 +236,41 @@ img.logo {
 	box-shadow: 0 4px 16px rgba(21, 50, 79, 0.06);
 }
 
-/* narrower card for short forms like login */
+/* narrower card for short forms: login, updatePwd */
 .cardNarrow {
 	max-width: 480px;
 	margin-left: auto;
 	margin-right: auto;
 }
 
-/* h1 with an amber bar on the left */
+/* h1 with an amber bar on the left, used inside .card */
 .pageTitle {
 	padding-left: 14px;
 	border-left: 5px solid var(--amber);
 }
 
+/* grey line under .pageTitle, e.g. "Fields marked * are required." */
 .pageSub {
 	margin: 0 0 28px 19px;
 	color: var(--grey);
 }
 
+
 /* ---------- 5. Forms ---------- */
-/* two columns of fields */
+/* two columns of fields: register, addParticipant, editParticipant, profileEdit */
 .formGrid {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 20px 32px;
 }
 
-/* one column of fields */
+/* one column of fields: login, updatePwd */
 .formStack {
 	display: grid;
 	gap: 20px;
 }
 
+/* one label + input + error/hint */
 .field {
 	display: flex;
 	flex-direction: column;
@@ -241,10 +281,12 @@ img.logo {
 	font-weight: 600;
 }
 
+/* the amber * after a required label */
 .req {
 	color: var(--amber);
 }
 
+/* every text box, dropdown and text area */
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -276,7 +318,7 @@ textarea:focus {
 	box-shadow: 0 0 0 3px rgba(8, 127, 140, 0.15);
 }
 
-/* red box when the server found a problem with the field */
+/* red box when the server found a problem with the field (class="inputError" set in the JSP) */
 input.inputError,
 select.inputError,
 textarea.inputError {
@@ -291,7 +333,7 @@ textarea.inputError {
 	color: var(--grey);
 }
 
-/* red message under a field */
+/* red message under a field, e.g. usernameErr */
 .fieldError {
 	margin-top: 6px;
 	font-size: 14px;
@@ -303,7 +345,8 @@ textarea.inputError {
 	display: none;
 }
 
-/* bottom row of a form: link on the left, button on the right */
+/* bottom row of a form or card: left item on the left, buttons on the right
+   (forms, viewParticipant, confirmParticipantDeactivate) */
 .formActions {
 	display: flex;
 	align-items: center;
@@ -314,8 +357,9 @@ textarea.inputError {
 	border-top: 1px solid var(--borderLight);
 }
 
+
 /* ---------- 6. Buttons ---------- */
-/* .btn alone = white button with a border */
+/* .btn alone = white button with a border (Cancel, Back, View, Edit, Deactivate, Log out) */
 .btn {
 	display: inline-block;
 	padding: 10px 18px;
@@ -334,7 +378,7 @@ textarea.inputError {
 	border-color: var(--navy);
 }
 
-/* main action (teal) */
+/* teal main action: Create account (register), Search (list pages), login Submit */
 .btnPrimary {
 	color: var(--white);
 	background: var(--teal);
@@ -346,7 +390,7 @@ textarea.inputError {
 	background: var(--tealDark);
 }
 
-/* dark navy button */
+/* dark navy action: + Add participant, Save buttons, Edit my profile, confirm Deactivate */
 .btnDark {
 	color: var(--white);
 	background: var(--navy);
@@ -358,7 +402,7 @@ textarea.inputError {
 	opacity: 0.9;
 }
 
-/* delete actions */
+/* red delete action (for delete pages, e.g. events) */
 .btnDanger {
 	color: var(--white);
 	background: var(--red);
@@ -370,12 +414,15 @@ textarea.inputError {
 	opacity: 0.9;
 }
 
+/* smaller button, add next to .btn */
 .btnSmall {
 	padding: 5px 10px;
 	font-size: 14px;
 }
 
+
 /* ---------- 7. Message boxes ---------- */
+/* <div class="msgBox msgSuccess"> etc.; shown from msg / errCode on list pages, myProfile, forms */
 .msgBox {
 	padding: 12px 16px;
 	margin-bottom: 20px;
@@ -383,12 +430,55 @@ textarea.inputError {
 	border-left: 4px solid;
 }
 
-.msgError   { color: #912018; background: var(--redLight);   border-left-color: var(--red); }
-.msgSuccess { color: #0B5E43; background: var(--greenLight); border-left-color: var(--green); }
-.msgInfo    { color: var(--navy); background: #E3F3F4;       border-left-color: var(--teal); }
-.msgWarn    { color: #7A4A0E; background: #FDF1E2;       border-left-color: var(--amber); }
+.msgError   { color: #912018; background: var(--redLight);   border-left-color: var(--red); }    /* errors, formErr */
+.msgSuccess { color: #0B5E43; background: var(--greenLight); border-left-color: var(--green); }  /* added, updated, deactivated */
+.msgInfo    { color: var(--navy); background: #E3F3F4;       border-left-color: var(--teal); }   /* neutral information */
+.msgWarn    { color: #7A4A0E; background: #FDF1E2;           border-left-color: var(--amber); }  /* warning on confirm pages */
 
-/* ---------- 8. Tables and badges (for other pages) ---------- */
+
+/* ---------- 8. List pages (listParticipants, listEvents) ---------- */
+/* page title on the left, main button on the right (also used by myProfile) */
+.titleRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-top: 8px;
+}
+
+.titleRow h1 {
+	font-size: 36px;
+	margin: 0;
+}
+
+.titleRow .btn {
+	padding: 13px 20px;
+	font-size: 17px;
+}
+
+/* grey line under the page title (also used by myProfile) */
+.intro {
+	margin: 10px 0 32px;
+	font-size: 17px;
+	color: var(--grey);
+}
+
+/* "Search participants" label above the search bar */
+.searchLabel {
+	display: block;
+	margin-bottom: 6px;
+	font-weight: 600;
+}
+
+/* search box, status dropdown and Search button on one row */
+.searchBar {
+	display: grid;
+	grid-template-columns: 6fr 2fr 1fr;
+	gap: 20px;
+	margin-bottom: 20px;
+}
+
+/* the results table */
 .dataTable {
 	width: 100%;
 	border-collapse: collapse;
@@ -412,7 +502,13 @@ textarea.inputError {
 	background: #F8FBFC;
 }
 
-/* small coloured status labels */
+/* small grey text inside a cell, e.g. "P01 · john123" or "None" */
+.small {
+	font-size: 13px;
+	color: var(--grey);
+}
+
+/* status labels: grey "Active" pill; dashed "Inactive" pill */
 .badge {
 	display: inline-block;
 	padding: 3px 10px;
@@ -423,63 +519,30 @@ textarea.inputError {
 	color: var(--grey);
 }
 
+.badgeInactive {
+	background: var(--ice);
+	border: 1px dashed var(--border);
+}
+
+/* coloured status labels (available for other statuses) */
 .badgeGreen { background: var(--greenLight); color: var(--green); }
 .badgeRed   { background: var(--redLight);   color: var(--red); }
 .badgeAmber { background: #FDF1E2;           color: #B86E14; }
 
-/* ---------- 8b. Page header, detail cards, notes (signed-in pages) ---------- */
-
-/* signed-in header: brand + user on top, menu underneath (header.jsp) */
-.topbar:has(+ .navMenu) {
-	margin-bottom: 0;
-	border-bottom: none;
-	padding: 28px 0 22px;
-}
-
-.topbar + .navMenu {
-	margin-left: 0;
-	gap: 30px;
-	margin-bottom: 40px;
-	border-bottom: 1px solid var(--borderLight);
-}
-
-.topbar + .navMenu a {
-	padding: 12px 0;
-	font-size: 17px;
-}
-
-.userName {
-	font-weight: 600;
-	color: var(--navy);
-}
-
-/* page title on the left, main button on the right */
-.titleRow {
+/* View / Edit / Deactivate buttons in each table row (each button is a small form) */
+.actions {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	gap: 16px;
-	margin-top: 8px;
+	gap: 8px;
 }
 
-.titleRow h1 {
-	font-size: 36px;
+.actions form {
 	margin: 0;
 }
 
-.titleRow .btn {
-	padding: 13px 20px;
-	font-size: 17px;
-}
 
-/* grey line under the page title */
-.intro {
-	margin: 10px 0 32px;
-	font-size: 17px;
-	color: var(--grey);
-}
-
-/* white card with label / value rows, e.g. My profile */
+/* ---------- 9. Detail pages (myProfile, viewParticipant) ---------- */
+/* bordered box around the label / value rows (myProfile) */
 .detailCard {
 	max-width: 780px;
 	padding: 34px 30px;
@@ -488,6 +551,7 @@ textarea.inputError {
 	border-radius: var(--radius);
 }
 
+/* one "Label   value" row */
 .detailRow {
 	display: grid;
 	grid-template-columns: 190px 1fr;
@@ -499,40 +563,9 @@ textarea.inputError {
 	color: var(--grey);
 }
 
-/* participant list page: search box, row details, status, row buttons */
-.searchLabel {
-	display: block;
-	margin-bottom: 6px;
-	font-weight: 600;
-}
 
-.searchRow {
-	display: flex;
-	gap: 10px;
-	margin-bottom: 20px;
-}
-
-.small {
-	font-size: 13px;
-	color: var(--grey);
-}
-
-.badgeInactive {
-	background: var(--ice);
-	border: 1px dashed var(--border);
-}
-
-.actions {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-}
-
-.actions form {
-	margin: 0;
-}
-
-/* confirm pages: Cancel and the action button share the row equally */
+/* ---------- 10. Confirm pages (confirmParticipantDeactivate) ---------- */
+/* add with .formActions: Cancel and the action button share the row equally */
 .confirmActions > * {
 	flex: 1;
 }
@@ -547,7 +580,9 @@ textarea.inputError {
 	text-align: center;
 }
 
-/* ---------- 9. Small screens ---------- */
+
+/* ---------- 11. Small screens (keep LAST) ---------- */
+/* below 760px wide: header wraps, forms become one column, buttons stack */
 @media (max-width: 760px) {
 	.topbar {
 		flex-wrap: wrap;
@@ -576,12 +611,4 @@ textarea.inputError {
 		align-items: stretch;
 		text-align: center;
 	}
-}
-
-/* search box, filter dropdown and Search button on one row (list pages) */
-.searchBar {
-	display: grid;
-	grid-template-columns: 6fr 2fr 1fr;
-	gap: 20px;
-	margin-bottom: 20px;
 }
