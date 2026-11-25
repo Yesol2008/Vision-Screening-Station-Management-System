@@ -4,15 +4,6 @@
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
     
 <%@ include file="/auth/staffGuard.jsp" %>
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Delete event - Vision Screening</title>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
-</head>
-<body>
 <%
 
 if (!"POST".equals(request.getMethod())) {
@@ -44,7 +35,10 @@ if (eventId != null && eventId.matches("\\d+")) {
 	response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 	return;
 }
-
+boolean isRegistered=false;
+int count = 0;
+String isRegisteredMsg="";
+	 
 
 try {
 	
@@ -59,11 +53,6 @@ try {
 
     // Step 2: Load JDBC Driver (optional for newer drivers)
     Class.forName("com.mysql.cj.jdbc.Driver");
-    boolean isRegistered=false;
-    int count = 0;
-    String isRegisteredMsg="";
-    	 
-    	
     		
  // Step 3: Establish database connection. Used try-with so that connection will close automatically
  		try(Connection conn = DriverManager.getConnection(connURL, username, password)){
@@ -93,9 +82,34 @@ try {
  	 		}
  		}
  
-
+} catch (ClassNotFoundException e) {
+	System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+} catch (SQLException e) {
+	System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+} catch (DotenvException e) {
+	System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+}catch (Exception e) {
+    e.printStackTrace();
+    application.log("Database connection error", e);
+    out.println("Unable to connect to the database.");
+}
 
 %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Delete event - Vision Screening</title>
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
+</head>
+<body>
+
 <div class="page">
 <%@ include file="/shared/header.jsp" %>
 
@@ -115,29 +129,8 @@ try {
 	</div>
 	
 	<%@ include file="/shared/footer.html" %>
-	
 
 </div>
-<%
-} catch (ClassNotFoundException e) {
-	System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
-	response.sendRedirect("listEvents.jsp?errCode=dbError");
-	return;
-} catch (SQLException e) {
-	System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
-	response.sendRedirect("listEvents.jsp?errCode=dbError");
-	return;
-} catch (DotenvException e) {
-	System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
-	response.sendRedirect("listEvents.jsp?errCode=dbError");
-	return;
-}catch (Exception e) {
-    e.printStackTrace();
-    application.log("Database connection error", e);
-    out.println("Unable to connect to the database.");
-}
 
-
-%>
 </body>
 </html>

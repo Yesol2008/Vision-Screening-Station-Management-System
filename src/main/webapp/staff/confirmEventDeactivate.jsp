@@ -44,7 +44,9 @@ if (eventId != null && eventId.matches("\\d+")) {
 	response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 	return;
 }
-
+boolean cantDeactive=false;
+int count = 0;
+String cantDeactivateMsg="";
 
 try {
 	
@@ -59,9 +61,7 @@ try {
 
     // Step 2: Load JDBC Driver (optional for newer drivers)
     Class.forName("com.mysql.cj.jdbc.Driver");
-    boolean cantDeactive=false;
-    int count = 0;
-    String cantDeactivateMsg="";
+
     	 
     	
     		
@@ -85,6 +85,24 @@ try {
  	 	 			}
  	 			}
  	 		}
+ 		}
+} catch (ClassNotFoundException e) {
+	System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+} catch (SQLException e) {
+	System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+} catch (DotenvException e) {
+	System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+}catch (Exception e) {
+	System.err.println("Database connection error"+ e);
+    out.println("Unable to connect to the database.");
+}
+
 %>
 <div class="page">
 
@@ -114,39 +132,12 @@ try {
  			 <a href="listEvents.jsp" class="btn btnPrimary">Back</a>
  			
  		</form>
- 
- 
- 
- <%  			
- 			
- 		}
-	}
- %>
+ 		<%} %>
  
 	</div>
 	<%@ include file="/shared/footer.html" %>
 
 </div>
- 
- <%
-} catch (ClassNotFoundException e) {
-	System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
-	response.sendRedirect("listEvents.jsp?errCode=dbError");
-	return;
-} catch (SQLException e) {
-	System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
-	response.sendRedirect("listEvents.jsp?errCode=dbError");
-	return;
-} catch (DotenvException e) {
-	System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
-	response.sendRedirect("listEvents.jsp?errCode=dbError");
-	return;
-}catch (Exception e) {
-	System.err.println("Database connection error"+ e);
-    out.println("Unable to connect to the database.");
-}
 
-
-%>
 </body>
 </html>

@@ -1,11 +1,117 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*" %>
+<%@ page import="java.sql.*, java.util.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
 <%@ page import="org.mindrot.jbcrypt.BCrypt" %>
 <%@ include file="/auth/staffGuard.jsp" %>
 
 
+<% 
+String successMsg = request.getParameter("msg");
+String successMessage ="";
+if("successCreate".equals(successMsg)){
+	successMessage = "Event Created Successfully";
+}else if("successUpdate".equals(successMsg)){
+	successMessage = "Event Updated Successfully";	
+}else if("deactivated".equals(successMsg)){
+	successMessage = "Event Deactivated Successfully";	
+}else if("deleted".equals(successMsg)){
+	successMessage = "Event Deleted Successfully";
+}
+
+
+String errCode = request.getParameter("errCode");
+String errorCode ="";
+if("invalidEventId".equals(errCode)){
+	errorCode = "Invalid event ID.";
+}else if("eventNotFound".equals(errCode)){
+	errorCode = "No such event exist";	
+}else if("invalidRequest".equals(errCode)){
+	errorCode = "Invalid request. Please try again.";
+}else if("alreadyInactive".equals(errCode)){
+	errorCode = "Event is already inactive";	
+}else if("hasSignups".equals(errCode)){
+	errorCode = "There is participant who has signed up for this event!";	
+}else if("dbError".equals(errCode)){
+	errorCode="Something went wrong. Please try again later.";
+	
+}
+String search = request.getParameter("search");
+String statusFilter = request.getParameter("status");
+
+
+if (search != null && search.trim().isEmpty()) {
+    search = null;
+}
+
+if (statusFilter != null && statusFilter.trim().isEmpty()) {
+    statusFilter = null;
+}
+
+	
+List<Map<String, String>> events = new ArrayList<>();
+
+try {
+	
+	// Step 1: Load environment variables
+	Dotenv dotenv =  Dotenv.configure()
+	        .directory(application.getRealPath("/WEB-INF"))
+	        .load();;
+
+	String connURL = dotenv.get("DB_URL");
+	String username = dotenv.get("DB_USERNAME");
+	String password = dotenv.get("DB_PASSWORD");
+
+    // Step 2: Load JDBC Driver (optional for newer drivers)
+    Class.forName("com.mysql.cj.jdbc.Driver");
+    		
+    		
+    String sql = "{CALL view_all_events(?, ?)}";
+
+    	// Step 3: Establish database connection. Used try-with so that connection will close automatically
+		try(Connection conn = DriverManager.getConnection(connURL, username, password);
+
+	
+		// Step 4: Create Statement object
+			CallableStatement cs = conn.prepareCall(sql)){
+	
+				cs.setString(1, search);
+			    cs.setString(2, statusFilter);
+				
+				try(ResultSet rs = cs.executeQuery();){
+					
+					while(rs.next()){
+						Map<String, String> ev = new HashMap<>();
+					ev.put("id", String.valueOf(rs.getInt("event_id")));
+					ev.put("name", rs.getString("event_name"));
+					ev.put("date", rs.getString("event_date"));
+					ev.put("location", rs.getString("location"));
+					ev.put("status", rs.getString("status"));
+					ev.put("participants", String.valueOf(rs.getInt("participant_count")));
+					 events.add(ev);      
+				
+			}
+		}
+	}
+}catch (ClassNotFoundException e) {
+	System.err.println("JDBC Driver not found"+ e);
+	errorCode = "Unable to connect to the server. Please try again later.";
+
+} catch (SQLException e) {
+	System.err.println("Database error in login.jsp"+ e);
+	errorCode = "Unable to connect to the server. Please try again later.";
+
+}catch (DotenvException e) {
+	System.err.println("Environment configuration error in browseEvents.jsp"+ e);
+	errorCode="Something went wrong. Please try again later.";
+
+}catch (Exception e) {
+    System.err.println("Database connection error"+ e);
+	errorCode="Something went wrong. Please try again later.";
+}
+boolean hasEvent = !events.isEmpty();
+
+%>
 
 <!DOCTYPE html>
 <html>
@@ -43,86 +149,6 @@
 </style>
 </head>
 <body>
-
-
-
-
-<% 
-String successMsg = request.getParameter("msg");
-String successMessage ="";
-if("successCreate".equals(successMsg)){
-	successMessage = "Event Created Successfully";
-}else if("successUpdate".equals(successMsg)){
-	successMessage = "Event Updated Successfully";	
-}else if("deactivated".equals(successMsg)){
-	successMessage = "Event Deactivated Successfully";	
-}else if("deleted".equals(successMsg)){
-	successMessage = "Event Deleted Successfully";
-}
-
-
-String errCode = request.getParameter("errCode");
-String errorCode ="";
-if("invalidEventId".equals(errCode)){
-	errorCode = "Invalid event ID.";
-}else if("eventNotFound".equals(errCode)){
-	errorCode = "No such event exist";	
-}else if("invalidRequest".equals(errCode)){
-	errorCode = "Invalid request. Please try again.";
-}else if("alreadyInactive".equals(errCode)){
-	errorCode = "Event is already inactive";	
-}else if("hasSignups".equals(errCode)){
-	errorCode = "There is participant who has signed up for this event!";	
-}else if("dbError".equals(errCode)){
-	errorCode="Something went wrong. Please try again later.";
-	
-}
-
-
-try {
-	
-	// Step 1: Load environment variables
-	Dotenv dotenv =  Dotenv.configure()
-	        .directory(application.getRealPath("/WEB-INF"))
-	        .load();;
-
-	String connURL = dotenv.get("DB_URL");
-	String username = dotenv.get("DB_USERNAME");
-	String password = dotenv.get("DB_PASSWORD");
-
-    // Step 2: Load JDBC Driver (optional for newer drivers)
-    Class.forName("com.mysql.cj.jdbc.Driver");
-    		
-    		
-    String sql = "{CALL view_all_events(?, ?)}";
-    	String search = request.getParameter("search");
-	String statusFilter = request.getParameter("status");
-	
-
-		if (search != null && search.trim().isEmpty()) {
-		    search = null;
-		}
-	
-		if (statusFilter != null && statusFilter.trim().isEmpty()) {
-		    statusFilter = null;
-		}
-
-    		
-		boolean hasEvent = false;
-    	// Step 3: Establish database connection. Used try-with so that connection will close automatically
-		try(Connection conn = DriverManager.getConnection(connURL, username, password);
-
-	
-		// Step 4: Create Statement object
-			CallableStatement cs = conn.prepareCall(sql)){
-	
-				cs.setString(1, search);
-			    cs.setString(2, statusFilter);
-				
-				try(ResultSet rs = cs.executeQuery();){
-		
-	///////////////////// start of html pagee/////////////////////
-%>
 
 <div class="page">
 <%-- placeholder for now will be replaced by shared header include file --%>
@@ -169,14 +195,13 @@ try {
 			
 			</tr>
 <%				
-				while(rs.next()){
-					int eventId = rs.getInt("event_id");
-					String event_name = rs.getString("event_name");
-					String event_date = rs.getString("event_date");
-					String location = rs.getString("location");
-					String status = rs.getString("status");
-					int participants = rs.getInt("participant_count");
-					hasEvent = true;
+			for (Map<String, String> ev : events) {
+			    String eventId   = ev.get("id");
+			    String event_name = ev.get("name");
+			    String event_date = ev.get("date");
+			    String location = ev.get("location");
+			    String status = ev.get("status");
+			    int participants = Integer.parseInt(ev.get("participants"));
                     
                     if(status.equals("Inactive")){
 					%>
@@ -257,7 +282,8 @@ try {
         				<p>Try searching with a different keyword or changing your filters.</p>
     				</div>
 <%
-				}%>
+				}
+%>
 
 	</div>
 	
@@ -265,28 +291,5 @@ try {
 </div>
 
 
-<%
-    			
-			}
-		}
-	}catch (ClassNotFoundException e) {
-		System.err.println("JDBC Driver not found"+ e);
-		errorCode = "Unable to connect to the server. Please try again later.";
-
-	} catch (SQLException e) {
-		System.err.println("Database error in login.jsp"+ e);
-		errorCode = "Unable to connect to the server. Please try again later.";
-
-	}catch (DotenvException e) {
-		System.err.println("Environment configuration error in browseEvents.jsp"+ e);
-		errorCode="Something went wrong. Please try again later.";
-
-	}catch (Exception e) {
-        System.err.println("Database connection error"+ e);
-		errorCode="Something went wrong. Please try again later.";
-    }
-
-
-%>
 </body>
 </html>

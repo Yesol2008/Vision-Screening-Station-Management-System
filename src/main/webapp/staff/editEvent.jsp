@@ -48,8 +48,16 @@ String eventDateErr = null;
 String eventLocationErr = null;
 String statusErr = null;
 
-boolean isPost = "POST".equalsIgnoreCase(request.getMethod());
+//declaring values that will be pre filled inside the form
+int event_id;
+String name;
+String date;
+String location;
+String eventStatus;
 
+
+boolean isPost = "POST".equalsIgnoreCase(request.getMethod());
+//getting the user supplied value
 String eventName = request.getParameter("event_name");
 String eventDate = request.getParameter("event_date");
 String eventLocation = request.getParameter("event_location");
@@ -143,7 +151,40 @@ try {
 				ps.setInt(1, intEventId);
 
 				try (ResultSet rs = ps.executeQuery()) {
-	//////////////// start of html//////////////
+					
+					if (rs.next()) {
+						
+						event_id = rs.getInt("event_id");
+						name = rs.getString("event_name");
+			        	date = rs.getString("event_date");
+			       		location = rs.getString("location");
+			       		eventStatus = rs.getString("status");
+					} else {
+						response.sendRedirect("listEvents.jsp?errCode=eventNotFound");
+						return;
+					}
+				}
+			}
+
+			
+		}
+} catch (ClassNotFoundException e) {
+	System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+} catch (SQLException e) {
+	System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+} catch (DotenvException e) {
+	System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
+	response.sendRedirect("listEvents.jsp?errCode=dbError");
+	return;
+}catch (Exception e) {
+	System.err.println("Database connection error"+ e);
+    response.sendRedirect("listEvents.jsp?errCode=dbError");
+    return; 
+}
 %>
 			    	
 		<div class="page">
@@ -154,18 +195,7 @@ try {
 			    	
 			    	
 				<form class="formGrid" method="post">
-			    		
-<%	
-					if (rs.next()) {
-						
-						int event_id = rs.getInt("event_id");
-						String name = rs.getString("event_name");
-			        	String date = rs.getString("event_date");
-			       		String location = rs.getString("location");
-			       		String eventStatus = rs.getString("status");
-
-			       ////////////html/////////////////
-%>					
+				
 					<div class="field">
 						<label>Event Name :<span class="req">*</span> </label>
 						<input type="text" name="event_name" 
@@ -215,18 +245,6 @@ try {
 						<input type="hidden" name="eventId" value="<%=event_id%>">
 						<a href="listEvents.jsp" class="btn btnPrimary">Back</a>
 					</div>
-<%
-
-				} else {
-					response.sendRedirect("listEvents.jsp?errCode=eventNotFound");
-					return;
-				}
-			}
-		}
-
-		
-		}%>
-
 		</form>
 		</div>
 		
@@ -234,26 +252,6 @@ try {
 		
 	
 	</div>	
-			
-<%			
-	} catch (ClassNotFoundException e) {
-		System.err.println("confirmEventDeactivate.jsp - driver not found: " + e);
-		response.sendRedirect("listEvents.jsp?errCode=dbError");
-		return;
-	} catch (SQLException e) {
-		System.err.println("confirmEventDeactivate.jsp - SQL error: " + e);
-		response.sendRedirect("listEvents.jsp?errCode=dbError");
-		return;
-	} catch (DotenvException e) {
-		System.err.println("confirmEventDeactivate.jsp - .env error: " + e);
-		response.sendRedirect("listEvents.jsp?errCode=dbError");
-		return;
-	}catch (Exception e) {
-		System.err.println("Database connection error"+ e);
-	    response.sendRedirect("listEvents.jsp?errCode=dbError");
-	}
 
-
-%>
 </body>
 </html>
