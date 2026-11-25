@@ -21,6 +21,8 @@ if ("registered".equals(request.getParameter("msg"))) {
 	successMessage = "Account registered successfully. You can now sign in to your account.";
 } else if("successUpdate".equals(request.getParameter("msg"))){
 	successMessage = "Account password updated successfully. Please log in again.";
+}else if("loggedOut".equals(request.getParameter("msg"))){
+	successMessage = "Successfully logged out.";
 }
 
 //for staff verification

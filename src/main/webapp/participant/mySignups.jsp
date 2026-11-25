@@ -158,7 +158,11 @@ try {
 					<td><%=escapeHtml(status)%></td>
 					<td><%=escapeHtml(registrationStatus)%></td>
 					<td>
-<% 					if("Registered".equals(registrationStatus)){ %>
+<% 					 if(past ||"Completed".equals(status) ||"Inactive".equals(status) || "Attended".equals(registrationStatus)){ %>
+						<form action="signup.jsp?returnUrl=<%=returnUrl %>>" method="post">
+						<input type="submit" class="btn btnPrimary" value="Withdawal Closed" disabled>
+						</form>
+					<%}else if("Registered".equals(registrationStatus)){ %>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>" method="post">
 							<input type="submit" class="btn btnPrimary" value="Withdraw">
 							<input type="hidden" name="registrationIdForWithraw" value="<%=registration_id%>">
@@ -167,10 +171,6 @@ try {
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>" method="post">
 							<input type="submit" class="btn btnPrimary" value="Sign-up again">
 							<input type="hidden" name="registrationId" value="<%=registration_id%>">
-						</form>
-					<%} else if(past || "Completed".equals(status) || "Inactive".equals(status) || "Attended".equals(registrationStatus)){ %>
-						<form action="signup.jsp?returnUrl=<%=returnUrl %>>" method="post">
-							<input type="submit" class="btn btnPrimary" value="Withdawal Closed" disabled>
 						</form>
 					<%}%>
 					</td>
