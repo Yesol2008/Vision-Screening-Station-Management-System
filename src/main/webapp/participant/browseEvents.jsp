@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*" %>
+<%@ page import="java.sql.*, java.util.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
 <%@ page import="io.github.cdimascio.dotenv.DotenvException" %>
 <%@ page import="java.time.format.DateTimeParseException" %>
@@ -8,6 +8,120 @@
 
 
 <%@ include file="/auth/participantGuard.jsp" %>
+
+
+<%
+
+
+
+String successMsg = request.getParameter("msg");
+String errCode = request.getParameter("errCode");
+
+String successMessage ="";
+String errorCode ="";
+
+if("withdrawn".equals(successMsg)){
+	successMessage = "Event Withdrawn Successfully";
+}else if("registered".equals(successMsg)){
+	successMessage = "Event Registered Successfully";	
+}
+
+if("failedWithdrawn".equals(errCode)){
+	errorCode = "Failed to withdraw the event";
+}else if("failedRegistration".equals(errCode)){
+	errorCode = "Faild to register the event";	
+}else if("Exception".equals(errCode)){
+	errorCode ="Unable to connect to the server for signup/withdrawal. Please try again later.";
+}else if("dbError".equals(errCode)){
+	errorCode ="Something went wrong. Please try again later.";
+}else if("invalidEventId".equals(errCode)){
+	errorCode ="No such event exist.";
+}
+Integer participantId = (Integer) session.getAttribute("userId");
+String search = request.getParameter("search");
+String statusFilter = request.getParameter("status");
+
+if (search != null && search.trim().isEmpty()) {
+    search = null;
+}
+
+if (statusFilter != null && statusFilter.trim().isEmpty()) {
+    statusFilter = null;
+}
+String returnUrl = "browseEvents.jsp";
+List<Map<String, String>> events = new ArrayList<>();
+LocalDate today = LocalDate.now();
+
+try {
+	
+	// Step 1: Load environment variables
+	Dotenv dotenv =  Dotenv.configure()
+	        .directory(application.getRealPath("/WEB-INF"))
+	        .load();;
+
+	String connURL = dotenv.get("DB_URL");
+	String username = dotenv.get("DB_USERNAME");
+	String password = dotenv.get("DB_PASSWORD");
+
+    // Step 2: Load JDBC Driver (optional for newer drivers)
+    Class.forName("com.mysql.cj.jdbc.Driver");
+    		    		
+    String sql = "{CALL get_events_for_participant(?, ?, ?)}";
+    
+	
+    	// Step 3: Establish database connection. Used try-with so that connection will close automatically
+		try(Connection conn = DriverManager.getConnection(connURL, username, password);
+
+	
+		// Step 4: Create Statement object
+		CallableStatement cs = conn.prepareCall(sql)){
+			
+			cs.setInt(1, participantId);
+			cs.setString(2, search);
+		    cs.setString(3, statusFilter);
+		    
+			try(ResultSet rs = cs.executeQuery();){
+
+				while(rs.next()){
+					 Map<String, String> ev = new HashMap<>();
+						ev.put("id", String.valueOf(rs.getInt("event_id")));
+						ev.put("name", rs.getString("event_name"));
+						ev.put("location", rs.getString("location"));
+						ev.put("status", rs.getString("status"));
+						ev.put("regStatus", rs.getString("registration_status"));
+						ev.put("regId", String.valueOf(rs.getInt("registration_id")));
+						java.sql.Date d = rs.getDate("event_date");
+						ev.put("date", d == null ? "" : d.toString());
+						boolean past = !ev.get("date").isEmpty()&& LocalDate.parse(ev.get("date")).isBefore(today);
+						ev.put("past", String.valueOf(past));
+						 events.add(ev);      
+   				
+				}
+			}
+		}
+
+	} catch (ClassNotFoundException e) {
+		System.err.println("JDBC Driver not found"+ e);
+		errorCode = "Unable to connect to the server. Please try again later.";
+	} catch (SQLException e) {
+		System.err.println("Database error in login.jsp"+ e);
+		errorCode = "Unable to connect to the server. Please try again later.";
+
+	}catch (DotenvException e) {
+		System.err.println("Environment configuration error in browseEvents.jsp"+ e);
+		errorCode="Something went wrong. Please try again later.";
+
+	} catch (DateTimeParseException e) {
+		System.err.println("Invalid event date format in browseEvents.jsp"+ e);
+		errorCode = "Unable to display event information. Please try again later.";
+
+	}catch (Exception e) {
+	  	e.printStackTrace();
+	   	application.log("Database connection error", e);
+	   	out.println("Unable to connect to the database.");
+}
+
+%>	
 
 <!DOCTYPE html>
 <html>
@@ -46,7 +160,7 @@
     border-color: var(--grayLight);
     cursor: not-allowed;
 	}
-	.btn:not:(:disabled):hover {
+	.btn:not(:disabled):hover {
     color: var(--ice);
     background-color: var(--greyLight);
     border-color: var(--grayLight);
@@ -54,87 +168,8 @@
 	
 	</style>
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
-	
 </head>
 <body>
-<%
-
-
-
-String successMsg = request.getParameter("msg");
-String errCode = request.getParameter("errCode");
-
-String successMessage ="";
-String errorCode ="";
-
-if("withdrawn".equals(successMsg)){
-	successMessage = "Event Withdrawn Successfully";
-}else if("registered".equals(successMsg)){
-	successMessage = "Event Registered Successfully";	
-}
-
-if("failedWithdrawn".equals(errCode)){
-	errorCode = "Failed to withdraw the event";
-}else if("failedRegistration".equals(errCode)){
-	errorCode = "Faild to register the event";	
-}else if("Exception".equals(errCode)){
-	errorCode ="Unable to connect to the server for signup/withdrawal. Please try again later.";
-}else if("dbError".equals(errCode)){
-	errorCode ="Something went wrong. Please try again later.";
-}else if("invalidEventId".equals(errCode)){
-	errorCode ="No such event exist.";
-}
-
-try {
-	
-	// Step 1: Load environment variables
-	Dotenv dotenv =  Dotenv.configure()
-	        .directory(application.getRealPath("/WEB-INF"))
-	        .load();;
-
-	String connURL = dotenv.get("DB_URL");
-	String username = dotenv.get("DB_USERNAME");
-	String password = dotenv.get("DB_PASSWORD");
-
-    // Step 2: Load JDBC Driver (optional for newer drivers)
-    Class.forName("com.mysql.cj.jdbc.Driver");
-    		
-    String returnUrl = "browseEvents.jsp";
-    		
-    String sql = "{CALL get_events_for_participant(?, ?, ?)}";
-    
-	Integer participantId = (Integer) session.getAttribute("userId");
-	String search = request.getParameter("search");
-	String statusFilter = request.getParameter("status");
-
-	if (search != null && search.trim().isEmpty()) {
-	    search = null;
-	}
-
-	if (statusFilter != null && statusFilter.trim().isEmpty()) {
-	    statusFilter = null;
-	}
-
-	
-    	// Step 3: Establish database connection. Used try-with so that connection will close automatically
-		try(Connection conn = DriverManager.getConnection(connURL, username, password);
-
-	
-		// Step 4: Create Statement object
-		CallableStatement cs = conn.prepareCall(sql)){
-			
-			cs.setInt(1, participantId);
-			cs.setString(2, search);
-		    cs.setString(3, statusFilter);
-		    
-			try(ResultSet rs = cs.executeQuery();){
-			LocalDate today = LocalDate.now();
-			boolean hasEvents = false;
-				
-
-/////////////////////// start of html page ///////////////////
-%>	
-
 <div class="page">
 <%@ include file="/shared/header.jsp" %>
 
@@ -164,40 +199,32 @@ try {
 			
 		<div class="card">
 <%			
-				while(rs.next()){
-					int eventId = rs.getInt("event_id");
-					String event_name = rs.getString("event_name");
-                    String event_date = rs.getString("event_date");
-                    String location = rs.getString("location");
-                    String status = rs.getString("status");
-					String registrationStatus = rs.getString("registration_status");
-                    int registration_id = rs.getInt("registration_id");
-    				LocalDate date = LocalDate.parse(event_date);
-    				hasEvents = true;
+			 for (Map<String, String> ev : events) {
+			    String eventId   = ev.get("id");
+			    String registrationStatus = ev.get("regStatus");
+			    String status    = ev.get("status");
+			    boolean past     = Boolean.parseBoolean(ev.get("past"));
 
 %>
 					<div class="eventCard">
 					
-						<h2><%= escapeHtml(event_name) %></h2>
-						<p><strong>Date:</strong> <%= escapeHtml(event_date) %></p>
-						<p><strong>Location:</strong> <%= escapeHtml(location) %></p>
-						<p><strong>Status:</strong> <%= escapeHtml(status) %></p>
+						<h2><%= escapeHtml(ev.get("name")) %></h2>
+							<p><strong>Date:</strong> <%= escapeHtml(ev.get("date")) %></p>
+							<p><strong>Location:</strong> <%= escapeHtml(ev.get("location")) %></p>
+							<p><strong>Status:</strong> <%= escapeHtml(status) %></p>
+							<a href="viewEventDetails.jsp?eventId=<%=eventId%>">View Event Details</a>
+							
 <%
 					if("Registered".equals(registrationStatus) || "Attended".equals(registrationStatus)){ %>
-						<a href="viewEventDetails.jsp?eventId=<%=eventId%>">View Event Details</a>
 						<p><strong>You are signed up</strong></p>
 					<% } else if("Withdrawn".equals(registrationStatus)){%>
-						<a href="viewEventDetails.jsp?eventId=<%=eventId%>">View Event Details</a>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>" method="post">
 							<input type="submit" class="btn btnPrimary" value="Sign-up again">
-							<input type="hidden" name="registrationId" value="<%=registration_id%>">
+							<input type="hidden" name="registrationId" value="<%=ev.get("regId")%>">
 						</form>
-					<%} else if(date.isBefore(today) || "Completed".equals(status) || "Inactive".equals(status)){ %>
-						<a href="viewEventDetails.jsp?eventId=<%=eventId%>">View Event Details</a>
-						<form action="signup.jsp?returnUrl=<%=returnUrl %>>" method="post">
-							<input type="submit" class="btn" value="Sign-up closed" disabled>
-						</form>
-					<%} else{%>
+					<%}else if(past || "Completed".equals(status) || "Inactive".equals(status)){ %>
+						<input type="button" class="btn" value="Sign-up closed" disabled>
+					<%}else{%>
 						<a href="viewEventDetails.jsp?eventId=<%=eventId%>">View Event Details</a>
 						<form action="signup.jsp?returnUrl=<%=returnUrl %>" method="post">
 							<input type="submit" class="btn btnPrimary" value="Sign up">
@@ -207,52 +234,24 @@ try {
 					
 					</div>
         	
-<%	
-					
+<%				
 				}
-
-
-				if (!hasEvents) {
+			if (events.isEmpty() && errorCode.isEmpty()){ 
 %>
-    				<div class="noResults">
-        				<h3>No events found</h3>
-        				<p>Try searching with a different keyword or changing your filters.</p>
-    				</div>
+			    <div class="noResults">
+			        <h3>No events found</h3>
+			        <p>Try searching with a different keyword or changing your filters.</p>
+			    </div>
 <%
-				}
-    			
-			}
-		} %>
+			} 
+%>
+
 		</div>	
 		
 	<%@ include file="/shared/footer.html" %>
 	
 	</div>	
 	
-		<%
-	} catch (ClassNotFoundException e) {
-		System.err.println("JDBC Driver not found"+ e);
-		errorCode = "Unable to connect to the server. Please try again later.";
-
-	} catch (SQLException e) {
-		System.err.println("Database error in login.jsp"+ e);
-		errorCode = "Unable to connect to the server. Please try again later.";
-
-	}catch (DotenvException e) {
-		System.err.println("Environment configuration error in browseEvents.jsp"+ e);
-		errorCode="Something went wrong. Please try again later.";
-
-	} catch (DateTimeParseException e) {
-		System.err.println("Invalid event date format in browseEvents.jsp"+ e);
-		errorCode = "Unable to display event information. Please try again later.";
-
-	}catch (Exception e) {
-        e.printStackTrace();
-        application.log("Database connection error", e);
-        out.println("Unable to connect to the database.");
-    }
-
-%>
 
 </body>
 </html>
