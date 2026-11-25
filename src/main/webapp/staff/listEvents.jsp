@@ -207,7 +207,7 @@ boolean hasEvent = !events.isEmpty();
 					%>
                     	
 			<tr>
-				<td><%=escapeHtml(event_name) %>/<br>E<%=twoDigits(Integer.parseInt(eventId))%></td>
+				<td>E<%=twoDigits(Integer.parseInt(eventId))%> - <%=escapeHtml(event_name) %></td>
 				<td><%=escapeHtml(event_date)%></td>
 				<td><%=escapeHtml(location)%></td>
 				<td><span class="badge badgeInactive"><%=escapeHtml(status)%></span></td>
@@ -238,7 +238,7 @@ boolean hasEvent = !events.isEmpty();
                     %>
                     
             <tr>
-				<td><%=escapeHtml(event_name) %>/<br>E<%=twoDigits(Integer.parseInt(eventId))%></td>
+				<td>E<%=twoDigits(Integer.parseInt(eventId))%> - <%=escapeHtml(event_name)%></td>
 				<td><%=escapeHtml(event_date)%></td>
 				<td><%=escapeHtml(location)%></td>
 				<td><span class="badge"><%=escapeHtml(status)%></span></td>
