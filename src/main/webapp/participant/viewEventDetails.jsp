@@ -141,7 +141,7 @@ out.println("Unable to connect to the database.");
 
 		<div class="btnGrid">
 			<a href="browseEvents.jsp" class="btn btnPrimary">Back</a>
-<%		if(!isRegistered){	
+<%		if(!isRegistered && !"Inactive".equals(status)&& !"Completed".equals(status)){	
  %>
 			<form action="signup.jsp?returnUrl=mySignups.jsp" method="post">
 				<input type="submit" class="btn btnPrimary" value="Sign up">
