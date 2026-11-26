@@ -12,7 +12,7 @@ String returnUrl = request.getParameter("returnUrl");
 if (returnUrl == null || returnUrl.isEmpty()) {
     returnUrl = "browseEvents.jsp";
 }
-if (!returnUrl.equals("browseEvents.jsp") || !returnUrl.equals("mySignups.jsp") ) {
+if (!"browseEvents.jsp".equals(returnUrl) && !"mySignups.jsp".equals(returnUrl)) {
     returnUrl = "browseEvents.jsp";
 }
 try {
