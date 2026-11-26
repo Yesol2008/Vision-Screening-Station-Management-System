@@ -37,6 +37,8 @@ if("failedWithdrawn".equals(errCode)){
 	errorCode ="Something went wrong. Please try again later.";
 }else if("invalidEventId".equals(errCode)){
 	errorCode ="No such event exist.";
+}else if("invalidRequest".equals(errCode)){
+	errorCode ="Invalid request";
 }
 
 //getting participant id

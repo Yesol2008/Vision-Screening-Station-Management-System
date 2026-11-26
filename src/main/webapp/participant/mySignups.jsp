@@ -28,6 +28,8 @@ if("failedWithdrawn".equals(errCode)){
 	errorCode = "Faild to register the event";	
 }else if("Exception".equals(errCode)){
 	errorCode ="Unable to connect to the server for signup/withdrawal. Please try again later.";
+}else if("invalidRequest".equals(errCode)){
+	errorCode ="Invalid request";
 }
 
 //Make a value containes url of current page. it will be sent to signup.jsp 

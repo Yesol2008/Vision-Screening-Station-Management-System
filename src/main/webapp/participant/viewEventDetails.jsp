@@ -35,7 +35,7 @@ boolean found = false;
 Integer participantId = (Integer) session.getAttribute("userId");
 
 
-//declaring values that will be displayed on the html
+//declaring values that will be displayed on te html
 String name = "";
 String date = "";
 String location = "";
@@ -107,6 +107,10 @@ try {
 e.printStackTrace();
 application.log("Database connection error", e);
 out.println("Unable to connect to the database.");
+}
+
+if(!found){
+	response.sendRedirect("browseEvents.jsp?errCode=invalidEventId");
 }
 %>
 <!DOCTYPE html>

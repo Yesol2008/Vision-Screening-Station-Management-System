@@ -61,7 +61,7 @@ if (isPost) {
 	if (eventName == null || eventName.trim().isEmpty()) {
 		eventNameErr = "Event name cannot be empty.";
 
-	} else if (!eventName.trim().matches("[A-Za-z '\\-]{2,100}")) {
+	} else if (!eventName.trim().matches("[A-Za-z0-9 '\\-]{2,100}")) {
 		eventNameErr = "Use 2-100 letters. Spaces, hyphens and apostrophes are allowed.";
 	}
 
