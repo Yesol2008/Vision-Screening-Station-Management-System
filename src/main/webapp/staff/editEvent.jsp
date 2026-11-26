@@ -62,7 +62,7 @@ if (isPost) {
 		eventNameErr = "Event name cannot be empty.";
 
 	} else if (!eventName.trim().matches("[A-Za-z0-9 '\\-]{2,100}")) {
-		eventNameErr = "Use 2-100 letters. Spaces, hyphens and apostrophes are allowed.";
+		eventNameErr = "Use 2-100 letters. Digits, Spaces, hyphens and apostrophes are allowed.";
 	}
 
 	// Event date validation
