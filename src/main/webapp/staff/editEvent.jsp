@@ -7,21 +7,13 @@
 
 <%@ include file="/auth/staffGuard.jsp" %>
 
-
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Edit event - Vision Screening</title>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
-</head>
-<body>
 <%
+//getting the event id
 String eventId=request.getParameter("eventId");
 
 int intEventId =0;
 
+//validating event id
 if (eventId != null && eventId.matches("\\d+")) {
 
 	try {
@@ -42,7 +34,7 @@ if (eventId != null && eventId.matches("\\d+")) {
 	return;
 }
 
-
+//declaring the error message first
 String eventNameErr = null;
 String eventDateErr = null;
 String eventLocationErr = null;
@@ -121,10 +113,9 @@ try {
 		// Step 3: Establish database connection. Used try-with so that connection will close automatically
 		try(Connection conn = DriverManager.getConnection(connURL, username, password)){
 
-			
+			//if there is no any errors, updating the event record
 			if (isPost && eventNameErr == null && eventDateErr == null &&
 				eventLocationErr == null && statusErr == null) {
-
 				String sql1 = "UPDATE events SET event_name = ?, event_date = ?, location = ?, status = ? WHERE event_id = ?";
 
 				try (PreparedStatement ps1 = conn.prepareStatement(sql1)) {
@@ -144,6 +135,7 @@ try {
 				}
 			}
 			
+			//getting the prefilled values in the edit form
 			String sql = "SELECT * FROM events WHERE event_id = ?";
 
 			try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -153,7 +145,7 @@ try {
 				try (ResultSet rs = ps.executeQuery()) {
 					
 					if (rs.next()) {
-						
+						//assigning values
 						event_id = rs.getInt("event_id");
 						name = rs.getString("event_name");
 			        	date = rs.getString("event_date");
@@ -186,7 +178,16 @@ try {
     return; 
 }
 %>
-			    	
+	
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Edit event - Vision Screening</title>
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
+</head>
+<body>		    	
 		<div class="page">
 		
 		<%@ include file="/shared/header.jsp" %>

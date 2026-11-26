@@ -5,6 +5,7 @@
 <%-- fragments kept in WEB-INF so they cannot be opened directly --%>
 <%@ include file="/auth/staffGuard.jsp" %>
 <%
+//checking if request method is post. if not, it will be redirected to event page
 if (!"POST".equals(request.getMethod())) {
 		response.sendRedirect("listEvents.jsp?errCode=invalidRequest");
 		return;
@@ -14,7 +15,7 @@ if (!"POST".equals(request.getMethod())) {
 	String eventId=request.getParameter("eventId");
 
 	int intEventId =0;
-
+//validating event id
 	if (eventId != null && eventId.matches("\\d+")) {
 
 		try {

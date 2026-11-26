@@ -6,9 +6,9 @@
 <%@ include file="/auth/participantGuard.jsp" %>
 
 <%
-
+//getting returnUrl from either mySignup.jsp or browseEvents.jsp
 String returnUrl = request.getParameter("returnUrl");
-
+//if there is no returnUrl it will set it as browseEvents.jsp as default
 if (returnUrl == null || returnUrl.isEmpty()) {
     returnUrl = "browseEvents.jsp";
 }
@@ -37,12 +37,16 @@ try {
 	try(Connection conn = DriverManager.getConnection(connURL, username, password)){
 		
 		
-				
+		//getting either the registrationId, eventId, registrationIdForWithraw
+		
+		//registrationId is for signup again
 		String registrationId = request.getParameter("registrationId");
+		//event id is for new signup
 		String eventId = request.getParameter("eventId");
+		//registrationIdForWithraw is for withdrawing from the event registered
 		String registrationIdForWithraw = request.getParameter("registrationIdForWithraw");
 		
-		//to make sure that there's only one parameter provided.
+		//to make sure that there's only one parameter provided, run a validation with actionCount.
 		int actionCount = 0;
 
 		if (registrationId != null && !registrationId.trim().isEmpty()) {
@@ -64,7 +68,7 @@ try {
 			return;
 		}
 	 	
-	 	
+	 	//set the id after checking which value is provided
 		int id;
 
 		if (registrationId != null && !registrationId.trim().isEmpty()) {
@@ -79,7 +83,8 @@ try {
 			response.sendRedirect(returnUrl + "?errCode=invalidRequest");
 			return;
 		}
-
+		
+		//registering again for the event
 		if(registrationId != null && !registrationId.isEmpty()){
 			
 			String sql ="UPDATE registrations SET status = 'Registered' " +
@@ -103,8 +108,9 @@ try {
 				}
 				
 			}
-			
-		}else if(eventId != null && !eventId.isEmpty()){
+		
+		}//registering for the event
+		else if(eventId != null && !eventId.isEmpty()){
 			
 			String sql ="INSERT INTO registrations (participant_id, event_id, status) " +
 						"VALUES (?, ?, 'Registered')";
@@ -126,7 +132,8 @@ try {
 			}
 			
 			
-		}else if(registrationIdForWithraw != null && !registrationIdForWithraw.isEmpty()){
+		}//withdrawal from the event
+		else if(registrationIdForWithraw != null && !registrationIdForWithraw.isEmpty()){
 			String sql ="UPDATE registrations SET status = 'Withdrawn' " +
 					"WHERE registration_id = ? " +
             	    "AND participant_id = ? " +

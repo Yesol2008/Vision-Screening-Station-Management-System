@@ -39,18 +39,6 @@
 		out.println("Username: " + username);
 		out.println("Password loaded: " + (password != null));
 		
-		// Get the return URL
-	    String returnUrl = request.getParameter("returnUrl");
-
-	    if (returnUrl == null || returnUrl.isEmpty()) {
-	        returnUrl = "login.jsp";
-	    }
-	    
-	    ///dk
-	    if(returnUrl == "browseEvents.jsp" || returnUrl =="registeredEvents.jsp"){
-	 		returnUrl = "/participant"+returnUrl;
-	 	}
-
         // Step 2: Load JDBC Driver (optional for newer drivers)
         Class.forName("com.mysql.cj.jdbc.Driver");
         		

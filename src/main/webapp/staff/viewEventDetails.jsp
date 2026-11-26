@@ -4,17 +4,35 @@
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
 <%@ include file="/auth/staffGuard.jsp" %>
 <%
+//getting the event id from parameter
 String eventId=request.getParameter("eventId");
 
 int intEventId =0;
+//validating event id
+	if (eventId != null && eventId.matches("\\d+")) {
 
-if (eventId != null && eventId.matches("\\d+")) {
-	intEventId = Integer.parseInt(eventId);
-} else {
-	response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
-	return;
-}
+		try {
+			intEventId = Integer.parseInt(eventId);
+
+			if (intEventId <= 0) {
+				response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
+				return;
+			}
+
+		}catch (NumberFormatException e) {
+			response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
+			return;
+		}
+
+	} else {
+		response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
+		return;
+	}
+
+//declare the boolean to check if result is found or not
 boolean found = false;
+
+//declaring values to be displayed on html first
 String name ="";
 String date="";
 String location="";
@@ -22,7 +40,6 @@ String status="";
 String created_at="";
 
 
-String returnUrl = "registeredEvents.jsp";
 Integer participantId = (Integer) session.getAttribute("userId");
 try {
 	

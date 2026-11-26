@@ -9,13 +9,13 @@
 <%@ include file="/auth/participantGuard.jsp" %>
 <%
 
-
+//getting error and success
 String successMsg = request.getParameter("msg");
 String errCode = request.getParameter("errCode");
 
 String successMessage ="";
 String errorCode ="";
-
+//setting values of the error/success messages if there is any
 if("withdrawn".equals(successMsg)){
 	successMessage = "Event Withdrawn Successfully";
 }else if("registered".equals(successMsg)){
@@ -29,6 +29,12 @@ if("failedWithdrawn".equals(errCode)){
 }else if("Exception".equals(errCode)){
 	errorCode ="Unable to connect to the server for signup/withdrawal. Please try again later.";
 }
+
+//Make a value containes url of current page. it will be sent to signup.jsp 
+//when actions like sign up, or sign up again is performed in signup.jsp page
+//this is because signup.jsp handles the signup, signup again, and withdrawal of the events
+//and it is linked with mySignups.jsp as well. once the action is done signup.jsp will redirect users
+//back to the page that they were at before according to this returnUrl
 String returnUrl = "mySignups.jsp";
 Integer participantId = (Integer) session.getAttribute("userId");
 			
@@ -67,6 +73,7 @@ try {
 			try(ResultSet rs = cs.executeQuery();){
 				
 				while(rs.next()){
+					//putting values into hashmap with key and value
 					 Map<String, String> ev = new HashMap<>();
 						ev.put("id", String.valueOf(rs.getInt("event_id")));
 						ev.put("name", rs.getString("event_name"));

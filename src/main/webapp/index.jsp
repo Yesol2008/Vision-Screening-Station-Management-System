@@ -4,53 +4,9 @@
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
     
 <%
+//getting userId and role from the session
 Integer userId = (Integer) session.getAttribute("userId");
-String role = null; 
-String message = "";
-if (userId != null) {
-	try {
-		Dotenv dotenv = Dotenv.configure()
-				.directory(application.getRealPath("/WEB-INF"))
-				.load();
-
-		String connURL = dotenv.get("DB_URL");
-		String dbUser = dotenv.get("DB_USERNAME");
-		String dbPass = dotenv.get("DB_PASSWORD");
-
-		Class.forName("com.mysql.cj.jdbc.Driver");
-
-		if(userId != null){
-		String sql = "SELECT role FROM users WHERE user_id = ?";
-
-		try (Connection conn = DriverManager.getConnection(connURL, dbUser, dbPass);
-			 PreparedStatement ps = conn.prepareStatement(sql)) {
-
-			ps.setInt(1, userId);
-
-			try (ResultSet rs = ps.executeQuery()) {
-				if (rs.next()) {
-					role = rs.getString("role");
-				}
-			}
-		}
-		
-		}
-	}catch (ClassNotFoundException e) {
-		System.err.println("JDBC Driver not found"+ e);
-	    message = "Unable to connect to the server. Please try again later.";
-
-	} catch (SQLException e) {
-		System.err.println("Database error in login.jsp"+ e);
-	    message = "Unable to connect to the server. Please try again later.";
-
-	}catch (DotenvException e) {
-		System.err.println("Environment configuration error in browseEvents.jsp"+ e);
-		message="Something went wrong. Please try again later.";
-
-	} catch (Exception e) {
-		application.log("Index role lookup failed", e);
-	}
-}
+String role = (String) session.getAttribute("role");
 %>
 <!DOCTYPE html>
 <html>
@@ -101,7 +57,9 @@ if (userId != null) {
 
 	<div class="card">
 		<h1> Vision Screening Management System</h1>
-<% if ("STAFF".equalsIgnoreCase(role)) { %>
+<% 
+//this is an if else block to check the role and display the page according to the user's role
+if ("STAFF".equalsIgnoreCase(role)) { %>
 
 
 <h1 class="pageTitle">Admin dashboard</h1>

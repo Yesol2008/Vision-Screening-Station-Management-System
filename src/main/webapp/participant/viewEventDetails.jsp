@@ -3,52 +3,39 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="io.github.cdimascio.dotenv.Dotenv" %>
 <%@ include file="/auth/participantGuard.jsp" %>
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Event detail - Vision Screening</title>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
-<style>
-.btnGrid {
-	display: grid;
-	grid-template-columns: 1fr 2fr;
-	gap: 8px;
-	width: 40%;
-	}
-
-	.btnGrid form {
-	margin: 0;
-	}
-
-	.btnGrid .btn {
-	display: block;
-	width: 100%;
-	padding: 8px 10px;
-	text-align: center;
-	align-items: center;  
-	}
-
-</style>
-</head>
-<body>
-
 <%
+//getting event id
 String eventId=request.getParameter("eventId");
 
 int intEventId =0;
-
+//validating event id
 if (eventId != null && eventId.matches("\\d+")) {
-	intEventId = Integer.parseInt(eventId);
+
+	try {
+		intEventId = Integer.parseInt(eventId);
+
+		if (intEventId <= 0) {
+			response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
+			return;
+		}
+
+	} catch (NumberFormatException e) {
+		response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
+		return;
+	}
+
 } else {
-	response.sendRedirect("browseEvents.jsp?errCode=invalidEventId");
+	response.sendRedirect("listEvents.jsp?errCode=invalidEventId");
 	return;
 }
+
+//to check if the user has already registered for this event, or the event is already found
 boolean isRegistered = false;
 boolean found = false;
-String returnUrl = "registeredEvents.jsp";
 Integer participantId = (Integer) session.getAttribute("userId");
+
+
+//declaring values that will be displayed on the html
 String name = "";
 String date = "";
 String location = "";
@@ -121,8 +108,36 @@ e.printStackTrace();
 application.log("Database connection error", e);
 out.println("Unable to connect to the database.");
 }
-	////////////////////////html start here/////////////////////
 %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Event detail - Vision Screening</title>
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
+<style>
+.btnGrid {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	gap: 8px;
+	width: 40%;
+	}
+
+	.btnGrid form {
+	margin: 0;
+	}
+
+	.btnGrid .btn {
+	display: block;
+	width: 100%;
+	padding: 8px 10px;
+	text-align: center;
+	align-items: center;  
+	}
+
+</style>
+</head>
+<body>
 	
 	<div class="page">
 	

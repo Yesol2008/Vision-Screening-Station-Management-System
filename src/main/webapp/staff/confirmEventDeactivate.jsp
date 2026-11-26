@@ -4,27 +4,18 @@
 <%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
     
 <%@ include file="/auth/staffGuard.jsp" %>
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Deactivate event - Vision Screening</title>
-<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
-</head>
-<body>
 <%
-
+//checking if the request method is post or not. If it's not it will return to the event page with an error
 if (!"POST".equals(request.getMethod())) {
 	response.sendRedirect("listEvents.jsp?errCode=invalidRequest");
 	return;
 }
 
-
+//retrieving eventId 
 String eventId=request.getParameter("eventId");
 
 int intEventId =0;
-
+//validation for eventId
 if (eventId != null && eventId.matches("\\d+")) {
 
 	try {
@@ -67,8 +58,8 @@ try {
     		
  // Step 3: Establish database connection. Used try-with so that connection will close automatically
  		try(Connection conn = DriverManager.getConnection(connURL, username, password)){
- 			String sql="SELECT * FROM registrations WHERE event_id=?";
- 			////////////////////start of html////////////////////////////////
+ 			//select the registration record of participant who has not widthrawn this event
+ 			String sql="SELECT * FROM registrations WHERE event_id=? AND status <> 'Withdrawn'";
  			
  		// Step 4: Create Statement object
  	 		try(PreparedStatement ps = conn.prepareStatement(sql)){
@@ -76,6 +67,7 @@ try {
  	 			
  	 			try(ResultSet rs = ps.executeQuery()){
  	 				
+ 	 				//counting the number of participants
  	 	 			while(rs.next()){
  	 	 				count++;	
  	 	 			}	
@@ -104,6 +96,15 @@ try {
 }
 
 %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Deactivate event - Vision Screening</title>
+<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
+</head>
+<body>
+
 <div class="page">
 
 <%@ include file="/shared/header.jsp" %>

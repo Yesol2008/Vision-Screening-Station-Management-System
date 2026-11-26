@@ -9,53 +9,53 @@
 
 
 <%
-
+//defining the error Strings first
 String message = "";
 
 String eventNameErr = null;
 String eventDateErr = null;
 String eventLocationErr = null;
 String statusErr = null;
-
+//getting the values from the edit form
 String eventName = request.getParameter("event_name");
 String eventDate = request.getParameter("event_date");
 String eventLocation = request.getParameter("event_location");
 String status = request.getParameter("status");
 
-
+//checking the request method. if it's not post the code will not be executed
 if ("POST".equalsIgnoreCase(request.getMethod())) {
 // Event name validation
-if (eventName == null || eventName.trim().isEmpty()) {
-	eventNameErr = "Event name cannot be empty.";
-}else if (!eventName.matches("[A-Za-z '\\-]{2,100}")) {
-	eventNameErr = "Use 2-100 letters. Spaces, hyphens and apostrophes are allowed.";
-}
+	if (eventName == null || eventName.trim().isEmpty()) {
+		eventNameErr = "Event name cannot be empty.";
+	}else if (!eventName.matches("[A-Za-z '\\-]{2,100}")) {
+		eventNameErr = "Use 2-100 letters. Spaces, hyphens and apostrophes are allowed.";
+	}
 
 // Event date validation
-if (eventDate == null || eventDate.trim().isEmpty()) {
-	eventDateErr = "Event date cannot be empty.";
-}else {
-	try {
-		LocalDate.parse(eventDate);
-	} catch (DateTimeParseException e) {
-		eventDateErr = "Please enter a valid event date.";
+	if (eventDate == null || eventDate.trim().isEmpty()) {
+		eventDateErr = "Event date cannot be empty.";
+	}else {
+		try {
+			LocalDate.parse(eventDate);
+		} catch (DateTimeParseException e) {
+			eventDateErr = "Please enter a valid event date.";
+		}
 	}
-}
 
 // Event location validation
-if (eventLocation == null || eventLocation.trim().isEmpty()) {
-	eventLocationErr = "Event location cannot be empty.";
-}else if (!eventLocation.matches("[A-Za-z0-9][A-Za-z ,.'\\-#]{1,99}")) {
-	eventLocationErr = "Only letters, digits, spaces, hyphens, dots, '#', and apostrophes are allowed.";
-}
+	if (eventLocation == null || eventLocation.trim().isEmpty()) {
+		eventLocationErr = "Event location cannot be empty.";
+	}else if (!eventLocation.matches("[A-Za-z0-9][A-Za-z ,.'\\-#]{1,99}")) {
+		eventLocationErr = "Only letters, digits, spaces, hyphens, dots, '#', and apostrophes are allowed.";
+	}
 
 
 // Status validation
-if (status == null || status.trim().isEmpty()) {
-	statusErr = "Please select an event status.";
-}else if (!status.equals("Upcoming") &&!status.equals("Completed") &&!status.equals("Ongoing")) {
-	statusErr = "Invalid event status.";
-}
+	if (status == null || status.trim().isEmpty()) {
+		statusErr = "Please select an event status.";
+	}else if (!status.equals("Upcoming") &&!status.equals("Completed") &&!status.equals("Ongoing")) {
+		statusErr = "Invalid event status.";
+	}
 
 	// Only insert if theres no validation errors
 	if (eventNameErr == null && eventDateErr == null &&
@@ -94,13 +94,13 @@ if (status == null || status.trim().isEmpty()) {
 					}
 			}
 			
-			
+			//return error to prevent duplication of same event
 			if (eventExists) {
 				
 				message = "This event already exists.";
 
 			}else{
-				
+				//inserting the values from the form
 				String sql = "INSERT INTO events (event_name, event_date, location, status) VALUES (?,?,?,?)";
 
 				try(PreparedStatement ps = conn.prepareStatement(sql)){

@@ -10,22 +10,24 @@
 
 
 <% 
-
+//defining the error messages
 String message = "";
 String usernameErr = null;
 String passwordErr = null;
 String errCode = request.getParameter("errCode");
+String msg = request.getParameter("msg");
 String successMessage ="";
 
-if ("registered".equals(request.getParameter("msg"))) {
+//setting value into the success message string
+if ("registered".equals(msg)) {
 	successMessage = "Account registered successfully. You can now sign in to your account.";
-} else if("successUpdate".equals(request.getParameter("msg"))){
+} else if("successUpdate".equals(msg)){
 	successMessage = "Account password updated successfully. Please log in again.";
-}else if("loggedOut".equals(request.getParameter("msg"))){
+}else if("loggedOut".equals(msg)){
 	successMessage = "Successfully logged out.";
 }
 
-//for staff verification
+//setting the value for error messsage
 if ("sessionExpired".equals(errCode)) {
 	message = "Your session has expired. Please sign in again.";
 }
@@ -47,19 +49,20 @@ else if ("notAuthorised".equals(errCode)) {
 
 
 
-
+//getting username and password from the login form
 String username = request.getParameter("username");
 String pwd = request.getParameter("pwd");
 
-
+//checking if the request method is post. if not, code will not be executed
 if ("POST".equalsIgnoreCase(request.getMethod())) {
 
+	//if the whole password and username value is null, it will return the general error message
 	if (username == null || pwd == null) {
 
 		message = "Please enter your username and password.";
 
 	}else {
-		
+		//if either one of the value is missing, it will only return the error according to the field
 		//username validation
 		if (username.isEmpty()) {
             usernameErr = "Username cannot be empty.";
@@ -97,24 +100,26 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 				ps.setString(1, username.trim());
 
 				try (ResultSet rs = ps.executeQuery()){
-
+				
+				//checking if there is record, if it returns false, it will send the general error message about incorrect userid/password
 				if (rs.next()) {
 						String hashedPassword = rs.getString("password_hash");
 
-						// Compare passwords
+						// Compare passwords if it's wrong, it will send the general error message about incorrect userid/password
 						if (BCrypt.checkpw(pwd, hashedPassword)) {
 
 							// check if account is active
 							boolean isActive = rs.getBoolean("is_active");
-
+							
+							//if the accoun is active, it will retrieve the userid and the role of the user
 							if (isActive) {
-
+							
 							int userId = rs.getInt("user_id");
-                                    String role = rs.getString("role");
+							String role = rs.getString("role");
 
 							// Invalidate the previous session to prevent session fixation
 								if (request.getSession(false) != null) {
-								request.getSession(false).invalidate();
+									request.getSession(false).invalidate();
 								}
 							
 							session = request.getSession(true);
@@ -199,7 +204,8 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 		
 	<h1 class="pageTitle">Login form</h1>
 	<p class="pageSub">Login to your vision screening appointments and results.</p>
-		<% if (!successMessage.isEmpty()) { %>
+		<% //printing out the error message or success message
+			if (!successMessage.isEmpty()) { %>
     		<div class="msgBox msgSuccess"><%= successMessage %></div>
 		<% } %>	
 		<% if (!message.isEmpty()) { %>
@@ -211,7 +217,8 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 			<input type="text" id="username" name="username" maxlength="20" placeholder="e.g. alex_tan" 
 			value="<%= message != null || username == null ? "" : escapeHtml(username.trim()) %>" 
 			class="<%= usernameErr != null ? "inputError" : "" %>">
-			<% if (usernameErr != null) { %>
+			<% //printing error message when field is empty
+			if (usernameErr != null) { %>
 				<div class="fieldError"><%= escapeHtml(usernameErr) %></div>
 			<% } %>
 			

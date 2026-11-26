@@ -7,6 +7,8 @@
 
 
 <% 
+
+//getting the success message
 String successMsg = request.getParameter("msg");
 String successMessage ="";
 if("successCreate".equals(successMsg)){
@@ -19,7 +21,7 @@ if("successCreate".equals(successMsg)){
 	successMessage = "Event Deleted Successfully";
 }
 
-
+//getting the error message
 String errCode = request.getParameter("errCode");
 String errorCode ="";
 if("invalidEventId".equals(errCode)){
@@ -36,10 +38,12 @@ if("invalidEventId".equals(errCode)){
 	errorCode="Something went wrong. Please try again later.";
 	
 }
+
+//getting the value from the search field and filter field
 String search = request.getParameter("search");
 String statusFilter = request.getParameter("status");
 
-
+//validating the input in search filed. It will still be null if user only enters ' '.
 if (search != null && search.trim().isEmpty()) {
     search = null;
 }
@@ -79,7 +83,7 @@ try {
 			    cs.setString(2, statusFilter);
 				
 				try(ResultSet rs = cs.executeQuery();){
-					
+					//putting the values inside the hash map, key and value
 					while(rs.next()){
 						Map<String, String> ev = new HashMap<>();
 					ev.put("id", String.valueOf(rs.getInt("event_id")));

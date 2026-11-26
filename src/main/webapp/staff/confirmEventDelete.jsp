@@ -56,15 +56,14 @@ try {
     		
  // Step 3: Establish database connection. Used try-with so that connection will close automatically
  		try(Connection conn = DriverManager.getConnection(connURL, username, password)){
- 			String sql="SELECT COUNT(*) AS registrationCount FROM registrations WHERE event_id=?";
- 			////////////////////start of html////////////////////////////////
+ 			String sql="SELECT COUNT(*) AS registrationCount FROM registrations WHERE event_id=? AND status <> 'Withdrawn'";
  			
  		// Step 4: Create Statement object
  	 		try(PreparedStatement ps = conn.prepareStatement(sql)){
  	 				ps.setInt(1, intEventId);
  	 			
  	 			try(ResultSet rs = ps.executeQuery()){
- 	 				
+ 	 				//getting the number of student who has attended/registered for this event
  	 	 			if(rs.next()){
  	 	 				count = rs.getInt("registrationCount");
  	 	 			}	

@@ -13,13 +13,14 @@
 <%
 
 
-
+//getting success and error
 String successMsg = request.getParameter("msg");
 String errCode = request.getParameter("errCode");
 
 String successMessage ="";
 String errorCode ="";
 
+//set values in success or error messages if there is any
 if("withdrawn".equals(successMsg)){
 	successMessage = "Event Withdrawn Successfully";
 }else if("registered".equals(successMsg)){
@@ -37,17 +38,27 @@ if("failedWithdrawn".equals(errCode)){
 }else if("invalidEventId".equals(errCode)){
 	errorCode ="No such event exist.";
 }
+
+//getting participant id
 Integer participantId = (Integer) session.getAttribute("userId");
+
+//getting input values from search field and filter filed
 String search = request.getParameter("search");
 String statusFilter = request.getParameter("status");
 
+//if the values in search field and filter filed is only '   ', set it as null
 if (search != null && search.trim().isEmpty()) {
     search = null;
 }
-
 if (statusFilter != null && statusFilter.trim().isEmpty()) {
     statusFilter = null;
 }
+
+//Make a value containes url of current page. it will be sent to signup.jsp 
+//when actions like sign up, or sign up again is performed in signup.jsp page
+//this is because signup.jsp handles the signup, signup again, and withdrawal of the events
+//and it is linked with mySignups.jsp as well. once the action is done signup.jsp will redirect users
+//back to the page that they were at before according to this returnUrl
 String returnUrl = "browseEvents.jsp";
 List<Map<String, String>> events = new ArrayList<>();
 LocalDate today = LocalDate.now();
@@ -83,6 +94,7 @@ try {
 			try(ResultSet rs = cs.executeQuery();){
 
 				while(rs.next()){
+					//putting values into hashmap with key and value
 					 Map<String, String> ev = new HashMap<>();
 						ev.put("id", String.valueOf(rs.getInt("event_id")));
 						ev.put("name", rs.getString("event_name"));
