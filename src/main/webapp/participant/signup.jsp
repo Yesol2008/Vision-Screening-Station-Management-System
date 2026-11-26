@@ -12,6 +12,9 @@ String returnUrl = request.getParameter("returnUrl");
 if (returnUrl == null || returnUrl.isEmpty()) {
     returnUrl = "browseEvents.jsp";
 }
+if (!returnUrl.equals("browseEvents.jsp") || !returnUrl.equals("mySignups.jsp") ) {
+    returnUrl = "browseEvents.jsp";
+}
 try {
 	Integer participantId = (Integer) session.getAttribute("userId");
 	
