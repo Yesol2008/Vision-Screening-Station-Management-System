@@ -212,29 +212,29 @@ The participant id comes from a hidden field, so it is checked like any other us
 		Connection conn = null;
 
 		try {
-			// Step 1: Load JDBC Driver
+			//Load JDBC Driver
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
-			// Step 2: Read connection details from .env in WEB-INF
+			// Read connection details from .env in WEB-INF
 			Dotenv dotenv = Dotenv.configure().directory(application.getRealPath("/WEB-INF")).load();
 			String connURL = dotenv.get("DB_URL");
 			String dbUser = dotenv.get("DB_USERNAME");
 			String dbPassword = dotenv.get("DB_PASSWORD");
 
-			// Step 3: Establish connection
+			//Establish connection
 			conn = DriverManager.getConnection(connURL, dbUser, dbPassword);
 
-			// Step 4: PreparedStatement; the id came from the browser, so it goes in through ?
+			//PreparedStatement; the id came from the browser, so it goes in through ?
 			PreparedStatement ps = conn.prepareStatement(
 					"SELECT u.username, p.full_name, p.contact_number, p.email "
 					+ "FROM participants p JOIN users u ON p.user_id = u.user_id "
 					+ "WHERE p.participant_id = ?");
 			ps.setInt(1, participantId);
 
-			// Step 5: Execute query
+			//Execute query
 			ResultSet rs = ps.executeQuery();
 
-			// Step 6: Process result - if, not while: an id matches one row at most
+			//Process result - if, not while: an id matches one row at most
 			if (rs.next()) {
 				username = rs.getString("username");
 				fullName = rs.getString("full_name");
@@ -269,7 +269,7 @@ The participant id comes from a hidden field, so it is checked like any other us
 			response.sendRedirect("listParticipants.jsp?errCode=dbError");
 			return;
 		} finally {
-			// Step 7: Close connection
+			//Close connection
 			if (conn != null) {
 				try {
 					conn.close();

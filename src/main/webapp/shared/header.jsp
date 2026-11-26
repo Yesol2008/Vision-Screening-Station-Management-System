@@ -19,34 +19,35 @@ Description: ST0510/JAD Assignment 1 - Shared header file
 	String headerUsername = null;
 	String headerRole = null;
 
-	//1. no userId in the session (never logged in, expired or logged out): guest header
+	//1. read the logged-in user's id from the session
+	// null = not logged in (never logged in, session expired, or logged out)
 	Integer headerUserId = (Integer) session.getAttribute("userId");
 
 	//2. otherwise look the user up; a deactivated or deleted account also gets the guest header
 	if (headerUserId != null) {
-		Connection headerConn = null;
+		Connection headerConn = null; //headerConn declared outside try so catch can use it
 		try {
-			// Step 1: Load JDBC Driver
+			//Load JDBC Driver
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
-			// Step 2: Read connection details from .env in WEB-INF
+			//Read connection details from .env in WEB-INF
 			Dotenv headerEnv = Dotenv.configure().directory(application.getRealPath("/WEB-INF")).load();
 
-			// Step 3: Establish connection
+			//Establish connection to MySQL using the values from .env
 			headerConn = DriverManager.getConnection(headerEnv.get("DB_URL"),
 					headerEnv.get("DB_USERNAME"), headerEnv.get("DB_PASSWORD"));
 
-			// Step 4: PreparedStatement; LEFT JOIN as staff have no participants row
+			//PreparedStatement; LEFT JOIN to keep staff who have no participants row
 			PreparedStatement headerPs = headerConn.prepareStatement(
 					"SELECT u.username, u.role, p.full_name FROM users u "
 					+ "LEFT JOIN participants p ON p.user_id = u.user_id "
 					+ "WHERE u.user_id = ? AND u.is_active = TRUE");
 			headerPs.setInt(1, headerUserId);
 
-			// Step 5: Execute query
+			//Execute query
 			ResultSet headerRs = headerPs.executeQuery();
 
-			// Step 6: Process result - participants show their full name, staff their username
+			//Process result - participants show their full name, staff their username
 			if (headerRs.next()) {
 				headerUsername = headerRs.getString("username");
 				headerRole = headerRs.getString("role");
@@ -65,7 +66,7 @@ Description: ST0510/JAD Assignment 1 - Shared header file
 			//any other error: log it; the page still shows, with the guest header
 			System.err.println("header.jsp - " + e);
 		} finally {
-			// Step 7: Close connection
+			//Close connection
 			if (headerConn != null) {
 				try {
 					headerConn.close();
@@ -76,6 +77,7 @@ Description: ST0510/JAD Assignment 1 - Shared header file
 		}
 	}
 
+	//guest header unless an active user was found above
 	boolean signedIn = (headerUsername != null);
 	boolean isStaff = "STAFF".equals(headerRole);
 %>
@@ -88,7 +90,7 @@ Description: ST0510/JAD Assignment 1 - Shared header file
 		</span>
 	</a>
 
-	<%-- guest: nav sits inside the topbar, on the same row --%>
+	<%-- guest menu (shown on the same row as the brand); current page's link is underlined using class "active" --%>
 	<% if (!signedIn) { %>
 		<nav class="navMenu">
 			<a href="<%= base %>/index.jsp" class="<%= path.equals("/index.jsp") ? "active" : "" %>">Overview</a>
@@ -97,11 +99,14 @@ Description: ST0510/JAD Assignment 1 - Shared header file
 		</nav>
 	<% } %>
 
+	<%--right side of the top bar --%>
 	<div class="userBox">
 	<% if (!signedIn) { %>
 		<span class="userRole">Guest</span>
 	<% } else { %>
+		<%--group the name and role for CSS to stack them --%>
 		<div class="userInfo">
+			<%--For line 1, print the full name for Participants and username for Staff--%>
 			<span class="userName"><%= escapeHtml(headerName) %></span>
 			<% if (isStaff) { %>
 				<span class="userRole">Staff</span>
@@ -114,7 +119,7 @@ Description: ST0510/JAD Assignment 1 - Shared header file
 	</div>
 </div>
 
-<%-- signed in: nav sits under the topbar (styled by .topbar + .navMenu) --%>
+<%-- signed in menu under the topbar (styled by .topbar + .navMenu) --%>
 <% if (signedIn) { %>
 	<nav class="navMenu">
 		<a href="<%= base %>/index.jsp" class="<%= path.equals("/index.jsp") ? "active" : "" %>">Overview</a>

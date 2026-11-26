@@ -38,19 +38,19 @@ Description: ST0510/JAD Assignment 1 - Staff: view one participant's details
 	Connection conn = null;
 
 	try {
-		// Step 1: Load JDBC Driver
+		//Load JDBC Driver
 		Class.forName("com.mysql.cj.jdbc.Driver");
 
-		// Step 2: Read connection details from .env in WEB-INF
+		//Read connection details from .env in WEB-INF
 		Dotenv dotenv = Dotenv.configure().directory(application.getRealPath("/WEB-INF")).load();
 		String connURL = dotenv.get("DB_URL");
 		String dbUser = dotenv.get("DB_USERNAME");
 		String dbPassword = dotenv.get("DB_PASSWORD");
 
-		// Step 3: Establish connection
+		//Establish connection
 		conn = DriverManager.getConnection(connURL, dbUser, dbPassword);
 
-		// Step 4: PreparedStatement; withdrawn sign-ups are not listed
+		//PreparedStatement; withdrawn sign-ups are not listed
 		String sql = "SELECT p.full_name, p.contact_number, p.email, u.username, u.is_active, "
 				+ "GROUP_CONCAT(r.event_id ORDER BY r.event_id) AS event_ids "
 				+ "FROM participants p "
@@ -61,10 +61,10 @@ Description: ST0510/JAD Assignment 1 - Staff: view one participant's details
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ps.setInt(1, participantId);
 
-		// Step 5: Execute query
+		//Execute query
 		ResultSet rs = ps.executeQuery();
 
-		// Step 6: Process result - if, not while: an id matches one row at most
+		//Process result - if, not while: an id matches one row at most
 		if (rs.next()) {
 			found = true;
 			fullName = rs.getString("full_name");
@@ -91,7 +91,7 @@ Description: ST0510/JAD Assignment 1 - Staff: view one participant's details
 		response.sendRedirect("listParticipants.jsp?errCode=dbError");
 		return;
 	} finally {
-		// Step 7: Close connection
+		//Close connection
 		if (conn != null) {
 			try {
 				conn.close();

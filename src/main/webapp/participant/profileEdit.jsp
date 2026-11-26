@@ -93,7 +93,6 @@
 					&& contactNumErr == null && emailErr == null;
 
 			if (!allValid) {
-				// shown above the buttons, like the mockup
 				formErr = "Please correct the highlighted fields. Your other entries have been kept.";
 			} else {
 				// only touch the database when every field passed
@@ -101,19 +100,19 @@
 				Connection conn = null;
 
 				try {
-					// Step 1: Load the JDBC driver
+					//Load the JDBC driver
 					Class.forName("com.mysql.cj.jdbc.Driver");
 
-					// Step 2: Read the database connection details from WEB-INF/.env
+					//Read the database connection details from WEB-INF/.env
 					Dotenv dotenv = Dotenv.configure()
 							.directory(application.getRealPath("/WEB-INF")).load();
 
-					// Step 3: Connect to the database
+					//Connect to the database
 					conn = DriverManager.getConnection(dotenv.get("DB_URL"),
 							dotenv.get("DB_USERNAME"), dotenv.get("DB_PASSWORD"));
 
-					// Step 4a: is the new username taken by SOMEONE ELSE?
-					// (user_id <> ? skips this user, so keeping your own username is fine)
+					// check if the new username taken by SOMEONE ELSE?
+					// (user_id <> ? skips this user, so keeping one's own username is fine)
 					PreparedStatement ps = conn.prepareStatement(
 							"SELECT user_id FROM users WHERE username = ? AND user_id <> ?");
 					ps.setString(1, username);
@@ -121,11 +120,12 @@
 					ResultSet rs = ps.executeQuery();
 
 					// one row at most (username is UNIQUE), so use if instead of while
+					//if username is already used by someone else
 					if (rs.next()) {
 						usernameErr = "The username is already taken. Please try again with a different username.";
 						formErr = "Please correct the highlighted fields. Your other entries have been kept.";
 					} else {
-						// Step 4b: update users AND participants together in the stored procedure
+						//update users AND participants together in the stored procedure
 						// both ids come from the session (via the guard), never from the form
 						CallableStatement cs = conn.prepareCall("{ call update_my_profile(?, ?, ?, ?, ?, ?) }");
 						cs.setInt(1, currentUserId);
@@ -160,7 +160,7 @@
 					System.err.println("profileEdit.jsp - unexpected error :" + e);
 					formErr = "Sorry, your profile couldn't be saved right now. Please try again later.";
 				} finally {
-					// Step 7: Close the connection
+					//Close the connection
 					if (conn != null) {
 						try {
 							conn.close();
@@ -170,7 +170,7 @@
 					}
 				}
 
-				// Step 6: Process result - success goes back to My profile with a message
+				// Process result - success goes back to My profile with a message
 				// (redirect, so refreshing won't submit the form again)
 				if (updated) {
 					response.sendRedirect("myProfile.jsp?msg=updated");
@@ -184,28 +184,28 @@
 		Connection conn = null;
 
 		try {
-			// Step 1: Load the JDBC driver
+			//Load the JDBC driver
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
-			// Step 2: Read the database connection details from WEB-INF/.env
+			//Read the database connection details from WEB-INF/.env
 			Dotenv dotenv = Dotenv.configure()
 					.directory(application.getRealPath("/WEB-INF")).load();
 
-			// Step 3: Connect to the database
+			//Connect to the database
 			conn = DriverManager.getConnection(dotenv.get("DB_URL"),
 					dotenv.get("DB_USERNAME"), dotenv.get("DB_PASSWORD"));
 
-			// Step 4: find the profile by the userId from the session
+			//find the profile by the userId from the session
 			PreparedStatement ps = conn.prepareStatement(
 					"SELECT u.username, p.full_name, p.contact_number, p.email "
 					+ "FROM participants p JOIN users u ON p.user_id = u.user_id "
 					+ "WHERE p.user_id = ?");
 			ps.setInt(1, currentUserId);
 
-			// Step 5: Execute
+			//Execute
 			ResultSet rs = ps.executeQuery();
 
-			// Step 6: Process result - one row at most (user_id is UNIQUE in participants)
+			//Process result - one row at most (user_id is UNIQUE in participants)
 			if (rs.next()) {
 				username = rs.getString("username");
 				fullName = rs.getString("full_name");
@@ -236,7 +236,7 @@
 			System.err.println("profileEdit.jsp - unexpected error :" + e);
 			formErr = "Sorry, your current details couldn't be loaded. Please try again later.";
 		} finally {
-			// Step 7: Close the connection
+			//Close the connection
 			if (conn != null) {
 				try {
 					conn.close();
@@ -269,10 +269,9 @@
 
 		<%-- submits to the same page; novalidate turns off the browser checks --%>
 		<%-- every field is checked by the server-side code above --%>
-		<%-- the error goes before the grey hint; styles.css hides the hint when an error is shown --%>
+		<%-- error is placed right before the hint so styles.css can hide the hint when an error shows --%>
 		<form action="profileEdit.jsp" method="post" novalidate>
 			<div class="formGrid">
-
 				<div class="field">
 					<label for="username">Username <span class="req">*</span></label>
 					<input type="text" id="username" name="username" maxlength="20"
@@ -307,7 +306,7 @@
 
 			</div>
 
-			<%-- form-level message, above the buttons like the mockup --%>
+			<%-- form-level message, above the buttons --%>
 			<% if (formErr != null) { %>
 				<div class="msgBox msgError"><%= formErr %></div>
 			<% } %>

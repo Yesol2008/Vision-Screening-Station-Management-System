@@ -14,7 +14,7 @@
 
 <%@ include file="/auth/participantGuard.jsp" %>
 <%
-	// messages sent here by other pages
+	// messages sent here by other pages (read the values from the URL)
 	String msg = request.getParameter("msg");
 	String errCode = request.getParameter("errCode");
 	String successMessage = null;
@@ -26,10 +26,10 @@
 	if (errCode != null) {
 		if (errCode.equals("notAuthorised")) {
 			// a participant tried to open a staff page
-			errMessage = "You don't have access to that page.";
-		} else if (errCode.equals("failUpdate")) {
+			errMessage = "Access denied: you are not authorised to view that page.";
+		} else if (errCode.equals("failUpdate")) { //errCode form updatePw
 			errMessage = "Your password couldn't be updated. Please try again.";
-		} else if (errCode.equals("noResult")) {
+		} else if (errCode.equals("noResult")) { //errCode form updatePw
 			errMessage = "Your account could not be found.";
 		}
 	}
@@ -39,34 +39,35 @@
 	String fullName = null;
 	String contactNum = null;
 	String email = null;
+	
 	boolean found = false;
 	String loadErr = null;
 
 	Connection conn = null;
 
 	try {
-		// Step 1: Load the JDBC driver
+		//Load the JDBC driver
 		Class.forName("com.mysql.cj.jdbc.Driver");
 
-		// Step 2: Read the database connection details from WEB-INF/.env
+		//Read the database connection details from WEB-INF/.env
 		Dotenv dotenv = Dotenv.configure()
 				.directory(application.getRealPath("/WEB-INF")).load();
 
-		// Step 3: Connect to the database
+		//Connect to the database
 		conn = DriverManager.getConnection(dotenv.get("DB_URL"),
 				dotenv.get("DB_USERNAME"), dotenv.get("DB_PASSWORD"));
 
-		// Step 4: PreparedStatement - find the profile by the userId from the session
+		//PreparedStatement - find the profile by the userId from the session
 		PreparedStatement ps = conn.prepareStatement(
 				"SELECT p.participant_id, u.username, p.full_name, p.contact_number, p.email "
 				+ "FROM participants p JOIN users u ON p.user_id = u.user_id "
 				+ "WHERE p.user_id = ?");
 		ps.setInt(1, currentUserId);
 
-		// Step 5: Execute
+		//Execute query
 		ResultSet rs = ps.executeQuery();
 
-		// Step 6: Process result - one row at most (user_id is UNIQUE in participants), so use if
+		//Process result - one row at most (user_id is UNIQUE in participants), so use if
 		if (rs.next()) {
 			found = true;
 			participantId = rs.getInt("participant_id");
@@ -90,7 +91,7 @@
 		System.err.println("myProfile.jsp - unexpected error :" + e);
 		loadErr = "Sorry, your profile could not be loaded. Please try again later.";
 	} finally {
-		// Step 7: Close the connection
+		//Close the connection
 		if (conn != null) {
 			try {
 				conn.close();

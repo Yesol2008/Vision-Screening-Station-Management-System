@@ -31,7 +31,7 @@ Description: ST0510/JAD Assignment 1 - Staff: deactivate a participant account
 		return;
 	}
 
-	//3. check the rules again (the request may not come from the button), then update
+	//3. check the rules again (the request may not come from the button/ another staff member alr deactivated the participant just now), then update
 	String result = null;
 	Connection conn = null;
 

@@ -15,8 +15,8 @@
 <%
 	// ===== Session guard for participant-related pages =====
 
-	//capture userId from session
-	Integer currentUserId = (Integer) session.getAttribute("userId");
+	//capture userId from session 
+	Integer currentUserId = (Integer) session.getAttribute("userId"); //getAttribute returns an Object so typecast to Integer(can be null)
 
 	//Redirect unauthenticated users to the login page (expired session or no login)
 	if (currentUserId == null) {
@@ -107,7 +107,7 @@
 		}
 	}
 
-	// Account no longer exists (e.g. deleted after the user logged in).
+	// Account no longer exists 
 	if (!accountFound) {
 		session.invalidate();
 		response.sendRedirect(request.getContextPath() + "/login.jsp?errCode=accountNotFound");

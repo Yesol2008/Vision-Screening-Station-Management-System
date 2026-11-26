@@ -22,7 +22,7 @@ Passwords are hashed with bcrypt before they are stored.
 	request.setCharacterEncoding("UTF-8");
 	
 	// values to put back into the form (empty on the first visit)
-	// passwords are never put back into the page
+	// passwords are never sent back into the page
 	String username = "";
 	String fullName = "";
 	String contactNum = "";
@@ -123,19 +123,19 @@ Passwords are hashed with bcrypt before they are stored.
 				Connection conn = null;
 
 				try {
-					// Step 1: Load JDBC Driver
+					//Load JDBC Driver
 					Class.forName("com.mysql.cj.jdbc.Driver");
 
-					// Step 2: Read connection details from .env in WEB-INF
+					//Read connection details from .env in WEB-INF
 					Dotenv dotenv = Dotenv.configure().directory(application.getRealPath("/WEB-INF")).load();
 					String connURL = dotenv.get("DB_URL");
 					String dbUser = dotenv.get("DB_USERNAME");
 					String dbPassword = dotenv.get("DB_PASSWORD");
 
-					// Step 3: Establish connection
+					//Establish connection
 					conn = DriverManager.getConnection(connURL, dbUser, dbPassword);
 
-					// Step 4a: is the username already taken? (friendly message instead of a database error)
+					//check if the username already taken? (friendly message instead of a database error)
 					PreparedStatement ps = conn.prepareStatement("SELECT user_id FROM users WHERE username = ?");
 					ps.setString(1, username);
 					ResultSet rs = ps.executeQuery();
@@ -145,7 +145,7 @@ Passwords are hashed with bcrypt before they are stored.
 						usernameErr = "The username is already taken. Please try again with a different username.";
 						formErr = "Please correct the highlighted fields. Your other entries have been kept.";
 					} else {
-						// Step 4b: hash the password with bcrypt (the 60-character hash includes its own random salt),
+						//hash the password with bcrypt (the 60-character hash includes its own random salt),
 						// then insert into users AND participants together in the stored procedure
 						String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt(10));
 
@@ -156,7 +156,7 @@ Passwords are hashed with bcrypt before they are stored.
 						cs.setString(4, email);
 						cs.setString(5, contactNum);
 
-						// Step 5: Execute
+						//Execute
 						cs.execute();
 						added = true;
 					}
@@ -189,7 +189,7 @@ Passwords are hashed with bcrypt before they are stored.
 					}
 				}
 
-				// Step 6: Process result - success goes back to the list with a message
+				// Process result - success goes back to the list with a message
 				// (redirect, so refreshing won't submit the form again)
 				if (added) {
 					response.sendRedirect("listParticipants.jsp?msg=added");

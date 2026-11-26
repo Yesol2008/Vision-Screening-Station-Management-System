@@ -41,19 +41,19 @@ Description: ST0510/JAD Assignment 1 - Staff: confirm deactivation of a particip
 	Connection conn = null;
 
 	try {
-		// Step 1: Load JDBC Driver
+		// Load JDBC Driver
 		Class.forName("com.mysql.cj.jdbc.Driver");
 
-		// Step 2: Read connection details from .env in WEB-INF
+		//Read connection details from .env in WEB-INF
 		Dotenv dotenv = Dotenv.configure().directory(application.getRealPath("/WEB-INF")).load();
 		String connURL = dotenv.get("DB_URL");
 		String dbUser = dotenv.get("DB_USERNAME");
 		String dbPassword = dotenv.get("DB_PASSWORD");
 
-		// Step 3: Establish connection
+		//Establish connection
 		conn = DriverManager.getConnection(connURL, dbUser, dbPassword);
 
-		// Step 4: PreparedStatement; withdrawn sign-ups are not counted
+		//PreparedStatement; withdrawn sign-ups are not counted
 		String sql = "SELECT p.full_name, u.username, u.is_active, COUNT(r.event_id) AS signup_count "
 				+ "FROM participants p "
 				+ "JOIN users u ON p.user_id = u.user_id "
@@ -63,10 +63,10 @@ Description: ST0510/JAD Assignment 1 - Staff: confirm deactivation of a particip
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ps.setInt(1, participantId);
 
-		// Step 5: Execute query
+		//Execute query
 		ResultSet rs = ps.executeQuery();
 
-		// Step 6: Process result :we will use if instead of while
+		//Process result :we will use if instead of while
 		//because it will return one row at most
 		if (rs.next()) {
 			found = true;

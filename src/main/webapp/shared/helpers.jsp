@@ -1,9 +1,12 @@
 <%--
+Author: Htet Yamin Aung (P2535607)
+Date: 20/11/2026
 Description: Shared helper methods; included with <%@ include %> on each page
 --%>
 <%!
 	//helper method to escape HTML special characters
 	 String escapeHtml(String input) {
+		//null check before .replace to avoid NullPointerException
 		if (input == null) {
 			return "";
 		}

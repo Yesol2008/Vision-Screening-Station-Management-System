@@ -33,7 +33,7 @@ Description: ST0510/JAD Assignment 1 - Staff: list, search and filter participan
 		} else if (errCode.equals("dbError")) {
 			errMessage = "Something went wrong. Please try again later.";
 		} else if (errCode.equals("notAuthorised")) {
-			errMessage = "You don't have access to that page.";
+			errMessage = "Access denied: you are not authorised to view that page.";
 		} else if (errCode.equals("hasSignups")) {
 			errMessage = "This participant has event sign-ups and cannot be deactivated.";
 		} else if (errCode.equals("alreadyInactive")) {
@@ -62,41 +62,46 @@ Description: ST0510/JAD Assignment 1 - Staff: list, search and filter participan
 	Connection conn = null;
 
 	try {
-		// Step 1: Load JDBC Driver
+		//Load JDBC Driver
 		Class.forName("com.mysql.cj.jdbc.Driver");
 
-		// Step 2: Read connection details from .env in WEB-INF
+		//Read connection details from .env in WEB-INF
 		Dotenv dotenv = Dotenv.configure().directory(application.getRealPath("/WEB-INF")).load();
 		String connURL = dotenv.get("DB_URL");
 		String dbUser = dotenv.get("DB_USERNAME");
 		String dbPassword = dotenv.get("DB_PASSWORD");
 
-		// Step 3: Establish connection
+		//Establish connection
 		conn = DriverManager.getConnection(connURL, dbUser, dbPassword);
 
-		// Step 4: CallableStatement for the stored procedure; NULL means "don't filter on this"
+		//CallableStatement for the stored procedure; NULL means "don't filter on this"
 		CallableStatement cs = conn.prepareCall("{ call view_all_participants(?, ?) }");
 
+		// 1st ? = search keyword
+		// empty box -> NULL, so the procedure skips the search and returns everyone
+		// otherwise  -> the typed text, matched against name, username and contact number
 		if (keyword.isEmpty()) {
-			cs.setNull(1, Types.VARCHAR);
+			cs.setNull(1, Types.VARCHAR); //1 => blank - type VARCHAR to match the procedure p_search VARCHAR(100)
 		} else {
 			cs.setString(1, keyword);
 		}
 
+		//status filter
 		if (status.equals("active")) {
 			cs.setBoolean(2, true);
 		} else if (status.equals("inactive")) {
 			cs.setBoolean(2, false);
 		} else {
-			cs.setNull(2, Types.BOOLEAN);
+			cs.setNull(2, Types.BOOLEAN); //if no status is chosen => blank but type is BOOLEAN
 		}
 
-		// Step 5: Execute query
+		//Execute query
 		ResultSet rs = cs.executeQuery();
 
-		// Step 6: Process result - while, as there can be many rows
+		//Process result - while; there can be many rows
 		while (rs.next()) {
-			Map<String, Object> row = new HashMap<>();
+			//box for every participant
+			Map<String, Object> row = new HashMap<>(); //Object => can be any type , will typecast later
 			row.put("participantId", rs.getInt("participant_id"));
 			row.put("fullName", rs.getString("full_name"));
 			row.put("contactNum", rs.getString("contact_number"));
@@ -215,6 +220,7 @@ Description: ST0510/JAD Assignment 1 - Staff: list, search and filter participan
 							<td>
 								<div class="actions">
 									<%-- the id is embedded in a hidden field and sent to the next page --%>
+									<%--one tiny form per button --%>
 									<form action="viewParticipant.jsp" method="get">
 										<input type="hidden" name="id" value="<%= participantId %>">
 										<button type="submit" class="btn">View</button>
