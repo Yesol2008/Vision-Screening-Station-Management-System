@@ -1,0 +1,86 @@
+8104e78 2026-11-26 yesol2008 fix signup.jsp
+550c0bd 2026-11-26 yesol2008 fixed signup.jsp
+2b504c8 2026-11-26 yesol2008 fix editEvent and creatEvent
+5487b7e 2026-11-26 yesol2008 Fix: participant and staff event
+d4dc3cd 2026-11-26 yesol2008 Add comments
+47aaea8 2026-11-26 htetya25 Add comments and clean up code
+b16f1f5 2026-11-25 yesol2008 fixed browseEvents.jsp
+74fd713 2026-11-25 yesol2008 fix loggout msg
+7b515dd 2026-11-25 yesol2008 fix viewEventDetails.jsp
+ce22523 2026-11-25 htetya25 Change the format in event list dispaly
+66ddc6c 2026-11-25 yesol2008 fix: listEvents.jsp
+74f789a 2026-11-25 htetya25 Remove duplicate title from browseEvents.jsp
+1ff6c98 2026-11-25 yesol2008 fixed overal code structure
+611ce60 2026-11-25 yesol2008 fixed staff Events
+2b63a17 2026-11-25 htetya25 Add request encoding and shared footer
+08f9f2c 2026-11-25 htetya25 Reorganise styles.css with comments
+454c6a0 2026-11-25 yesol2008 fixed viewEventDetail.jsp
+a659169 2026-11-25 yesol2008 fixed mySignups.jsp
+31061b8 2026-11-25 yesol2008 fixed browseEvents.jsp
+3813632 2026-11-25 htetya25 Fix column name and block reusing current password in updatePwd.jsp
+f4335d5 2026-11-25 yesol2008 Merge branch 'main' of https://github.com/Yesol2008/Vision-Screening-Station-Management-System
+13a7e13 2026-11-25 yesol2008 fix: page title and errCode
+52ecc0f 2026-11-25 htetya25 Add filtering to participant list
+18ffbc0 2026-11-25 yesol2008 fix: style updatePwd
+df0e9cf 2026-11-24 yesol2008 fix: shared file path
+921e9be 2026-11-24 htetya25 Move auth/ and shared/ form WEB-INF to webapp and edit the paths
+dafbf4e 2026-11-24 yesol2008 Add staff account in seed.jsp
+acc6719 2026-11-24 yesol2008 Fix: error fix and move footer
+d0c4d9e 2026-11-24 yesol2008 fixseed
+62c6fb1 2026-11-24 Yesol2008 Merge pull request #10 from Yesol2008/yesol
+ac522db 2026-11-24 yesol2008 minorFix
+82e736e 2026-11-24 yesol2008 Resolve merge conflict in listEvents.jsp
+7fc7e8b 2026-11-24 yesol2008 viewEventDetails
+32a2201 2026-11-23 htetya25 Add staff: add, edit, and view participant
+3f80287 2026-11-23 Yesol2008 Merge pull request #9 from Yesol2008/yesol
+0603346 2026-11-23 Yesol2008 Merge branch 'main' into yesol
+b1ae2ab 2026-11-23 yesol2008 errorHandling
+08fc0fc 2026-11-23 htetya25 Merge and remove request encoding from web.xml
+ff9dabf 2026-11-23 htetya25 Read request data as UTF-8
+8a06ada 2026-11-23 Yesol2008 Merge pull request #8 from Yesol2008/yesol
+41e20e2 2026-11-23 yesol2008 addfooter
+1c30258 2026-11-23 yesol2008 appliedHeader
+6c537b5 2026-11-23 Yesol2008 Merge pull request #7 from Yesol2008/yesol
+0f54731 2026-11-23 yesol2008 Merge remote-tracking branch 'origin/main' into yesol
+f29c19d 2026-11-23 yesol2008 fixUpdatePw
+eefdc31 2026-11-23 yesol2008 eventDelete
+e0fa130 2026-11-23 yesol2008 22/11/2026
+1853b15 2026-11-23 htetya25 add logout.jsp to invalidate session upon logging out
+cf6b338 2026-11-23 htetya25 add participant view and edit own profile
+705166a 2026-11-23 htetya25 remove duplicate lines from styles.css
+a244633 2026-11-22 htetya25 Merge pull request #6 from Yesol2008/header
+96d9382 2026-11-22 htetya25 Merge main into header
+409ffe6 2026-11-22 htetya25 Merge main into header
+2510284 2026-11-22 yesol2008 fixseed
+d88a2fa 2026-11-22 yesol2008 seed
+0bdac36 2026-11-22 yesol2008 EventForStaff
+f6faeb3 2026-11-22 htetya25 fix unclosed div in header.jsp
+dc23e14 2026-11-22 htetya25 Merge pull request #5 from Yesol2008/header
+1dc1b33 2026-11-22 htetya25 add shared header for guest, participants and staff and add it on top of existing files
+5ee2928 2026-11-22 Yesol2008 Merge pull request #4 from Yesol2008/yesol
+ebfc2a8 2026-11-22 yesol2008 fixseed
+1b7dd46 2026-11-22 Yesol2008 Merge pull request #3 from Yesol2008/yesol
+569d661 2026-11-22 yesol2008 Merge remote-tracking branch 'origin/main' into yesol
+4ae1606 2026-11-22 yesol2008 seed
+17c4a14 2026-11-22 htetya25 Merge pull request #2 from Yesol2008/participant-deactivation
+15f6fb4 2026-11-22 htetya25 Add participant deactivation with confirmation
+ca316a4 2026-11-22 htetya25 Add shared helper methods
+13d06a0 2026-11-22 yesol2008 EventForStaff
+c3464b8 2026-11-22 htetya25 Merge pull request #1 from Yesol2008/yesol
+9620ad3 2026-11-21 yesol2008 registeredEvents
+4da29ff 2026-11-21 yesol2008 setupAndBrowseEvents
+1a53f8b 2026-11-20 yesol2008 addlogin
+d588e01 2026-11-20 htetya25 Add logo, update theme and register page styling
+e0ad075 2026-11-20 htetya25 Add staff and participant session guards in WEB-INF/auth
+785bcd2 2026-11-19 htetya25 Add participant registration page with server-side validation and login placeholder
+3806cfb 2026-11-19 htetya25 add shared styles
+8c32655 2026-11-19 htetya25 Update dotenv path in seed and connection test pages
+db24e56 2026-11-19 yesol2008 'try-with'
+f4da527 2026-11-19 yesol2008 'fix'
+d757e4d 2026-11-17 yesol2008 'bcrypt'
+b2fd848 2026-11-17 htetya25 Move seed.jsp into webapp
+3f4aa7b 2026-11-17 htetya25 Set up Dynamic Web Project with DB connection test
+90adfd8 2026-11-17 yesol2008 'seed.jsp'
+5b5974d 2026-11-17 yesol2008 'testMySQLConnection'
+a41b31e 2026-11-17 yesol2008 Add MySQL connection test
+f55e374 2026-11-16 Yesol2008 Initial commit

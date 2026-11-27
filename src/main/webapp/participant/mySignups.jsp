@@ -38,7 +38,7 @@ if("failedWithdrawn".equals(errCode)){
 //and it is linked with mySignups.jsp as well. once the action is done signup.jsp will redirect users
 //back to the page that they were at before according to this returnUrl
 String returnUrl = "mySignups.jsp";
-Integer participantId = (Integer) session.getAttribute("userId");
+Integer participantId = (Integer) session.getAttribute("participantId");
 			
 			
 List<Map<String, String>> signups = new ArrayList<>();

@@ -42,7 +42,7 @@ if("failedWithdrawn".equals(errCode)){
 }
 
 //getting participant id
-Integer participantId = (Integer) session.getAttribute("userId");
+Integer participantId = (Integer) session.getAttribute("participantId");
 
 //getting input values from search field and filter filed
 String search = request.getParameter("search");

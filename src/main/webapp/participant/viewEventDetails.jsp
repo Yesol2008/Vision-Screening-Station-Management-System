@@ -32,7 +32,7 @@ if (eventId != null && eventId.matches("\\d+")) {
 //to check if the user has already registered for this event, or the event is already found
 boolean isRegistered = false;
 boolean found = false;
-Integer participantId = (Integer) session.getAttribute("userId");
+Integer participantId = (Integer) session.getAttribute("participantId");
 
 
 //declaring values that will be displayed on te html

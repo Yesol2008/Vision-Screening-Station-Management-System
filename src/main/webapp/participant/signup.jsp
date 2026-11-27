@@ -16,7 +16,7 @@ if (!"browseEvents.jsp".equals(returnUrl) && !"mySignups.jsp".equals(returnUrl))
     returnUrl = "browseEvents.jsp";
 }
 try {
-	Integer participantId = (Integer) session.getAttribute("userId");
+	Integer participantId = (Integer) session.getAttribute("participantId");
 	
 	if(participantId == null){
 		response.sendRedirect("login.jsp");

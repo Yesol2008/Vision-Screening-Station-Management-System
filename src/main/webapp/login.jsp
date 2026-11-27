@@ -87,7 +87,11 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 		String connURL = dotenv.get("DB_URL");
 		String dbUser = dotenv.get("DB_USERNAME");
 		String dbPassword = dotenv.get("DB_PASSWORD");
-		String sql = "SELECT user_id, password_hash, role, is_active FROM users WHERE username = ?";
+		String sql = "SELECT u.user_id, u.password_hash, u.role, u.is_active, " +
+					"p.participant_id " +
+					"FROM users u " +
+					"LEFT JOIN participants p ON u.user_id = p.user_id " +
+					"WHERE u.username = ?";
 
 		// Step 3: Establish connection
 		//using try with statement so that connection will close automatically
@@ -116,6 +120,9 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 							
 							int userId = rs.getInt("user_id");
 							String role = rs.getString("role");
+							
+							int participantId = rs.getInt("participant_id");
+							boolean hasParticipantId = !rs.wasNull();
 
 							// Invalidate the previous session to prevent session fixation
 								if (request.getSession(false) != null) {
@@ -134,7 +141,7 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 									response.sendRedirect("staff/listEvents.jsp");
 									return;
 								} else if ("participant".equalsIgnoreCase(role)) {
-									
+							        session.setAttribute("participantId", participantId);
 									response.sendRedirect("participant/browseEvents.jsp");
 									return;
 									
