@@ -126,7 +126,7 @@ if ("POST".equalsIgnoreCase(request.getMethod())) {
 								
 							// Store user information in session
 							session.setAttribute("userId", userId);
-							session.setAttribute("role", role);
+							
 						
 								//Redirect according to user role. it will be replaced when the page is implemented
 								if ("staff".equalsIgnoreCase(role)) {

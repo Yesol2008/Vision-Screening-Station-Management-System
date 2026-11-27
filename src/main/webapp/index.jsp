@@ -1,13 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*" %>
-<%@ page import="io.github.cdimascio.dotenv.Dotenv, io.github.cdimascio.dotenv.DotenvException" %>
-    
-<%
-//getting userId and role from the session
-Integer userId = (Integer) session.getAttribute("userId");
-String role = (String) session.getAttribute("role");
-%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -53,13 +46,14 @@ String role = (String) session.getAttribute("role");
 
 <div class="page">
 
+<%-- the header looks up the signed-in user from the database and sets isStaff / signedIn used below --%>
 <%@ include file="/shared/header.jsp" %>
 
 	<div class="card">
 		<h1> Vision Screening Management System</h1>
-<% 
-//this is an if else block to check the role and display the page according to the user's role
-if ("STAFF".equalsIgnoreCase(role)) { %>
+<%
+//show the view for the user's role: staff, participant, or guest (not signed in)
+if (isStaff) { %>
 
 
 <h1 class="pageTitle">Admin dashboard</h1>
@@ -79,7 +73,7 @@ if ("STAFF".equalsIgnoreCase(role)) { %>
 	</div>
 
 
-<%} else if("PARTICIPANT".equalsIgnoreCase(role)){%>		
+<%} else if (signedIn) {%>
 
 	<h1 class="pageTitle">Welcome back</h1>
 	<p class="pageSub">Find events and manage your signups.</p>
@@ -110,7 +104,7 @@ if ("STAFF".equalsIgnoreCase(role)) { %>
 			<a href="login.jsp" class="btn btnDark">Login</a>
 		</div>
 			<p class="pageSub">Get started with browsing events and managing your sign-up's.</p>
-		
+
 		<div class="grid">
 			<div class="quickCard">
 				<h2>Participant</h2>
@@ -127,7 +121,7 @@ if ("STAFF".equalsIgnoreCase(role)) { %>
 			</div>
 		</div>
 <%} %>
-		
+
 	</div>
 
 
